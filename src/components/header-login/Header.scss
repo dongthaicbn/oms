@@ -1,0 +1,39 @@
+.header {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  .button-menu {
+    width: 68px;
+    height: 44px;
+    background: linear-gradient(92.72deg, #c5c2ff 0%, #938fff 100%);
+    border-radius: 8px;
+    cursor: pointer;
+    .icon-menu {
+      border-radius: 8px;
+    }
+  }
+  .container-language {
+    display: flex;
+    @media only screen and (max-width: 576px) {
+      display: none;
+    }
+    .button-language-choosed {
+      background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      color: white;
+    }
+    .button-language-not-choosed {
+      color: #828282;
+    }
+    .button-language {
+      border-radius: 4px;
+      padding: 6px 33px;
+      align-items: center;
+      display: flex;
+      cursor: pointer;
+      height: 37px;
+      align-self: center;
+      font-weight: bold;
+    }
+  }
+}

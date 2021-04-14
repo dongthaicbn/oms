@@ -1,0 +1,102 @@
+.status-filter-container {
+  margin-bottom: 16px;
+  .ant-radio-group {
+    font-weight: 900;
+
+    .ant-radio-button-wrapper {
+      height: auto;
+      padding: 8px 24px;
+      font-size: 20px;
+    }
+
+    .ant-radio-button-wrapper:first-child {
+      border: 0;
+    }
+
+    .ant-radio-button-wrapper:first-child:last-child {
+      border-radius: 4px;
+    }
+
+    .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-checked) {
+      background: transparent;
+      color: #ABAACA;
+    }
+  }
+}
+
+.list-order-record-container {
+  .ant-list-item {
+    padding: 0 0 12px 0;
+  }
+
+  .ant-card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    .ant-card-body {
+      padding: 16px;
+
+      .estimated-delivery-color {
+        color: #FF884B;
+      }
+
+      .delivery-date-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        vertical-align: baseline;
+      }
+
+      .delivery-date-color {
+        color: #4BC09C;
+      }
+
+      .order-date-status-info-group {
+        text-align: end;
+        .order-date {
+          display: block;
+          font-size: 18px;
+          color: #3056A3;
+          font-weight: bold;
+        }
+      }
+
+      .order-no-receipt-no-info-group {
+        .ant-typography {
+          font-size: 16px;
+          color: #4F4E66;
+          margin-bottom: 16px;
+          .divider {
+            border-color: #4F4E66;
+          }
+        }
+      }
+
+      .total-order-number-info {
+        .ant-tag {
+          width: 100%;
+          padding: 8px 16px;
+          background-color: #F0F0FC;
+          margin: 0;
+
+          .ant-typography {
+            color: #4F4E66;
+            vertical-align: middle;
+            font-size: 18px;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
+
+.order-record-message-container {
+  width: 100%;
+  padding-top: 166px;
+  text-align: center;
+
+  .message {
+    color: #4F4E66;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}

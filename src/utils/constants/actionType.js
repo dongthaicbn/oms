@@ -1,0 +1,6 @@
+export const CHANGE_LANG = 'CHANGE_LANG';
+export const FETCH_ACCOUNT = 'FETCH_ACCOUNT';
+
+export const TOGGLE_MENU = 'TOGGLE_MENU';
+export const SELECT_MENU_ACTION_ITEM = 'SELECT_MENU_ACTION_ITEM';
+export const SNACK_BAR = 'SNACK_BAR';

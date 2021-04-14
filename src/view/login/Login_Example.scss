@@ -1,0 +1,79 @@
+.login-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  .login-left {
+    width: 60%;
+    background: #236be1;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .logo-content {
+      display: flex;
+      img {
+        width: 160px;
+        margin: 0 32px 0 0;
+      }
+      .login-text {
+        max-width: 500px;
+        .login-header {
+          font-size: 48px;
+          font-weight: 700;
+          letter-spacing: -2px;
+          line-height: 54px;
+        }
+        .sub-header {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+  .login-container {
+    min-width: 460px;
+    width: 40%;
+    background: white;
+    padding: 60px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .logo-img {
+      width: 120px;
+      margin-bottom: 24px;
+    }
+    .fail-text {
+      color: red;
+      margin-bottom: 10px;
+      margin-top: -10px;
+    }
+    .login-form {
+      min-width: 420px;
+    }
+  }
+  .login-btn {
+    width: 100%;
+    background: #3a8ee6;
+    border-color: #3a8ee6;
+    height: 48px;
+    font-size: 20px;
+    margin-top: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .login-wrapper {
+    .login-container {
+      width: 80%;
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  .login-wrapper {
+    padding: 10px;
+    .login-container {
+      width: calc(100% - 20px);
+    }
+  }
+}

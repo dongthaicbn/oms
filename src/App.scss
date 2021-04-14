@@ -1,0 +1,219 @@
+@font-face {
+  font-family: NotoSansTC;
+  src: url('./assets/fonts/NotoSansTC-Regular.otf');
+}
+body {
+  font-family: NotoSansTC;
+}
+.app-container {
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.width-full {
+  width: 100%;
+}
+.width-haft {
+  width: 50%;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #a0a0a0;
+}
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.pagination-table {
+  width: 100%;
+  text-align: right;
+  padding: 20px 0;
+}
+
+.delete-modal {
+  .ant-modal-footer {
+    .ant-btn-primary {
+      background-color: #e94940;
+      border-color: #e94940;
+    }
+  }
+}
+.submit-modal {
+  .ant-modal-footer {
+    .ant-btn-primary {
+      background-color: #47bac1;
+      border-color: #47bac1;
+    }
+  }
+}
+.ant-modal-content {
+  .ant-modal-header {
+    padding-bottom: 10px;
+    .ant-modal-title {
+      color: #455154;
+    }
+  }
+  .ant-modal-body {
+    padding-top: 10px;
+  }
+  .ant-btn.disabled,
+  .ant-btn[disabled] {
+    color: white;
+    opacity: 0.65;
+  }
+}
+
+.app-button {
+  .ant-btn {
+    border: 2px solid #6461b4;
+    border-radius: 10px;
+    background: none;
+    padding: 20px 30px;
+    color: #6461b4;
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  .ant-btn:focus {
+    color: #6461b4;
+    background: none;
+    border: 2px solid #6461b4;
+  }
+
+  .ant-btn:active {
+    color: #6461b4;
+    background: none;
+    border: 2px solid #6461b4;
+  }
+
+  .ant-btn:hover {
+    color: #ffffff;
+    background: #6461b4;
+    border: 2px solid #6461b4;
+  }
+
+  .ant-btn-primary {
+    border: none;
+    background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
+    color: #ffffff;
+  }
+
+  .ant-btn-primary:focus {
+    border: none;
+    background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
+    color: #ffffff;
+  }
+
+  .ant-btn-primary:active {
+    border: none;
+    background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
+    color: #ffffff;
+  }
+
+  .ant-btn-primary:hover {
+    background: linear-gradient(92.72deg, #c5c2ff 0%, #938fff 100%);
+    border: none;
+  }
+}
+
+.app-table {
+  .ant-table {
+    background: transparent;
+    .ant-table-container {
+      .ant-table-content {
+        table {
+          border-spacing: 0 8px;
+          .ant-table-thead {
+            tr {
+              th {
+                padding: 17px 8px;
+                background-color: #e5eafb;
+                color: #6461b4;
+                font-size: 14px;
+                font-weight: 500;
+              }
+              th:first-child {
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px;
+                color: #4f4e66;
+                font-size: 16px;
+                font-weight: 700;
+              }
+              th:last-child {
+                border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+              }
+            }
+          }
+
+          .ant-table-tbody {
+            tr {
+              td {
+                background-color: #ffffff;
+                padding: 8px 8px;
+              }
+
+              td:first-child {
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+              }
+
+              td:last-child {
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.app-card {
+  .ant-card {
+    .ant-card-body {
+      padding: 12px 16px;
+    }
+  }
+}
+
+.app-scrollable-container {
+  height: 100vh;
+  overflow: auto;
+}
+
+.app-content-container {
+  min-width: 863px;
+  min-height: 100vh;
+  padding: 32px 24px;
+  background: #f3f3f9;
+}
+
+.app-flex-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+.pointer {
+  cursor: pointer;
+}
