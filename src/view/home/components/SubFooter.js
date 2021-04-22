@@ -1,10 +1,15 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import * as icons from 'assets';
 import '../Home.scss';
 import { Row, Col } from 'antd';
+import { routes } from 'utils/constants/constants';
 
-const SubFooter = props => {
+const SubFooter = (props) => {
+  const handleChangeRoute = (url) => {
+    props.history.push(url);
+  };
   return (
     <div className="padding-common sub-footer-content">
       <Row className="wapper-sub-footer">
@@ -16,13 +21,22 @@ const SubFooter = props => {
             <p className="title-item">
               <FormattedMessage id="IDS_ORDER" />
             </p>
-            <p className="text-item pointer">
+            <p
+              className="text-item pointer"
+              onClick={() => handleChangeRoute(routes.ORDER_FORM)}
+            >
               <FormattedMessage id="IDS_ORDER_FORM" />
             </p>
-            <p className="text-item pointer">
+            <p
+              className="text-item pointer"
+              onClick={() => handleChangeRoute(routes.ORDER_RECORD)}
+            >
               <FormattedMessage id="IDS_ORDER_RECORD" />
             </p>
-            <p className="text-item pointer">
+            <p
+              className="text-item pointer"
+              onClick={() => handleChangeRoute(routes.VEHICLE_SCHEDULE)}
+            >
               <FormattedMessage id="IDS_VEHICLE_SCHEDULE" />
             </p>
             <p className="text-item pointer">
@@ -61,4 +75,4 @@ const SubFooter = props => {
   );
 };
 
-export default SubFooter;
+export default withRouter(SubFooter);

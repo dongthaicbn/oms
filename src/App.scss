@@ -2,12 +2,24 @@
   font-family: NotoSansTC;
   src: url('./assets/fonts/NotoSansTC-Regular.otf');
 }
+@font-face {
+  font-family: NotoSansTCBlack;
+  src: url('./assets/fonts/NotoSansTC-Black.otf');
+}
 body {
   font-family: NotoSansTC;
+  background-color: #f3f3f9;
+}
+#root {
+  background-color: #f3f3f9;
 }
 .app-container {
-  min-height: 100vh;
-  background-color: #fff;
+  // min-height: 100vh;
+  background-color: #f3f3f9;
+}
+
+.height-full {
+  height: 100%;
 }
 
 .width-full {
@@ -98,6 +110,12 @@ body {
     color: #6461b4;
     background: none;
     border: 2px solid #6461b4;
+  }
+
+  .ant-btn:disabled {
+    border: 2px solid #f0f0fc;
+    color: #bdbdbd;
+    background: #f7f7fd;
   }
 
   .ant-btn:hover {
@@ -199,7 +217,6 @@ body {
 
 .app-content-container {
   min-width: 863px;
-  min-height: 100vh;
   padding: 32px 24px;
   background: #f3f3f9;
 }
@@ -214,6 +231,31 @@ body {
   justify-content: flex-end;
 }
 
+.flex-va-center {
+  align-items: center;
+}
+
 .pointer {
   cursor: pointer;
+}
+
+.ant-popover {
+  padding-right: 5px !important;
+
+  .ant-popover-content {
+    .ant-popover-arrow {
+      display: none;
+    }
+
+    .ant-popover-inner {
+      border-radius: 4px;
+      background: #E2E7F5;
+      border: 2px solid #D0D1FF;
+      box-shadow: 0 5px 16px -5px rgba(85, 81, 180, 0.3);
+
+      .ant-popover-inner-content {
+        padding: 0;
+      }
+    }
+  }
 }

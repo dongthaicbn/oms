@@ -36,7 +36,7 @@ const actionMenuItems = [
     icon: <OrderIcon />,
     textID: 'IDS_ORDER',
     loggedInRequired: true,
-    route: ''
+    route: '/order-record'
   },
   {
     id: 3,
@@ -81,6 +81,7 @@ const DrawerMenu = props => {
   const onActionMenuItemSelected = item => {
     props.actionSelectActionMenuItem(item.id);
     props.history.push(item.route);
+    closeMenu();
   };
   const changeLanguage = language => () => {
     props.actionChangeLang(language);
@@ -93,7 +94,10 @@ const DrawerMenu = props => {
         <>
           <div className="app-button login-info app-flex-container">
             <AvatarImage src={account?.user?.avatar} alt="" />
-            <Paragraph ellipsis={true}>{account?.user?.email || '_'}</Paragraph>
+            <Paragraph ellipsis={true}>
+              {`${account?.store?.company_name}` || '_'}
+              <div> {`${account?.user?.email}` || ''}</div>
+            </Paragraph>
           </div>
         </>
       );
@@ -199,7 +203,8 @@ export default connect(
   state => ({
     showMenu: state.system.showMenu,
     selectedActionMenuItemId: state.system.selectedActionMenuItemId,
-    locale: state.system.locale
+    locale: state.system.locale,
+    account: state.system.account
   }),
   { actionToggleMenu, actionSelectActionMenuItem, actionChangeLang }
 )(withRouter(DrawerMenu));

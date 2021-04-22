@@ -9,12 +9,14 @@ import { validateEmail } from '../../utils/helpers/helpers';
 import { notification } from 'antd';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-export default function ForgetPassword() {
+export default function ForgetPassword(props) {
   const [sendDone, setSendDone] = useState(false);
   const [values, setValues] = React.useState({
-    email: '',
+    email: ''
   });
   const [loading, setLoading] = React.useState(false);
+  const [loadingRedirect, setLoadingRedirect] = React.useState(false);
+
   const [error, setError] = React.useState(null);
   const onSubmit = async () => {
     if (valid(values.email)) {
@@ -29,14 +31,14 @@ export default function ForgetPassword() {
       }
     }
   };
-  const openNotificationError = (message) => {
+  const openNotificationError = message => {
     notification['error']({
       message: intl.formatMessage({ id: 'IDS_ERROR' }),
-      description: message,
+      description: message
     });
   };
   const intl = useIntl();
-  const handleResultForgetPassword = (data) => {
+  const handleResultForgetPassword = data => {
     let status = data && data.result && data.result.status;
     switch (status) {
       case 200:
@@ -50,18 +52,25 @@ export default function ForgetPassword() {
     }
     setLoading(false);
   };
-  const valid = (email) => {
+  const valid = email => {
     if (validateEmail(email)) {
       return null;
     } else {
       return intl.formatMessage({ id: 'EMAIL_NOT_RECOGNIZED' });
     }
   };
-  const handleChange = (prop) => (event) => {
+  const handleChange = prop => event => {
     if (error) {
       setError(null);
     }
     setValues({ ...values, [prop]: event.target.value });
+  };
+  const goToSignIn = () => {
+    setLoadingRedirect(true);
+    setTimeout(() => {
+      props.history.push('/');
+      setLoadingRedirect(false);
+    }, 5000);
   };
 
   return (
@@ -79,7 +88,7 @@ export default function ForgetPassword() {
         </div>
         <div className="input-field">
           <FormattedMessage id="IDS_PLACEHOLDER_EMAIL_OR_ID">
-            {(msg) => (
+            {msg => (
               <TextField
                 id="outlined-basic"
                 label={<FormattedMessage id="IDS_EMAIL_OR_ID" />}
@@ -113,8 +122,12 @@ export default function ForgetPassword() {
           <img src={icons.ic_done} alt="" />
         </div>
         {/* button signin */}
-        <div className="button">
-          <FormattedMessage id="IDS_GO_TO_SIGN_IN" />
+        <div className="button" onClick={goToSignIn}>
+          {loadingRedirect ? (
+            <CircularProgress style={{ color: '#fff' }} size={20} />
+          ) : (
+            <FormattedMessage id="IDS_GO_TO_SIGN_IN" />
+          )}
         </div>
         {/* question receive email */}
         <div className="wapper-inline">

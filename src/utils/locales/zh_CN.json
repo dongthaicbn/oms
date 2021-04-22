@@ -113,5 +113,30 @@
   "IDS_ORDER_ITEM_DESCRIPTION": "Order form will be updated instantly after you saved changes",
   "IDS_TOTAL_ITEM": "Total item",
   "IDS_SUBMIT_ORDER_DESCRIPTION": "You are not able to revise today form after submission",
-  "IDS_PLACEHOLDER_SEARCH_ITEMS": "Search (e.g. Fish)"
+  "IDS_PLEASE_FILL_OUT": "Please fill out",
+  "IDS_DONT_RECOGNISE_EMAIL": "Sorry, we don't recognise this email",
+  "IDS_FORMAT_NOT_CORRECT": "Contact no. format is not correct",
+  "IDS_COMPANY_SIZE": "Company Size",
+  "IDS_TOKEN_EXPIRES": "Token expires. Please try again!",
+  "IDS_AN_ERROR_OCCURRED": "An error occurred. Please try again!",
+  "IDS_PASSWORD_NOT_MATCH": "Password not match",
+  "IDS_PLACEHOLDER_SEARCH_ITEMS": "Search (e.g. Fish)",
+
+  "IDS_USE_COOKIE_OUR_WEBSITE": "We use Cookie on our website",
+  "IDS_USE_COOKIE_OUR_WEBSITE_DESCRIPTION": "This websites uses cookies to ensure you get the best experience on our website.",
+  "IDS_LEARN_MORE": "Learn More",
+  "IDS_GOT_IT": "Got it",
+
+  "IDS_MON": "Mon",
+  "IDS_TUE": "Tue",
+  "IDS_WED": "Wed",
+  "IDS_THU": "Thu",
+  "IDS_FRI": "Fri",
+  "IDS_SAT": "Sat",
+  "IDS_SUN": "Sun",
+  "IDS_TOTAL_COST_PER_PACKS": "Total : {currency}{cost} / packs",
+  "IDS_WEIGHT_PER_PACKS": "({weight}/pc)",
+  "IDS_EXPAND": "Expand",
+  "IDS_UPDATE": "Update",
+  "IDS_CHECK": "Check"
 }

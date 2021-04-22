@@ -27,7 +27,9 @@
 }
 .page-content {
   padding: 0 24px 0 12px;
-  margin-top: 40px;
+  margin-top: 23px;
+  height: calc(100vh - 218px);
+  overflow: auto;
   .item-group {
     display: flex;
     margin: 0 -6px;
@@ -70,6 +72,7 @@
     &.categories-group {
       flex-wrap: wrap;
       width: 100%;
+      margin: 0;
       .normal-item {
         background: #ffffff;
         border: 2px solid #d0d1ff;
@@ -93,9 +96,9 @@
   }
 }
 .page-footer {
-  position: sticky;
+  position: absolute;
   bottom: 0;
-  padding: 24px;
+  padding: 20px 0;
   background: #f3f3f9;
   .footer-btn {
     font-weight: bold;
@@ -118,6 +121,20 @@
     line-height: 30px;
     color: #6461b4;
   }
+  .header-fix {
+    position: sticky;
+    position: --webkit-sticky;
+    top: 0;
+    background-color: #f3f3f9;
+  }
+
+  .header-fill {
+    height: 10px;
+    background-color: #f0f2f5;
+    position: sticky;
+    position: --webkit-sticky;
+    top: 50px;
+  }
   .header-group {
     display: flex;
     font-weight: 500;
@@ -128,10 +145,12 @@
     color: #6461b4;
     background: #e5eafb;
     border-radius: 4px;
-    margin-bottom: 8px;
     padding: 8px 16px 8px 12px;
     &.vehicle-item {
       background: white;
+      padding: 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
       .value-item {
         background: #f7f7fd;
         border-radius: 10px;
@@ -148,11 +167,12 @@
       display: flex;
       flex-direction: column;
       color: #4f4e66;
+      font-weight: bold;
     }
     .vehicle-column {
-      width: 100px;
+      width: 110px;
       min-width: 100px;
-      max-width: 100px;
+      max-width: 110px;
       text-align: center;
     }
     .order-column {
@@ -162,14 +182,22 @@
       text-align: center;
     }
   }
-  .title-vehicle-item {
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    color: #ffffff;
-    background: #817eb8;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    padding: 10px 12px;
+  .wapper-title-vehicle {
+    position: sticky;
+    position: --webkit-sticky;
+    top: 58px;
+    background-color: #f3f3f9;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    .title-vehicle-item {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 24px;
+      color: #ffffff;
+      background: #817eb8;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      padding: 10px 12px;
+    }
   }
 }

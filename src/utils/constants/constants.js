@@ -1,5 +1,6 @@
 // common
 export const TOKEN = 'token';
+export const USE_COOKIE = 'use-cookie';
 export const ACCOUNT = 'ACCOUNT';
 export const LANG = 'language';
 
@@ -22,11 +23,14 @@ export const routes = {
   HOME: '/',
   ORDER_FORM: '/order-form',
   GOODS_CATEGORIES: '/goods-categories',
-  GOODS_CATEGORIES_DETAIL: '/goods-categories/:id',
   VEHICLE_SCHEDULE: '/vehicle-schedule',
   VEHICLE_SCHEDULE_DETAIL: '/vehicle-schedule/:id',
   HOLIDAY: '/holiday',
+  HOLIDAY_GOOD_CATEGORY: '/holiday/goods-category',
+  HOLIDAY_GOOD_CATEGORY_DETAIL: '/holiday/goods-category/:id',
   FAVOURITE: '/favourite',
+  CATEGORY: '/category',
+  GOODS_CATEGORY_ORDER_DETAIL: '/goods-categories/:id/order',
 };
 export const formItemLayout = {
   labelCol: { xs: { span: 24 }, sm: { span: 4 } },

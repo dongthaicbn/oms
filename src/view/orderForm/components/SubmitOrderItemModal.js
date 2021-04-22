@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { actionSnackBar } from 'view/system/systemAction';
 import { createOrder } from '../OrderFormActions';
+import IconLoading from 'components/icon-loading/IconLoading';
 
 const SubmitOrderItemModal = (props) => {
   const [loading, setLoading] = useState(false);
@@ -15,14 +16,20 @@ const SubmitOrderItemModal = (props) => {
     try {
       setLoading(true);
       const { data } = await createOrder({});
+      // props.actionSnackBar({
+      //   open: true,
+      //   type: 'success', //or success
+      //   message: 'Today Order form created',
+      // });
+    } catch (error) {
+    } finally {
+      handleClose();
+      setLoading(false);
       props.actionSnackBar({
         open: true,
         type: 'success', //or success
         message: 'Today Order form created',
       });
-    } catch (error) {
-    } finally {
-      setLoading(false);
     }
   };
   return (
@@ -57,7 +64,16 @@ const SubmitOrderItemModal = (props) => {
           <FormattedMessage id="IDS_SUBMIT_ORDER_DESCRIPTION" />
         </p>
         {loading ? (
-          <p>loading</p>
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              justifyContent: 'center',
+              padding: 32,
+            }}
+          >
+            <IconLoading />
+          </div>
         ) : (
           <div className="filter-footer" style={{ marginTop: 16 }}>
             <Button className="outline-btn" onClick={handleClose}>

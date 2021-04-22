@@ -46,10 +46,14 @@ export default function ResetPasswordForm(props) {
         case 200:
           break;
         case 400:
-          openNotificationError('Token expires. Please try again!');
+          openNotificationError(
+            intl.formatMessage({ id: 'IDS_TOKEN_EXPIRES' })
+          );
           break;
         default:
-          openNotificationError('An error occurred. Please try again!');
+          openNotificationError(
+            intl.formatMessage({ id: 'IDS_AN_ERROR_OCCURRED' })
+          );
       }
     }
   };
@@ -152,7 +156,9 @@ export default function ResetPasswordForm(props) {
             }
           />
           {errorInput ? (
-            <div className="text-error-reset-password">Password not match</div>
+            <div className="text-error-reset-password">
+              <FormattedMessage id="IDS_PASSWORD_NOT_MATCH" />
+            </div>
           ) : null}
         </FormControl>
       </div>
@@ -192,7 +198,9 @@ export default function ResetPasswordForm(props) {
             }
           />
           {errorInput ? (
-            <div className="text-error-reset-password">Password not match</div>
+            <div className="text-error-reset-password">
+              <FormattedMessage id="IDS_PASSWORD_NOT_MATCH" />
+            </div>
           ) : null}
         </FormControl>
       </div>

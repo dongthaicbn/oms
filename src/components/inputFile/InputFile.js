@@ -71,9 +71,9 @@ export const Dropzone = props => {
       return '0 Bytes';
     }
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const sizes = ['bytes', 'kb', 'mb', 'gb', 'tb'];
     const i = Math.floor(Math.log(size) / Math.log(k));
-    return parseFloat((size / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((size / Math.pow(k, i)).toFixed(2)) + '' + sizes[i];
   };
 
   return (
@@ -98,7 +98,7 @@ export const Dropzone = props => {
                         data.invalid ? 'file-error' : ''
                       }`}
                     >
-                      {trimmedString} ({fileSize(validFiles[0].size)})
+                      {trimmedString}({fileSize(validFiles[0].size)})
                     </span>
                   );
                 })}

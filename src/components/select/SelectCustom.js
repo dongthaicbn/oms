@@ -1,10 +1,20 @@
 import { memo } from 'react';
-import { List, ListItem, Popover, Typography } from '@material-ui/core';
+import { List, ListItem, Popover, Typography, Radio } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import DoneIcon from '@material-ui/icons/Done';
 import React from 'react';
 import { BootstrapInput } from './BootstrapInput';
 
+const CustomRadio = withStyles({
+  root: {
+    color: '#6461B4',
+    '&$checked': {
+      color: '#6461B4',
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
 const SelectCustom = (props) => {
   const {
     options,
@@ -15,6 +25,7 @@ const SelectCustom = (props) => {
     disabled,
     isView,
     iconRight,
+    value,
     ...rest
   } = props;
   const [open, setOpen] = React.useState(false);
@@ -24,34 +35,10 @@ const SelectCustom = (props) => {
   };
   const handleClose = () => setOpen(false);
   const isChecked = (one) => {
-    if (props.multiple) {
-      const { value } = props;
-      return value && value?.length > 0
-        ? value?.findIndex((v) => v === one?.id) !== -1
-        : one?.id === undefined;
+    if (multiple) {
+      return Boolean(value.find((v) => v.id === one.id));
     }
-    const { value } = props;
     return value === one?.id;
-  };
-  const getTextInput = () => {
-    if (props.multiple) {
-      const { value } = props;
-      const defaultValue = options.find((v) => v?.id === undefined);
-      return value && value.length > 0
-        ? value
-            .map((v) => {
-              const tmp = options.find((one) => one?.id === v);
-              if (tmp) {
-                return getOptionLabel(tmp);
-              }
-              return undefined;
-            })
-            .join(', ')
-        : defaultValue && getOptionLabel(defaultValue);
-    }
-    const { value } = props;
-    const tmp = options?.find((one) => one?.id === value);
-    return tmp && getOptionLabel(tmp);
   };
 
   return (
@@ -121,7 +108,7 @@ const SelectCustom = (props) => {
                 >
                   {getOptionLabel && getOptionLabel(one)}
                 </Typography>
-                <DoneIcon
+                {/* <DoneIcon
                   style={{
                     opacity: 0.6,
                     width: 18,
@@ -130,7 +117,8 @@ const SelectCustom = (props) => {
                     color: '#0070ef',
                     justifySelf: 'flex-end',
                   }}
-                />
+                /> */}
+                <CustomRadio checked={isChecked(one)} />
               </ListItem>
             ))}
         </List>

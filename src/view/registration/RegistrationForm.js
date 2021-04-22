@@ -133,26 +133,26 @@ export default function RegistrationForm(props) {
   };
   const textValid = (type, value) => {
     if (!value) {
-      return 'Please fill out';
+      return intl.formatMessage({ id: 'IDS_PLEASE_FILL_OUT' });
     }
     switch (type) {
       case 'email':
         if (validateEmail(value)) {
           return false;
         } else {
-          return "Sorry, we don't recognise this email";
+          return intl.formatMessage({ id: 'IDS_DONT_RECOGNISE_EMAIL' });
         }
       case 'contact_no':
         if (validatePhoneNumber(value)) {
           return false;
         } else {
-          return 'Contact no. format is not correct';
+          return intl.formatMessage({ id: 'IDS_FORMAT_NOT_CORRECT' });
         }
       case 'store_contact_no':
         if (validatePhoneNumber(value)) {
           return false;
         } else {
-          return 'Contact no. format is not correct';
+          return intl.formatMessage({ id: 'IDS_FORMAT_NOT_CORRECT' });
         }
       default:
         return '';
@@ -278,7 +278,7 @@ export default function RegistrationForm(props) {
               id="demo-simple-select-outlined-label"
               error={error.company_size}
             >
-              Company Size
+              <FormattedMessage id="IDS_COMPANY_SIZE" />
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"

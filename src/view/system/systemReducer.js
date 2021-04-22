@@ -13,8 +13,8 @@ const initialState = {
   snackBar: {
     open: false,
     type: '',
-    message: '',
-  },
+    message: ''
+  }
 };
 
 const system = (state = initialState, action) => {
@@ -24,8 +24,7 @@ const system = (state = initialState, action) => {
     case constants.FETCH_ACCOUNT:
       return {
         ...state,
-        account: action.payload,
-        role: action.payload.permission,
+        account: action.payload
       };
     case constants.TOGGLE_MENU:
       return { ...state, showMenu: action.payload };

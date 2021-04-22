@@ -47,10 +47,14 @@ export default function CreatePasswordForm(props) {
         case 200:
           break;
         case 400:
-          openNotificationError('Token expires. Please try again!');
+          openNotificationError(
+            intl.formatMessage({ id: 'IDS_TOKEN_EXPIRES' })
+          );
           break;
         default:
-          openNotificationError('An error occurred. Please try again!');
+          openNotificationError(
+            intl.formatMessage({ id: 'IDS_AN_ERROR_OCCURRED' })
+          );
       }
     }
   };

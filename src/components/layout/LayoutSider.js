@@ -34,7 +34,7 @@ const LayoutSider = (props) => {
       name: <FormattedMessage id="IDS_HOLIDAY" />,
       url: routes.HOLIDAY,
       icon: icons.ic_holiday,
-      isActive: location.pathname === routes.HOLIDAY,
+      isActive: location.pathname.includes(routes.HOLIDAY),
     },
     {
       name: <FormattedMessage id="IDS_FAVOURITE" />,
@@ -54,7 +54,12 @@ const LayoutSider = (props) => {
       <img
         src={icons.ic_menu}
         alt=""
-        style={{ marginTop: 12, cursor: 'pointer', borderRadius: 8 }}
+        style={{
+          marginTop: 12,
+          cursor: 'pointer',
+          borderRadius: 8,
+          marginBottom: 56,
+        }}
         onClick={openMenu}
       />
       {menuList.map((el, i) => {
@@ -65,7 +70,7 @@ const LayoutSider = (props) => {
             onClick={() => handleClickMenu(el)}
           >
             <img src={el.icon} alt="" />
-            <span>{el.name}</span>
+            <span className="name-tab">{el.name}</span>
           </div>
         );
       })}

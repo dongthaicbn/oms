@@ -60,7 +60,9 @@ export const validatePhoneNumber = (phonenumber) => {
 };
 
 export const formatDate = (date, format) => {
-  return moment(date).format(format);
+  if (date) {
+    return moment(date).format(format)
+  }
 };
 
 export const isLoggedIn = () => {
@@ -72,4 +74,8 @@ export const getLangCode = (lang) => {
   // zh_CN	Simplified Chinese
   const language = lang || localStorage.getItem(LANG) || 'en';
   return language === 'zh_CN' ? 3 : language === 'zh_TW' ? 2 : 1;
+};
+
+export const isFunction = (value) => {
+  return value && {}.toString.call(value) === '[object Function]';
 };

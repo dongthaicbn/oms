@@ -21,11 +21,12 @@ import { encrypt } from '../../utils/helpers/helpers';
 import { actionSnackBar } from '../../view/system/systemAction';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { validateEmail } from '../../utils/helpers/helpers';
 
 const Login = props => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [showError400, setshowError400] = React.useState(false);
+  const [showError, setshowError] = React.useState('');
   const [values, setValues] = React.useState({
     username: '',
     password: ''
@@ -35,8 +36,8 @@ const Login = props => {
   }, []);
 
   const handleChange = prop => event => {
-    if (showError400) {
-      setshowError400(false);
+    if (showError) {
+      setshowError('');
     }
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -50,8 +51,13 @@ const Login = props => {
     setValues({ ...values, password: '' });
   };
   const handleLogin = async () => {
+    if (!validateEmail(values.username)) {
+      setshowError(intl.formatMessage({ id: 'IDS_INVALID_EMAIL_OR_PASSWORD' }));
+      return;
+    }
     setLoading(true);
     const encryptText = encrypt(values.password);
+
     try {
       const { data } = await requestLogin(values.username, encryptText);
       handleResultLogin(data);
@@ -75,7 +81,9 @@ const Login = props => {
         localStorage.setItem(TOKEN, data && data.data.token);
         break;
       case 400:
-        setshowError400(true);
+        setshowError(
+          intl.formatMessage({ id: 'IDS_INVALID_EMAIL_OR_PASSWORD' })
+        );
         break;
       default:
         openNotificationError(data.result && data.result.message);
@@ -85,13 +93,7 @@ const Login = props => {
   const redirectionPage = event => {
     props.history.push(event.target.id);
   };
-  const openSnackBar = () => {
-    props.actionSnackBar({
-      open: true,
-      type: 'warning', //or success
-      message: 'This is a success message!'
-    });
-  };
+
   return (
     <ContainerLogin styleContainerForm={{ marginBottom: 124 }}>
       {/* logo */}
@@ -112,12 +114,8 @@ const Login = props => {
               fullWidth
               autoComplete="new-password"
               onChange={handleChange('username')}
-              helperText={
-                showError400
-                  ? intl.formatMessage({ id: 'IDS_INVALID_EMAIL_OR_PASSWORD' })
-                  : null
-              }
-              error={showError400}
+              helperText={showError}
+              error={showError ? true : false}
             />
           )}
         </FormattedMessage>
@@ -126,7 +124,7 @@ const Login = props => {
         <FormControl variant="outlined" fullWidth>
           <InputLabel
             htmlFor="outlined-adornment-password"
-            error={showError400}
+            error={showError ? true : false}
           >
             <FormattedMessage id="IDS_PASSWORD" />
           </InputLabel>
@@ -161,12 +159,10 @@ const Login = props => {
                 ) : null}
               </InputAdornment>
             }
-            error={showError400}
+            error={showError ? true : false}
           />
-          {showError400 ? (
-            <div className="text-error-login">
-              <FormattedMessage id="IDS_INVALID_EMAIL_OR_PASSWORD" />
-            </div>
+          {showError ? (
+            <div className="text-error-login">{showError}</div>
           ) : null}
         </FormControl>
       </div>

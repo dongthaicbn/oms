@@ -1,0 +1,141 @@
+.order-detail-container {
+
+  .content-container {
+    height: calc(100vh - 118px);
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+    min-width: 649px;
+
+    h3.ant-typography {
+      margin: 0;
+    }
+  }
+
+  .action-container {
+    background: #F3F3F9;
+    height: 118px;
+    padding: 24px;
+    position: sticky;
+    min-width: 649px;
+    bottom: 0;
+
+    .action-button {
+      width: 351px;
+    }
+
+    .back-button {
+      width: 226px;
+    }
+  }
+}
+
+.order-detail-header {
+  margin-bottom: 24px;
+}
+
+.order-detail-table {
+  justify-content: stretch;
+  flex-grow: 1;
+  min-width: 911px;
+
+  .app-table {
+    .table-header {
+      .header-row {
+        .column-cell {
+          div {
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    .table-body {
+      .group-item-expand-row {
+        .group-item-expand-cell {
+          img {
+            margin-right: 8px;
+          }
+          .ant-typography {
+            color: white;
+            font-size: 14px;
+            font-weight: 400;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.filter-button-container {
+  .ant-btn {
+    height: 58px;
+    width: 213px;
+    color: #6461B4;
+    transition: background .2s ease-in;
+
+    svg {
+      margin-right: 10px;
+    }
+  }
+
+  .ant-btn:hover {
+    background: #6461B4;
+    color: #FFFFFF;
+
+    svg {
+      margin-right: 10px;
+
+      path {
+        fill: #ffffff;
+      }
+    }
+  }
+}
+
+.order-detail-total-cost-label {
+  .ant-tag {
+    margin-right: 8px;
+    background: #F0F0FC;
+    color: #6461B4;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 8px;
+    border: none;
+    border-radius: 4px;
+  }
+}
+
+.order-detail-item-quantity-button {
+
+  .ant-btn {
+    width: 58px;
+    height: 55px;
+    padding: 0;
+    border-radius: 10px;
+    border: 2px solid #B5B6FF;
+    size: 18px;
+    font-weight: 700;
+    color: #4F4E66;
+  }
+
+  .ant-btn:focus {
+    border: 2px solid #B5B6FF;
+    color: #4F4E66;
+    background: none;
+  }
+
+  .ant-btn:hover {
+    border: 4px solid #B530BC;
+    color: #4F4E66;
+    background: none;
+  }
+
+  .active {
+    border: 4px solid #B530BC;
+    color: #4F4E66;
+    background: none;
+  }
+}

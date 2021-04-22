@@ -167,7 +167,7 @@
     display: flex;
     justify-content: flex-end;
 
-    align-items: center;
+    align-items: flex-end;
     height: 100%;
     padding: 16px;
     .container-language {
@@ -212,11 +212,24 @@
   display: flex;
   width: 100%;
   height: 100%;
-  min-height: 100vh;
+  // min-height: 100vh;
+  max-width: 1200px;
+  margin: auto;
   // min-width: 100vw;
   align-items: flex-start;
+  background: #f3f3f9;
+
   .layout-content {
     width: 100%;
+    // min-height: 100vh;
+    padding-left: 125px;
+    // overflow: hidden;
+    // max-height: 100%;
+  }
+  .layout-order-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 }
 .layout-sider {
@@ -227,8 +240,8 @@
   padding: 12px;
   display: flex;
   flex-direction: column;
-  position: sticky;
-  top: 12px;
+  position: fixed;
+  top: 0;
   height: calc(100vh - 24px);
   .menu-sider-item {
     display: flex;
@@ -240,14 +253,22 @@
     text-align: center;
     color: #bdbdd3;
     margin-top: 24px;
-    padding: 12px;
+    padding: 10px 0;
+    width: 77px;
     cursor: pointer;
+    .name-tab {
+      line-height: 12px;
+      font-style: normal;
+      font-weight: 900;
+      font-size: 10px;
+      font-family: NotoSansTCBlack;
+    }
     &:hover {
       color: white;
       background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
     }
     img {
-      max-width: 30px;
+      max-width: 20px;
       max-height: 30px;
       margin: 0 auto;
       margin-bottom: 4px;

@@ -14,6 +14,7 @@ import { getHomeInfo } from './HomeActions';
 import { isEmpty, getLangCode } from 'utils/helpers/helpers';
 import Header from '../../components/header-home/Header';
 import Footer from '../../components/footer-login/Footer';
+
 const Home = props => {
   const [data, setData] = useState({});
   const { locale } = props;
@@ -29,6 +30,7 @@ const Home = props => {
   };
   useEffect(() => {
     fetchData();
+    // fetchAccountDetail();
   }, []);
   return (
     <div className="wapper-home-page">

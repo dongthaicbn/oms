@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import './Layout.scss';
 import LayoutSider from './LayoutSider';
 
-const Layout = (props) => {
+const Layout = props => {
   return (
     <>
       <div className="layout-container">
