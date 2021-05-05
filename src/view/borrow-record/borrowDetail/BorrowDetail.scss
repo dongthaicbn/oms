@@ -1,0 +1,124 @@
+.borrow-detail-container {
+  .content-container {
+    height: calc(100vh - 118px);
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+    min-width: calc(100% - 150px);
+
+    h3.ant-typography {
+      margin: 0;
+    }
+  }
+
+  .action-container {
+    background: #f3f3f9;
+    height: 118px;
+    padding: 24px;
+    position: sticky;
+    min-width: 100%;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+
+    .action-button {
+      width: 351px;
+    }
+
+    .back-button {
+      width: 226px;
+      margin-right: 10px;
+    }
+  }
+}
+
+.borrow-detail-header {
+  margin-bottom: 24px;
+  min-width: 911px;
+  .reject-button-container {
+    width: 213px;
+    height: 70px;
+    margin-right: 5px;
+  }
+}
+
+.borrow-detail-table {
+  justify-content: stretch;
+  flex-grow: 1;
+  min-width: 911px;
+
+  .app-table {
+    .table-header {
+      .header-row {
+        .column-cell {
+          div {
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    .table-body {
+      .group-item-expand-row {
+        .group-item-expand-cell {
+          img {
+            margin-right: 8px;
+          }
+          .ant-typography {
+            color: white;
+            font-size: 14px;
+            font-weight: 400;
+            margin: 0;
+          }
+        }
+      }
+      .borrowed-qty {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 30px;
+        /* identical to box height, or 150% */
+
+        text-align: right;
+
+        /* Primary text */
+
+        color: #4f4e66;
+      }
+      .unit {
+        padding: 8px 12px;
+        background: #f7f7fd;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 27px;
+        /* identical to box height, or 150% */
+
+        text-align: right;
+
+        /* Thirdary Text */
+
+        color: #828282;
+      }
+    }
+  }
+}
+
+canvas {
+  background-color: #fff;
+  border: 1px solid #b5b6ff;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.image-sign {
+  background-color: #fff;
+  width: 250px;
+  height: auto;
+  border: 1px solid #b5b6ff;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.icon-loading {
+  margin-top: 20px;
+}

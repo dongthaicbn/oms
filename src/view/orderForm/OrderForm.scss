@@ -273,6 +273,9 @@
     border: 1px solid #d8d8d8;
     color: white;
   }
+  &.disabled {
+    cursor: not-allowed;
+  }
 }
 .modal-filter-content {
   .title-filter-text {
@@ -403,9 +406,14 @@
     margin-top: 40px;
     .outline-btn {
       width: calc(50% - 12px);
+      padding: 14px;
     }
     .primary-btn {
       width: calc(50% - 12px);
+      padding: 14px;
+      &.disabled {
+        cursor: not-allowed;
+      }
     }
   }
 }

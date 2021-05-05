@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, Modal } from 'antd';
-import { withStyles } from '@material-ui/core/styles';
-import { Radio, FormControlLabel } from '@material-ui/core';
+// import { withStyles } from '@material-ui/core/styles';
+// import { Radio, FormControlLabel } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import * as icons from 'assets';
 import { isEmpty } from 'utils/helpers/helpers';
 import SelectCustom from 'components/select/SelectCustom';
 import { BootstrapInput } from 'components/select/BootstrapInput';
 
-const CustomRadio = withStyles({
-  root: {
-    color: '#6461B4',
-    '&$checked': {
-      color: '#6461B4',
-    },
-  },
-  checked: {},
-})((props) => <Radio color="default" {...props} />);
+// const CustomRadio = withStyles({
+//   root: {
+//     color: '#6461B4',
+//     '&$checked': {
+//       color: '#6461B4',
+//     },
+//   },
+//   checked: {},
+// })((props) => <Radio color="default" {...props} />);
 
 const FilterModal = (props) => {
   const intl = useIntl();
-  const { suppliers, handleClose } = props;
+  const { suppliers, handleClose, handleFilter } = props;
   const convertArrayData = (data) => {
     return data.map((el) => ({
       ...el,
@@ -30,7 +30,8 @@ const FilterModal = (props) => {
     }));
   };
   const [itemsSelected, setSelected] = useState(
-    !isEmpty(suppliers) ? convertArrayData([suppliers[0]]) : []
+    // !isEmpty(suppliers) ? convertArrayData([suppliers[0]]) : []
+    []
   );
   const [subItemSelected, setSubItemSelected] = useState([]);
   const [filled, setFilled] = useState(null);
@@ -41,6 +42,7 @@ const FilterModal = (props) => {
     setFilled(null);
   };
   const handleSave = () => {
+    if (handleFilter) handleFilter();
     handleClose();
   };
   const startAdornment = (
@@ -64,7 +66,7 @@ const FilterModal = (props) => {
       visible={true}
       title={null}
       closeIcon={<img src={icons.ic_close} alt="" />}
-      onOk={handleClose}
+      onOk={handleSave}
       onCancel={handleClose}
       className="modal-container"
       width={476}
@@ -112,13 +114,6 @@ const FilterModal = (props) => {
           //   <Typography noWrap>{option.name}</Typography>
           // )}
         />
-        {/* <Input
-          size="large"
-          placeholder={intl.formatMessage({
-            id: 'IDS_PLACEHOLDER_SEARCH_ITEMS',
-          })}
-          prefix={startAdornment}
-        /> */}
 
         <div className="tag-group">
           {!isEmpty(subItemSelected) &&
@@ -139,7 +134,7 @@ const FilterModal = (props) => {
         </div>
 
         <p className="title-item">
-          <FormattedMessage id="IDS_SUPPLIER" />
+          <FormattedMessage id="IDS_CATEGORIES" />
         </p>
         <SelectCustom
           options={convertArrayData(suppliers || [])}
@@ -154,6 +149,7 @@ const FilterModal = (props) => {
             }
           }}
           value={itemsSelected}
+          valueString="Categories"
           iconRight={
             <img
               src={icons.ic_arrow_down}
@@ -178,40 +174,47 @@ const FilterModal = (props) => {
               </span>
             ))}
         </div>
-
         <p className="title-item">
-          <FormattedMessage id="IDS_STATUS" />
+          <FormattedMessage id="IDS_SUPPLIER" />
         </p>
-        {/* <Radio.Group className="status-group">
-          <CustomRadio value={0}>
-            <FormattedMessage id="IDS_FILLED" />
-          </CustomRadio>
-          <CustomRadio value={1}>
-            <FormattedMessage id="IDS_NOT_FILLED" />
-          </CustomRadio>
-        </Radio.Group> */}
-        <FormControlLabel
-          value={0}
-          control={<CustomRadio checked={filled === 0} />}
-          style={{ width: 'calc(50% - 8px)' }}
-          label={
-            <span className="status-group">
-              <FormattedMessage id="IDS_FILLED" />
-            </span>
+        <SelectCustom
+          options={convertArrayData(suppliers || [])}
+          multiple
+          getOptionLabel={(v) => v.name}
+          onSelectOption={(value) => {
+            const result = itemsSelected.find((v) => v.id === value.id);
+            if (result) {
+              setSelected(itemsSelected.filter((v) => v.id !== result.id));
+            } else {
+              setSelected([...itemsSelected, value]);
+            }
+          }}
+          value={itemsSelected}
+          valueString="Supplier"
+          iconRight={
+            <img
+              src={icons.ic_arrow_down}
+              alt=""
+              style={{ marginRight: 24, cursor: 'pointer' }}
+            />
           }
-          onClick={() => setFilled(filled === 0 ? null : 0)}
         />
-        <FormControlLabel
-          value={1}
-          control={<CustomRadio checked={filled === 1} />}
-          style={{ width: 'calc(50% - 8px)' }}
-          label={
-            <span className="status-group">
-              <FormattedMessage id="IDS_NOT_FILLED" />
-            </span>
-          }
-          onClick={() => setFilled(filled === 1 ? null : 1)}
-        />
+
+        <div className="tag-group">
+          {!isEmpty(itemsSelected) &&
+            itemsSelected.map((el, i) => (
+              <span className="tag-item" key={el.id}>
+                {el.supplier_name}{' '}
+                <img
+                  src={icons.ic_close}
+                  alt=""
+                  onClick={() => {
+                    setSelected(itemsSelected.filter((v) => v.id !== el.id));
+                  }}
+                />
+              </span>
+            ))}
+        </div>
         <div className="filter-footer">
           <Button className="outline-btn" onClick={handleReset}>
             <FormattedMessage id="IDS_RESET" />

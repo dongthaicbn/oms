@@ -18,7 +18,10 @@ export { default as ic_search_black } from './icons/ic_search_black.svg';
 export { default as ic_arrow_down } from './icons/ic_arrow_down.svg';
 export { default as ic_tick } from './icons/ic_tick.svg';
 export { default as ic_plus } from './icons/ic_plus.svg';
+export { default as ic_subtract } from './icons/ic_subtract.svg';
 export { default as ic_calendar } from './icons/ic_calendar.svg';
+export { default as ic_dropdown } from './icons/ic_dropdown.svg';
+export { default as ic_backspace } from './icons/ic_backspace.svg';
 
 // image
 export { default as img_placeholder } from './images/image_placeholder.png';

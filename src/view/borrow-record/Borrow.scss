@@ -1,0 +1,97 @@
+.borrowing-record-message-container {
+  width: 100%;
+  padding-top: 166px;
+  text-align: center;
+
+  .message {
+    color: #4f4e66;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+.page-content-borrow {
+  padding: 0 24px 0 12px;
+  height: calc(100vh - 248px);
+  overflow: auto;
+  .list-borrow-record-container {
+    .ant-list-item {
+      padding: 0 0 12px 0;
+    }
+
+    .ant-card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      .ant-card-body {
+        padding: 16px;
+        .borrow-date-type {
+          text-align: end;
+          .date {
+            display: block;
+            font-size: 18px;
+            color: #3056a3;
+            font-weight: bold;
+          }
+        }
+        .borrow-no {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .ant-typography {
+            font-size: 16px;
+            color: #4f4e66;
+            margin-bottom: 0;
+            .divider {
+              border-color: #4f4e66;
+            }
+          }
+          .button-comfirm {
+            width: 175px;
+            background: linear-gradient(
+              81.97deg,
+              #a69bea 1.05%,
+              #b530bc 84.79%
+            );
+            border: 1px solid #d8d8d8;
+            box-shadow: 0px 4px 20px rgba(100, 97, 180, 0.1),
+              0px 1px 8px rgba(100, 97, 180, 0.12);
+            border-radius: 10px;
+            height: 55px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+.page-footer {
+  position: absolute;
+  bottom: 0;
+  padding: 15px 0;
+  background: #f3f3f9;
+  width: calc(100% - 125px - 35px);
+
+  .lending-form-btn {
+    background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
+    border: 1px solid #d8d8d8;
+    box-sizing: border-box;
+    /* Button Shardow */
+
+    box-shadow: 0px 4px 20px rgba(100, 97, 180, 0.1),
+      0px 1px 8px rgba(100, 97, 180, 0.12);
+    border-radius: 10px;
+    width: 100%;
+    height: 70px;
+    color: #ffffff;
+    font-size: 20px;
+    margin-left: 10px;
+  }
+}
+.no-margin-bottom {
+  margin-bottom: 0;
+}
+@media only screen and (min-width: 1200px) {
+  .page-footer {
+    width: calc(1200px - 125px - 35px);
+  }
+}

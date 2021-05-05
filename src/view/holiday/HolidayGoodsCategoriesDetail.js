@@ -3,162 +3,31 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { Button } from 'antd';
+import { Button, Divider } from 'antd';
 import { actionToggleMenu } from '../system/systemAction';
-import { getScheduleDetail } from './HolidayActions';
+import { getDeliveryCategoriesDetail } from './HolidayActions';
 import { getLangCode, isEmpty } from 'utils/helpers/helpers';
 import Layout from 'components/layout/Layout';
 import { routes } from 'utils/constants/constants';
 import { Fragment } from 'react';
+import { ReactComponent as DropDownIcon } from 'assets/icons/ic_dropdown.svg';
 import * as icons from 'assets';
-const MockData = [
-  {
-    items: [
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-    ],
-    name: 'A AND C ENGINEERING (HK) LIMITED',
-  },
-  {
-    items: [
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-      {
-        code: 'FA0005',
-        image:
-          'https://toa-oms-dev.legato.co/storage/app/media/Request_A_Sample_1532534180500_0.jpg',
-        name: '竹蔗',
-        order_before_day: 2,
-        pack_weight: '(~1/PCS)',
-        vehicle_schdules: '1-3, 5-7',
-      },
-    ],
-    name: 'BC',
-  },
-];
+
 const HolidayGoodsCategoriesDetail = (props) => {
   const [dataDetail, setDataDetail] = useState({});
+  const [viewAll, setViewAll] = useState([]);
   const { id } = props.match.params;
   const paramsUrl = queryString.parse(props.location.search);
+
   const fetchData = async () => {
     try {
-      const { data } = await getScheduleDetail({
+      const { data } = await getDeliveryCategoriesDetail({
         lang_code: getLangCode(props.locale),
         is_favorite_category: paramsUrl.type === 'categories' ? 0 : 1,
         id,
+        shop_id: paramsUrl.shop_id,
+        start_date: paramsUrl.start_date,
+        end_date: paramsUrl.end_date,
       });
 
       if (!isEmpty(data.data)) setDataDetail(data.data);
@@ -171,10 +40,7 @@ const HolidayGoodsCategoriesDetail = (props) => {
     props.history.push(routes.HOLIDAY_GOOD_CATEGORY);
   };
 
-  // const { category, suppliers } = dataDetail;
-  const { category } = dataDetail;
-  const suppliers = MockData;
-  console.log('dataDetail', dataDetail);
+  const { category, suppliers } = dataDetail;
   return (
     <Layout>
       <div className="scrollable-container">
@@ -203,64 +69,131 @@ const HolidayGoodsCategoriesDetail = (props) => {
             <div className="header-fill" />
             <>
               {!isEmpty(suppliers) &&
-                suppliers.map((el, i) => (
-                  <Fragment key={i}>
-                    <div className="wapper-title-vehicle">
-                      <p className="title-vehicle-item">{el.name}</p>
-                    </div>
+                suppliers.map((el, index) => {
+                  const isViewAll = viewAll.includes(index);
+                  const { available_date, suspended_date } = el.date;
+                  return (
+                    <Fragment key={index}>
+                      <div className="wapper-title-vehicle">
+                        <p className="title-vehicle-item">{el.name}</p>{' '}
+                        <div className="header-item-info">
+                          <div className="red-text-info">
+                            <p>
+                              <FormattedMessage id="IDS_DELIVERY_SUSPENDED" />
+                            </p>
+                            {!isEmpty(suspended_date) && (
+                              <div style={{ display: 'flex' }}>
+                                {suspended_date.map((suspendEl, idx) => (
+                                  <span key={idx}>{suspendEl}</span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <Divider />
+                          {!isEmpty(available_date) && (
+                            <>
+                              <div className="content-block-info">
+                                <div className="content-wrap">
+                                  {available_date.map(
+                                    (availableEl, availableIndex) => {
+                                      if (!isViewAll && availableIndex > 5)
+                                        return null;
+                                      return (
+                                        <div
+                                          className="text-info-item"
+                                          key={availableIndex}
+                                        >
+                                          {availableEl.order_date}
+                                          <DropDownIcon
+                                            style={{
+                                              margin: '0 8px',
+                                              transform: 'rotate(-90deg)',
+                                            }}
+                                          />
+                                          {availableEl.delivery_date}
+                                        </div>
+                                      );
+                                    }
+                                  )}
+                                </div>
+                              </div>
+                              {available_date.length > 6 && (
+                                <>
+                                  <Divider />
+                                  <div className="action-text-info">
+                                    <span
+                                      onClick={() => {
+                                        setViewAll(
+                                          isViewAll
+                                            ? viewAll.filter((v) => v !== index)
+                                            : [...viewAll, index]
+                                        );
+                                      }}
+                                    >
+                                      {isViewAll ? 'Close' : 'View all'}
+                                      <DropDownIcon style={{ marginLeft: 8 }} />
+                                    </span>
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
 
-                    {!isEmpty(el.items) &&
-                      el.items.map((item, idx) => (
-                        <div className="header-group vehicle-item" key={idx}>
-                          <div
-                            className="items-column"
-                            style={{ flexDirection: 'row' }}
-                          >
-                            <img
-                              src={icons.img_pic}
-                              alt=""
-                              style={{
-                                maxWidth: 75,
-                                maxHeight: 60,
-                                marginRight: 12,
-                              }}
-                            />
-                            <div className="items-column">
-                              <span
+                      {!isEmpty(el.items) &&
+                        el.items.map((item, idx) => (
+                          <div className="header-group vehicle-item" key={idx}>
+                            <div
+                              className="items-column"
+                              style={{ flexDirection: 'row' }}
+                            >
+                              <img
+                                src={icons.img_pic}
+                                alt=""
                                 style={{
-                                  fontSize: 14,
-                                  lineHeight: '21px',
-                                  marginBottom: 2,
+                                  maxWidth: 75,
+                                  maxHeight: 60,
+                                  marginRight: 12,
                                 }}
-                              >
-                                {item.code}
+                              />
+                              <div className="items-column">
+                                <span
+                                  style={{
+                                    fontSize: 14,
+                                    lineHeight: '21px',
+                                    marginBottom: 2,
+                                  }}
+                                >
+                                  {item.code}
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: 18,
+                                    lineHeight: '27px',
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {item.name}&nbsp;
+                                  {item.pack_weight}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="vehicle-column">
+                              <span className="value-item">
+                                {item.vehicle_schdules}
                               </span>
-                              <span
-                                style={{
-                                  fontSize: 18,
-                                  lineHeight: '27px',
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {item.name}&nbsp;
-                                {item.pack_weight}
+                            </div>
+                            <div className="order-column">
+                              <span className="value-item">
+                                {item.order_before_day}
                               </span>
                             </div>
                           </div>
-                          <div className="vehicle-column">
-                            <span className="value-item">
-                              {item.vehicle_schdules}
-                            </span>
-                          </div>
-                          <div className="order-column">
-                            <span className="value-item">
-                              {item.order_before_day}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                  </Fragment>
-                ))}
+                        ))}
+                    </Fragment>
+                  );
+                })}
             </>
           </div>
 

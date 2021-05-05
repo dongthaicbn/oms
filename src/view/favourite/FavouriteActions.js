@@ -1,7 +1,7 @@
 import api from 'utils/helpers/api';
 
-export const getTodayList = (params) => {
-  return api({ method: 'get', url: '/api/v1/order/today/list', params });
+export const getFavouriteList = (params) => {
+  return api({ method: 'get', url: '/api/v1/favourite/list', params });
 };
 export const getTodayDetail = (params) => {
   return api({
@@ -21,7 +21,4 @@ export const saveOrder = (data) => {
 };
 export const createOrder = (data) => {
   return api({ method: 'post', url: '/api/v1/order/submit', data });
-};
-export const getAccountDetail = (params) => {
-  return api({ method: 'get', url: '/api/v1/account/detail', params });
 };

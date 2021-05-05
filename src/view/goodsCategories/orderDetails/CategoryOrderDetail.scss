@@ -1,11 +1,9 @@
 .order-detail-container {
-
   .content-container {
     height: calc(100vh - 118px);
     padding-bottom: 0;
     display: flex;
     flex-direction: column;
-    overflow-x: auto;
     min-width: 649px;
 
     h3.ant-typography {
@@ -14,7 +12,7 @@
   }
 
   .action-container {
-    background: #F3F3F9;
+    background: #f3f3f9;
     height: 118px;
     padding: 24px;
     position: sticky;
@@ -38,9 +36,11 @@
 .order-detail-table {
   justify-content: stretch;
   flex-grow: 1;
-  min-width: 911px;
+  overflow-x: auto;
 
   .app-table {
+    min-width: 900px;
+
     .table-header {
       .header-row {
         .column-cell {
@@ -52,6 +52,9 @@
     }
 
     .table-body {
+      .ant-affix {
+      }
+
       .group-item-expand-row {
         .group-item-expand-cell {
           img {
@@ -73,8 +76,8 @@
   .ant-btn {
     height: 58px;
     width: 213px;
-    color: #6461B4;
-    transition: background .2s ease-in;
+    color: #6461b4;
+    transition: background 0.2s ease-in;
 
     svg {
       margin-right: 10px;
@@ -82,8 +85,8 @@
   }
 
   .ant-btn:hover {
-    background: #6461B4;
-    color: #FFFFFF;
+    background: #6461b4;
+    color: #ffffff;
 
     svg {
       margin-right: 10px;
@@ -93,13 +96,25 @@
       }
     }
   }
+  &.active-btn {
+    .ant-btn {
+      background: linear-gradient(272.96deg, #28a9f1 0%, #65c8ff 100%);
+      border: 2px solid #d0cff4;
+      color: white;
+      svg {
+        path {
+          fill: #ffffff;
+        }
+      }
+    }
+  }
 }
 
 .order-detail-total-cost-label {
   .ant-tag {
     margin-right: 8px;
-    background: #F0F0FC;
-    color: #6461B4;
+    background: #f0f0fc;
+    color: #6461b4;
     font-size: 16px;
     font-weight: 700;
     padding: 12px 8px;
@@ -109,33 +124,32 @@
 }
 
 .order-detail-item-quantity-button {
-
   .ant-btn {
     width: 58px;
     height: 55px;
     padding: 0;
     border-radius: 10px;
-    border: 2px solid #B5B6FF;
+    border: 2px solid #b5b6ff;
     size: 18px;
     font-weight: 700;
-    color: #4F4E66;
+    color: #4f4e66;
   }
 
   .ant-btn:focus {
-    border: 2px solid #B5B6FF;
-    color: #4F4E66;
+    border: 2px solid #b5b6ff;
+    color: #4f4e66;
     background: none;
   }
 
   .ant-btn:hover {
-    border: 4px solid #B530BC;
-    color: #4F4E66;
+    border: 4px solid #b530bc;
+    color: #4f4e66;
     background: none;
   }
 
-  .active {
-    border: 4px solid #B530BC;
-    color: #4F4E66;
+  .ant-btn:focus {
+    border: 4px solid #b530bc;
+    color: #4f4e66;
     background: none;
   }
 }

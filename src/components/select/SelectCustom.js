@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { List, ListItem, Popover, Typography, Radio } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import DoneIcon from '@material-ui/icons/Done';
+// import DoneIcon from '@material-ui/icons/Done';
 import React from 'react';
 import { BootstrapInput } from './BootstrapInput';
 
@@ -26,6 +26,7 @@ const SelectCustom = (props) => {
     isView,
     iconRight,
     value,
+    valueString = 'Supplier',
     ...rest
   } = props;
   const [open, setOpen] = React.useState(false);
@@ -48,7 +49,7 @@ const SelectCustom = (props) => {
         readOnly
         focused={open}
         disabled={disabled}
-        value="Supplier"
+        value={valueString}
         innerRef={inputRef}
         isView={isView}
         endAdornment={isView ? null : <>{iconRight || <ArrowDropDownIcon />}</>}

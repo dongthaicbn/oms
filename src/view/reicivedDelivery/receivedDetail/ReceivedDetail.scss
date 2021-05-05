@@ -1,0 +1,119 @@
+.received-detail-container {
+  .layout-content {
+    height: 100%;
+
+    .app-content-container {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0;
+
+      .header-group {
+        margin-bottom: 16px;
+
+        .page-info-container {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          .page-title {
+            flex: 1;
+
+            h3.ant-typography {
+              font-size: 20px;
+              font-weight: 900;
+              color: #6461B4;
+              margin-bottom: 0;
+            }
+
+            .ant-typography {
+              font-size: 16px;
+              font-weight: 700;
+              color: #4F4F4F;
+              margin-bottom: 0;
+            }
+          }
+
+          .ant-btn {
+            width: 213px;
+            height: 70px;
+            padding: 0;
+          }
+        }
+      }
+
+      .body-group {
+        overflow-y: auto;
+        flex: 1;
+
+        .app-table {
+          .items-info-cell {
+            .info-group-container {
+              .text-label {
+                font-weight: 400;
+                color: #4F4E66;
+
+                .ant-divider {
+                  border-color: #4F4E66;
+                }
+              }
+
+              .text-info {
+                font-weight: 700;
+                font-size: 18px;
+              }
+            }
+          }
+
+          .quantity-button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            .ant-btn {
+              width: 102px;
+              height: 55px;
+              border: 2px solid #B5B6FF;
+              border-radius: 10px;
+              font-size: 18px;
+              padding: 0;
+            }
+          }
+
+          .actual-quantity {
+            .ant-btn {
+              color: #B5B6FF;
+              font-weight: 400;
+            }
+          }
+
+          .received-quantity {
+            .ant-btn {
+              color: #4F4E66;
+              font-weight: 700;
+            }
+          }
+        }
+      }
+
+      .footer-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 24px 0 24px 0;
+
+        .ant-btn {
+          height: 70px;
+          padding: 0;
+        }
+
+        .back-button {
+          width: 226px;
+        }
+
+        .received-delivery-button {
+          width: 334px;
+        }
+      }
+    }
+  }
+}

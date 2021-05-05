@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -35,9 +36,19 @@ const SnackBar = props => {
     props.actionSnackBar({
       open: false,
       type: '',
-      message: ''
+      message: '',
+      messageID: '',
+      messageParams: undefined,
     });
   };
+
+  const renderMessage = () => {
+    if (props.snackBar.messageID) {
+      return <FormattedMessage id={props.snackBar.messageID} values={props.snackBar.messageParams}/>
+    }
+    return props.snackBar.message;
+  }
+
   return (
     <div>
       <Snackbar
@@ -60,7 +71,7 @@ const SnackBar = props => {
               : classes.warning
           }
         >
-          {props.snackBar.message}
+          {renderMessage()}
         </Alert>
       </Snackbar>
     </div>

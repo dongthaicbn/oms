@@ -2,102 +2,57 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
 import * as icons from 'assets';
 import { Button } from 'antd';
 import './Holiday.scss';
 import { actionToggleMenu } from '../system/systemAction';
-import { getTodayList } from './HolidayActions';
+import { getDeliveryStoreList } from './HolidayActions';
 import { getLangCode, isEmpty } from 'utils/helpers/helpers';
 import { actionSnackBar } from 'view/system/systemAction';
 import Layout from 'components/layout/Layout';
-import { routes } from 'utils/constants/constants';
-import SelectCustom from 'components/select/SelectCustom';
-import { getAccountDetail } from './HolidayActions';
+import {
+  routes,
+  DATE_FORMAT,
+  DATE_FORMAT_URL,
+} from 'utils/constants/constants';
+import SelectCustomHoliday from './components/SelectCustomHoliday';
 import CalendarModal from './components/CalendarModal';
 
-const TYPE_MODAL = {
-  SUBMIT: 'submit',
-};
-const MockData = {
-  is_submitted_today: 1,
-  is_collect_available: 1,
-  supplier_forms: [
-    {
-      id: 1,
-      supplier_name: 'SupplierA',
-      total_order_item: 7,
-      total_cost: 'HK$2305',
-      last_update: '2021-01-01 16:07:06',
-      estimated_delivery: '2021-01-01 00:00:00',
-      pass_moq: true,
-      moq_message:
-        'Shipping upon ordering 10 more items from this supplier today',
-    },
-    {
-      id: 2,
-      supplier_name: 'SupplierA',
-      total_order_item: 7,
-      total_cost: 'HK$2305',
-      last_update: '2021-01-01 16:07:06',
-      estimated_delivery: '2021-01-01 00:00:00',
-      pass_moq: false,
-      moq_message:
-        'Shipping upon ordering 10 more items from this supplier today',
-    },
-    {
-      id: 3,
-      supplier_name: 'SupplierA',
-      total_order_item: 7,
-      total_cost: 'HK$2305',
-      last_update: '2021-01-01 16:07:06',
-      estimated_delivery: '2021-01-01 00:00:00',
-      pass_moq: true,
-      moq_message:
-        'Shipping upon ordering 10 more items from this supplier today',
-    },
-    {
-      id: 4,
-      supplier_name: 'SupplierA',
-      total_order_item: 7,
-      total_cost: 'HK$2305',
-      last_update: '2021-01-01 16:07:06',
-      estimated_delivery: '2021-01-01 00:00:00',
-      pass_moq: false,
-      moq_message:
-        'Shipping upon ordering 10 more items from this supplier today',
-    },
-  ],
-};
 const Holiday = (props) => {
+  const { account, locale } = props;
   const [data, setData] = useState({});
-  const [accountDetail, setAccountDetail] = useState({});
   const [isCalendar, setCalendar] = useState(false);
+  const [shop, setShop] = useState({});
+  const [dateRange, setDateRange] = useState({
+    startDate: moment(),
+    endDate: moment().add(1, 'days'),
+  });
   const fetchData = async () => {
     try {
-      const { data } = await getTodayList({
-        lang_code: getLangCode(props.locale),
+      const { data } = await getDeliveryStoreList({
+        lang_code: getLangCode(locale),
       });
-      if (!isEmpty(data.data)) setData(data.data);
+      if (!isEmpty(data.data) && data.result.status === 200) setData(data.data);
     } catch (error) {}
   };
-  const fetchAccountDetail = async () => {
-    try {
-      const { data } = await getAccountDetail({
-        lang_code: getLangCode(props.locale),
-      });
-      if (!isEmpty(data.data)) setAccountDetail(data.data);
-    } catch (error) {}
-  };
+
   useEffect(() => {
-    // fetchData();
-    setData(MockData);
-    // fetchAccountDetail(); //eslint-disable-next-line
+    fetchData(); //eslint-disable-next-line
   }, []);
+
   const openCheck = () => {
-    props.history.push(routes.HOLIDAY_GOOD_CATEGORY);
+    props.history.push(
+      `${routes.HOLIDAY_GOOD_CATEGORY}?shop_id=${
+        shop.id
+      }&start_date=${dateRange.startDate.format(
+        DATE_FORMAT_URL
+      )}&end_date=${dateRange.endDate.format(DATE_FORMAT_URL)}`
+    );
   };
   const closeModal = () => setCalendar(false);
-  const { store, user } = accountDetail;
+  const { store, user } = account;
+  const isDisabled = isEmpty(shop);
   return (
     <Layout>
       <div className="scrollable-container">
@@ -106,22 +61,22 @@ const Holiday = (props) => {
             <div className="left-header">
               <span className="title-info">
                 <FormattedMessage id="IDS_STORE" />
-                <span className="title-value">: HP003 Lake Silver</span>
-              </span>
-              <span className="title-info">
-                <FormattedMessage id="IDS_DEPT" />
-                <span className="title-value">: Management team</span>
+                {!isEmpty(store) && (
+                  <span className="title-value">: {store.company_name}</span>
+                )}
               </span>
             </div>
           </div>
           <div className="page-content">
             <div className="holiday-content">
-              <SelectCustom
-                options={[]}
-                multiple
-                getOptionLabel={(v) => v.name}
+              <SelectCustomHoliday
+                options={Object.values(data.stores || {})}
+                // multiple
+                value={shop}
+                getOptionLabel={(v) => v.supplier_name}
                 onSelectOption={(value) => {
-                  console.log('value', value);
+                  setShop(value);
+                  setCalendar(true);
                 }}
                 // value={itemsSelected}
                 iconRight={
@@ -142,19 +97,33 @@ const Holiday = (props) => {
                     alt=""
                     style={{ marginRight: 12, marginTop: -4 }}
                   />
-                  12/11/2020 (Thu) - 18/11/2020(Wed)
+                  {dateRange.startDate.format(DATE_FORMAT)} (
+                  {dateRange.startDate.format('ddd')}) -&nbsp;
+                  {dateRange.endDate.format(DATE_FORMAT)} (
+                  {dateRange.endDate.format('ddd')})
                 </span>
               </div>
             </div>
           </div>
           <div className="page-footer holiday-footer">
-            <Button className="footer-btn save-btn" onClick={openCheck}>
+            <Button
+              className={`footer-btn save-btn ${isDisabled ? 'disabled' : ''}`}
+              onClick={() => {
+                if (!isDisabled) openCheck();
+              }}
+            >
               <FormattedMessage id="IDS_CHECK" />
             </Button>
           </div>
         </div>
       </div>
-      {isCalendar && <CalendarModal handleClose={() => setCalendar(false)} />}
+      {isCalendar && (
+        <CalendarModal
+          handleClose={() => setCalendar(false)}
+          dateRange={dateRange}
+          updateDateRange={(dates) => setDateRange(dates)}
+        />
+      )}
     </Layout>
   );
 };
@@ -162,6 +131,7 @@ const Holiday = (props) => {
 export default connect(
   (state) => ({
     locale: state.system.locale,
+    account: state.system.account,
   }),
   { actionToggleMenu, actionSnackBar }
 )(withRouter(Holiday));

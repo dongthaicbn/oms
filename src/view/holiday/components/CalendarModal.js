@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, Modal } from 'antd';
-import { withStyles } from '@material-ui/core/styles';
-import { Radio } from '@material-ui/core';
 import * as icons from 'assets';
-import { isEmpty } from 'utils/helpers/helpers';
 import moment from 'moment';
 
 import CalendarCustom from 'components/calendarCustom/CalendarCustom';
+import { isEmpty } from 'utils/helpers/helpers';
 
 const CalendarModal = (props) => {
   const intl = useIntl();
-  const { handleClose } = props;
-  const [startDate, setStartDate] = useState(moment());
-  const [endDate, setEndDate] = useState(moment());
+  const { handleClose, dateRange, updateDateRange } = props;
+  const [startDate, setStartDate] = useState(dateRange.startDate);
+  const [endDate, setEndDate] = useState(dateRange.endDate);
 
-  const handleReset = () => {};
+  const handleReset = () => {
+    setStartDate(dateRange.startDate);
+    setEndDate(dateRange.endDate);
+  };
   const handleSave = () => {
+    updateDateRange({ startDate, endDate });
     handleClose();
   };
+  const isDisabled = isEmpty(endDate);
 
   return (
     <Modal
@@ -28,7 +31,7 @@ const CalendarModal = (props) => {
       onOk={handleClose}
       onCancel={handleClose}
       className="modal-container"
-      width={476}
+      width={496}
       footer={null}
     >
       <div className="modal-filter-content">
@@ -38,11 +41,16 @@ const CalendarModal = (props) => {
           setStartDate={setStartDate}
           setEndDate={setEndDate}
         />
-        <div className="filter-footer">
+        <div className="filter-footer" style={{ marginTop: 24 }}>
           <Button className="outline-btn" onClick={handleReset}>
             <FormattedMessage id="IDS_RESET" />
           </Button>
-          <Button className="primary-btn" onClick={handleSave}>
+          <Button
+            className={`primary-btn ${isDisabled ? 'disabled' : ''}`}
+            onClick={() => {
+              if (!isDisabled) handleSave();
+            }}
+          >
             <FormattedMessage id="IDS_DONE" />
           </Button>
         </div>

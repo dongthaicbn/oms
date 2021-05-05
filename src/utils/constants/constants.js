@@ -4,9 +4,15 @@ export const USE_COOKIE = 'use-cookie';
 export const ACCOUNT = 'ACCOUNT';
 export const LANG = 'language';
 
+export const STATUS_ALL = 'all';
 export const STATUS_PENDING = 'pending';
 export const STATUS_RECEIVED = 'received';
+export const STATUS_DAMAGED = 'damaged';
 
+export const TYPE_BORROW = 'borrow';
+export const TYPE_LEND = 'lend';
+export const DATE_FORMAT = 'DD/MM/YYYY';
+export const DATE_FORMAT_URL = 'YYYY-MM-DD';
 // routes
 export const routes = {
   ERROR: '/error',
@@ -29,12 +35,20 @@ export const routes = {
   HOLIDAY_GOOD_CATEGORY: '/holiday/goods-category',
   HOLIDAY_GOOD_CATEGORY_DETAIL: '/holiday/goods-category/:id',
   FAVOURITE: '/favourite',
+  BORROW_RECORD: '/borrowing-record',
+  BORROW_DETAIL: '/borrowing-record/:id',
+
   CATEGORY: '/category',
   GOODS_CATEGORY_ORDER_DETAIL: '/goods-categories/:id/order',
+  RECEIVED_DELIVERY: '/received-delivery',
+  RECEIVED_DELIVERY_DETAIL: '/received-delivery/:id',
+  LENDING_FORM: '/lending-form',
+
+  RECEIVED_DELIVERY_DETAIL: '/received-delivery/:orderNo',
 };
 export const formItemLayout = {
   labelCol: { xs: { span: 24 }, sm: { span: 4 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 24 } },
+  wrapperCol: { xs: { span: 24 }, sm: { span: 24 } }
 };
 export const NUMBER_REGEX = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
 export const URL_REGEX = /^((ftp|http|https):\/\/).*$/;

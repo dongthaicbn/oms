@@ -3,21 +3,26 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Button } from 'antd';
-
+import { parse as parseQueryString } from 'query-string';
 import './Holiday.scss';
 import { actionToggleMenu } from '../system/systemAction';
-import { getOrderCategories } from './HolidayActions';
+import { getDeliveryCategories } from './HolidayActions';
 import { getLangCode, isEmpty } from 'utils/helpers/helpers';
 import Layout from 'components/layout/Layout';
 import { routes } from 'utils/constants/constants';
 
 const HolidayGoodsCategories = (props) => {
+  const { locale } = props;
+  const { shop_id, start_date, end_date } = parseQueryString(
+    props.location.search,
+    { parseBooleans: true }
+  );
   const [data, setData] = useState({});
 
   const fetchData = async () => {
     try {
-      const { data } = await getOrderCategories({
-        lang_code: getLangCode(props.locale),
+      const { data } = await getDeliveryCategories({
+        lang_code: getLangCode(locale),
       });
       if (!isEmpty(data.data)) setData(data.data);
     } catch (error) {}
@@ -30,7 +35,7 @@ const HolidayGoodsCategories = (props) => {
       `${routes.HOLIDAY_GOOD_CATEGORY_DETAIL.replace(
         ':id',
         item.id
-      )}?type=${type}`
+      )}?type=${type}&shop_id=${shop_id}&start_date=${start_date}&end_date=${end_date}`
     );
   };
   const handleBack = () => {

@@ -1,56 +1,57 @@
 import { Typography } from '@material-ui/core';
 import moment from 'moment';
 import { useState } from 'react';
-import { isEmpty } from 'utils/helpers/helpers';
+import { getMonth, isEmpty } from 'utils/helpers/helpers';
+import { ReactComponent as ArrowDownIcon } from 'assets/icons/ic_arrow_down.svg';
+import { FormattedMessage } from 'react-intl';
 
 const GREY_400 = '#BDBDBD';
-const WHITE = '#ffffff';
 const DATE_FORMAT_BACK_END = 'DD-MM-YYYY';
-
-const cellStyle = {
-  height: 52,
-  width: 52,
-  padding: 0,
-};
+const TYPE_SINGLE = 'single';
+const cellStyle = { height: 64, width: 64, padding: 0 };
 const headerStyle = {
   padding: 8,
   fontWeight: 600,
-  fontSize: 12,
-  lineHeight: '14px',
+  fontSize: 24,
+  lineHeight: '36px',
   textAlign: 'center',
   color: '#1A202C',
-  background: '#EDF2F7',
 };
 
 const CalendarCustom = (props) => {
-  const { startDate, endDate, setStartDate, setEndDate } = props;
+  const { startDate, endDate, setStartDate, setEndDate, type } = props;
   const [monthStart, setMonthStart] = useState(0);
-  const [hoverDate, setHoverDate] = useState(null);
+  // const [hoverDate, setHoverDate] = useState(null);
 
   const isOutsideRange = (date) => {
     return date.isBefore(moment(), 'days');
   };
   const handleSelectDate = (day) => {
-    if (startDate && endDate && !startDate.isSame(endDate, 'days')) {
+    if (type === TYPE_SINGLE) {
       setStartDate(day);
       setEndDate(null);
-    } else if (startDate) {
-      if (day.isBefore(startDate, 'days')) {
-        setEndDate(startDate);
-        setStartDate(day);
-      } else {
-        setEndDate(day);
-      }
-    } else if (endDate) {
-      if (day.isBefore(endDate, 'days')) {
-        setStartDate(day);
-      } else {
-        setStartDate(startDate);
-        setEndDate(day);
-      }
     } else {
-      setStartDate(day);
-      // setEndDate(day);
+      if (startDate && endDate && !startDate.isSame(endDate, 'days')) {
+        setStartDate(day);
+        setEndDate(null);
+      } else if (startDate) {
+        if (day.isBefore(startDate, 'days')) {
+          setEndDate(startDate);
+          setStartDate(day);
+        } else {
+          setEndDate(day);
+        }
+      } else if (endDate) {
+        if (day.isBefore(endDate, 'days')) {
+          setStartDate(day);
+        } else {
+          setStartDate(startDate);
+          setEndDate(day);
+        }
+      } else {
+        setStartDate(day);
+        // setEndDate(day);
+      }
     }
   };
   const getColorDay = (day, isEdge) => {
@@ -89,7 +90,7 @@ const CalendarCustom = (props) => {
         endDate &&
         day.isSameOrBefore(endDate, 'days') &&
         day.isSameOrAfter(startDate, 'days');
-      let cellBG = WHITE;
+      let cellBG = '#F7F9FF';
       let cellClass = '';
       if (isSelected) cellBG = '#F0F0FC';
       if (isEdge)
@@ -110,16 +111,26 @@ const CalendarCustom = (props) => {
           key={`day_${day.format(DATE_FORMAT_BACK_END)}`}
           style={{
             ...cellStyle,
-            background: cellBG,
+            background: isEdge ? '#F0F0FC' : cellBG,
             color: isEdge ? 'white' : '#1A202C',
             borderTopLeftRadius:
-              startDate && day.isSame(startDate, 'days') ? 8 : 0,
+              (startDate && day.isSame(startDate, 'days')) ||
+              type === TYPE_SINGLE
+                ? 64
+                : 0,
             borderBottomLeftRadius:
-              startDate && day.isSame(startDate, 'days') ? 8 : 0,
+              (startDate && day.isSame(startDate, 'days')) ||
+              type === TYPE_SINGLE
+                ? 64
+                : 0,
             borderTopRightRadius:
-              endDate && day.isSame(endDate, 'days') ? 8 : 0,
+              (endDate && day.isSame(endDate, 'days')) || type === TYPE_SINGLE
+                ? 64
+                : 0,
             borderBottomRightRadius:
-              endDate && day.isSame(endDate, 'days') ? 8 : 0,
+              (endDate && day.isSame(endDate, 'days')) || type === TYPE_SINGLE
+                ? 64
+                : 0,
             cursor: isOutsideRange(day) ? 'not-allowed' : 'pointer',
           }}
           onClick={() => {
@@ -134,10 +145,15 @@ const CalendarCustom = (props) => {
             className={cellClass}
             style={{
               ...cellStyle,
-              height: '100%',
               padding: 4,
               justifyContent: 'center',
               flexDirection: 'column',
+              background: cellBG,
+              borderRadius:
+                (startDate && day.isSame(startDate, 'days')) ||
+                (endDate && day.isSame(endDate, 'days'))
+                  ? '50%'
+                  : 0,
             }}
           >
             <Typography
@@ -145,6 +161,8 @@ const CalendarCustom = (props) => {
                 width: '100%',
                 textAlign: 'center',
                 color: getColorDay(day, isEdge),
+                fontSize: 24,
+                lineHeight: '36px',
               }}
               variant="body2"
             >
@@ -183,7 +201,7 @@ const CalendarCustom = (props) => {
     });
     return (
       <table
-        style={{ borderCollapse: 'collapse', width: '100%' }}
+        style={{ borderCollapse: 'collapse', width: 448 }}
         draggable={false}
       >
         <thead>
@@ -196,42 +214,38 @@ const CalendarCustom = (props) => {
                   alignItems: 'center',
                 }}
               >
-                {/* {iMonth === 0 && monthStart !== 0 && (
-                  <IconArrowDownToggle
-                    style={{
-                      marginLeft: 12,
-                      transform: 'rotate(90deg)',
-                      cursor: monthStart === 0 ? 'not-allowed' : 'pointer',
-                    }}
-                    onClick={() =>
-                      setMonthStart(
-                        monthStart > 0 ? monthStart - 1 : monthStart
-                      )
-                    }
-                  />
-                )} */}
+                <ArrowDownIcon
+                  style={{
+                    transform: 'rotate(90deg)',
+                    cursor: monthStart === 0 ? 'not-allowed' : 'pointer',
+                  }}
+                  className="active-icon"
+                  onClick={() =>
+                    setMonthStart(monthStart > 0 ? monthStart - 1 : monthStart)
+                  }
+                />
+
                 <Typography
                   variant="subtitle1"
                   style={{
                     userSelect: 'none',
-                    fontSize: 16,
-                    lineHeight: '19px',
+                    fontSize: 24,
+                    lineHeight: '36px',
+                    fontWeight: 600,
+                    color: '#6461B4',
                     width: '100%',
                     textAlign: 'center',
                   }}
                 >
-                  Tháng {m.format('MM')}, {m.format('YYYY')}
+                  <FormattedMessage id={getMonth(m.format('MM'))} />{' '}
+                  {m.format('YYYY')}
                 </Typography>
-                {/* {iMonth === 1 && (
-                  <IconArrowDownToggle
-                    style={{
-                      marginRight: 12,
-                      transform: 'rotate(-90deg)',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => setMonthStart(monthStart + 1)}
-                  />
-                )} */}
+
+                <ArrowDownIcon
+                  style={{ transform: 'rotate(-90deg)' }}
+                  className="active-icon"
+                  onClick={() => setMonthStart(monthStart + 1)}
+                />
               </div>
             </td>
           </tr>
@@ -263,6 +277,7 @@ const CalendarCustom = (props) => {
         width: 'calc(100% + 24px)',
         justifyContent: 'space-between',
         margin: '0 -12px',
+        marginTop: 36,
       }}
     >
       {[monthStart].map((v, index) => {

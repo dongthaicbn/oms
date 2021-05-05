@@ -9,7 +9,7 @@ import ResetPassword from './view/resetPassword/ResetPassword';
 import CreatePassword from './view/createPassword/CreatePassword';
 import Registration from './view/registration/Registration';
 import OrderForm from 'view/orderForm/OrderForm';
-import GoodsCategories from 'view/orderForm/GoodsCategories';
+import GoodsCategories from 'view/goodsCategories/GoodsCategories';
 import CategoryOrderDetail from 'view/goodsCategories/orderDetails/CategoryOrderDetail';
 import VehicleSchedule from 'view/vehicleSchedule/VehicleSchedule';
 import VehicleScheduleDetail from 'view/vehicleSchedule/VehicleScheduleDetail';
@@ -19,10 +19,16 @@ import Holiday from 'view/holiday/Holiday';
 import HolidayGoodsCategories from 'view/holiday/HolidayGoodsCategories';
 import HolidayGoodsCategoriesDetail from 'view/holiday/HolidayGoodsCategoriesDetail';
 import Favourite from 'view/favourite/Favourite';
+import Borrow from 'view/borrow-record/Borrow';
+import BorrowDetail from 'view/borrow-record/borrowDetail/BorrowDetail';
+import ReceivedDelivery from 'view/reicivedDelivery/ReceivedDelivery';
+import ReceivedDetail from 'view/reicivedDelivery/receivedDetail/ReceivedDetail';
 // import HolidayGoodsCategories from 'view/holiday/HolidayGoodsCategories';
 // import HolidayGoodsCategoriesDetail from 'view/holiday/HolidayGoodsCategoriesDetail';
+import LendingForm from 'view/lending-form/LendingForm';
 
-const Routes = (props) => {
+
+const Routes = props => {
   return (
     <Switch>
       <Route exact path={routes.HOME} component={Home} />
@@ -59,6 +65,12 @@ const Routes = (props) => {
         component={HolidayGoodsCategoriesDetail}
       />
       <Route exact path={routes.FAVOURITE} component={Favourite} />
+      <Route exact path={routes.BORROW_RECORD} component={Borrow} />
+      <Route exact path={routes.BORROW_DETAIL} component={BorrowDetail} />
+
+      <Route exact path={routes.RECEIVED_DELIVERY} component={ReceivedDelivery} />
+      <Route exact path={routes.LENDING_FORM} component={LendingForm} />
+      <Route exact path={routes.RECEIVED_DELIVERY_DETAIL} component={ReceivedDetail} />
       <Route render={() => <Redirect to="/" />} />
     </Switch>
   );

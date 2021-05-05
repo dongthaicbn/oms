@@ -10,6 +10,7 @@ import CookieApp from 'components/cookie/CookieApp';
 import { getAccountDetail } from './view/home/HomeActions';
 import { isEmpty, getLangCode } from './utils/helpers/helpers';
 import { updateAccountInfo } from './view/system/systemAction';
+import { TOKEN } from 'utils/constants/constants';
 
 const App = (props) => {
   const fetchAccountDetail = async () => {
@@ -17,15 +18,14 @@ const App = (props) => {
       const { data } = await getAccountDetail({
         lang_code: getLangCode(props.locale),
       });
-      console.log(data);
       if (!isEmpty(data.data)) {
         props.updateAccountInfo(data.data);
       }
     } catch (error) {}
   };
   useEffect(() => {
-    fetchAccountDetail();
-  });
+    if (localStorage.getItem(TOKEN)) fetchAccountDetail(); // eslint-disable-next-line
+  }, []);
   return (
     <Layout className="app-container">
       <Routes />

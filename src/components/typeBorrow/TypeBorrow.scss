@@ -1,0 +1,39 @@
+.type-borrow-container {
+  .ant-tag {
+    border: none;
+    border-radius: 6px;
+  }
+
+  .type-borrow {
+    width: 116px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    padding: 4px 8px;
+    margin: 0;
+  }
+
+  .type-borrow:first-letter {
+    text-transform: uppercase;
+  }
+
+  .borrow {
+    color: #ff884b;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 136, 75, 0.15),
+        rgba(255, 136, 75, 0.15)
+      ),
+      #ffffff;
+  }
+
+  .lend {
+    color: #29abe2;
+    background: linear-gradient(
+        0deg,
+        rgba(41, 171, 226, 0.15),
+        rgba(41, 171, 226, 0.15)
+      ),
+      #ffffff;
+  }
+}

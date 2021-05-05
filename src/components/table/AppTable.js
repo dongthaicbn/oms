@@ -31,10 +31,12 @@ const AppTable = (props) => {
     let hasRenderGroup = false;
     columns.forEach((column) => {
       let tableColumn = Object.assign({}, column);
-      tableColumns.push({
-        ...tableColumn,
-        flex: column.width || column.colSpan || 1
-      });
+      if (column.width) {
+        tableColumn['width'] = column.width;
+      } else {
+        tableColumn['flex'] = column.colSpan || 1;
+      }
+      tableColumns.push(tableColumn);
       hasRenderGroup = column.renderGroup;
     });
     groupItemDisabled = !groupKey && !hasRenderGroup;
@@ -76,7 +78,7 @@ const AppTable = (props) => {
           key={`col-${rowIndex}-${colIndex}`}
           className={className}
           flex={column.flex}
-          style={{ justifyContent: column.align }}
+          style={{ width: column.width, justifyContent: column.align }}
         >
           {contentRender(item, column, colIndex)}
         </Col>

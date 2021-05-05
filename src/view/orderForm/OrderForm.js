@@ -13,92 +13,37 @@ import Layout from 'components/layout/Layout';
 import OrderItem from './components/OrderItem';
 import { routes } from 'utils/constants/constants';
 import SubmitOrderItemModal from './components/SubmitOrderItemModal';
-import { getAccountDetail } from './OrderFormActions';
 
 const TYPE_MODAL = {
   SUBMIT: 'submit',
 };
-const MockData = {
-  is_submitted_today: 1,
-  is_collect_available: 1,
-  supplier_forms: [
-    {
-      id: 1,
-      supplier_name: 'SupplierA',
-      total_order_item: 7,
-      total_cost: 'HK$2305',
-      last_update: '2021-01-01 16:07:06',
-      estimated_delivery: '2021-01-01 00:00:00',
-      pass_moq: true,
-      moq_message:
-        'Shipping upon ordering 10 more items from this supplier today',
-    },
-    {
-      id: 2,
-      supplier_name: 'SupplierA',
-      total_order_item: 7,
-      total_cost: 'HK$2305',
-      last_update: '2021-01-01 16:07:06',
-      estimated_delivery: '2021-01-01 00:00:00',
-      pass_moq: false,
-      moq_message:
-        'Shipping upon ordering 10 more items from this supplier today',
-    },
-    {
-      id: 3,
-      supplier_name: 'SupplierA',
-      total_order_item: 7,
-      total_cost: 'HK$2305',
-      last_update: '2021-01-01 16:07:06',
-      estimated_delivery: '2021-01-01 00:00:00',
-      pass_moq: true,
-      moq_message:
-        'Shipping upon ordering 10 more items from this supplier today',
-    },
-    {
-      id: 4,
-      supplier_name: 'SupplierA',
-      total_order_item: 7,
-      total_cost: 'HK$2305',
-      last_update: '2021-01-01 16:07:06',
-      estimated_delivery: '2021-01-01 00:00:00',
-      pass_moq: false,
-      moq_message:
-        'Shipping upon ordering 10 more items from this supplier today',
-    },
-  ],
-};
 const OrderForm = (props) => {
+  const { account, locale } = props;
   const [data, setData] = useState({});
-  const [accountDetail, setAccountDetail] = useState({});
   const [typeModal, setTypeModal] = useState(null);
 
   const fetchData = async () => {
     try {
       const { data } = await getTodayList({
-        lang_code: getLangCode(props.locale),
+        lang_code: getLangCode(locale),
       });
       if (!isEmpty(data.data)) setData(data.data);
     } catch (error) {}
   };
-  const fetchAccountDetail = async () => {
-    try {
-      const { data } = await getAccountDetail({
-        lang_code: getLangCode(props.locale),
-      });
-      if (!isEmpty(data.data)) setAccountDetail(data.data);
-    } catch (error) {}
-  };
+
   useEffect(() => {
-    // fetchData();
-    setData(MockData);
-    // fetchAccountDetail(); //eslint-disable-next-line
+    fetchData(); //eslint-disable-next-line
   }, []);
   const openEditOrder = () => {
     props.history.push(routes.GOODS_CATEGORIES);
   };
   const closeModal = () => setTypeModal(null);
-  const { store, user } = accountDetail;
+  const { store } = account;
+  // const { store, user } = account;
+  // console.log('data', data);
+  const supplier = !isEmpty(data.supplier_forms)
+    ? data.supplier_forms.filter((v) => v)
+    : [];
   return (
     <Layout>
       <div className="scrollable-container">
@@ -111,37 +56,24 @@ const OrderForm = (props) => {
                     <FormattedMessage id="IDS_STORE" />
                     <span className="title-value">: {store.company_name}</span>
                   </span>
-                  {/* <span className="title-info">
-                <FormattedMessage id="IDS_DEPT" />
-                <span className="title-value">: {store.company_address}</span>
-              </span> */}
                 </div>
               )}
               <span className="title-header">
                 <FormattedMessage id="IDS_TODAY_ORDER_FORM" />
               </span>
             </div>
-            <Button
-              className="header-btn"
-              onClick={() => {
-                if (!isEmpty(data.supplier_forms)) setData({});
-                else setData(MockData);
-              }}
-            >
-              {!isEmpty(data.supplier_forms) ? 'Empty data' : 'Show data'}
-            </Button>
             <Button className="header-btn" onClick={openEditOrder}>
               <FormattedMessage id="IDS_EDIT_ORDER_ITEMS" />
             </Button>
           </div>
           {/* <div className="page-order-content"> */}
-          {isEmpty(data.supplier_forms) ? (
+          {isEmpty(supplier) ? (
             <div className="empty-text">
               <FormattedMessage id="IDS_NO_ORDER_ITEMS" />
             </div>
           ) : (
             <>
-              {data.supplier_forms.map((el, i) => (
+              {supplier.map((el, i) => (
                 <OrderItem item={el} key={i} />
               ))}
               <Box
@@ -181,27 +113,9 @@ const OrderForm = (props) => {
               <FormattedMessage id="IDS_COLLECT" />
             </Button>
             <Button
-              className={`item-btn ${
-                !isEmpty(data.supplier_forms) ? 'active-btn' : ''
-              }`}
+              className={`item-btn ${!isEmpty(supplier) ? 'active-btn' : ''}`}
               onClick={() => {
-                props.actionSnackBar({
-                  open: true,
-                  type: 'error', //or success
-                  message:
-                    'The order contains categories(s) that not satisfied for ordering requirement, please check it again',
-                });
-              }}
-            >
-              (2.1.2.2 MOQ not pass)
-            </Button>
-            <Button
-              className={`item-btn ${
-                !isEmpty(data.supplier_forms) ? 'active-btn' : ''
-              }`}
-              onClick={() => {
-                if (!isEmpty(data.supplier_forms))
-                  setTypeModal(TYPE_MODAL.SUBMIT);
+                if (!isEmpty(supplier)) setTypeModal(TYPE_MODAL.SUBMIT);
               }}
             >
               <FormattedMessage id="IDS_SUBMIT_TODAY_ORDER_FORM" />
@@ -209,7 +123,10 @@ const OrderForm = (props) => {
           </div>
           {/* </div> */}
           {typeModal === TYPE_MODAL.SUBMIT && (
-            <SubmitOrderItemModal handleClose={closeModal} />
+            <SubmitOrderItemModal
+              handleClose={closeModal}
+              fetchData={fetchData}
+            />
           )}
         </div>
       </div>
@@ -220,6 +137,7 @@ const OrderForm = (props) => {
 export default connect(
   (state) => ({
     locale: state.system.locale,
+    account: state.system.account,
   }),
   { actionToggleMenu, actionSnackBar }
 )(withRouter(OrderForm));

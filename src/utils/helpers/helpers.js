@@ -61,7 +61,7 @@ export const validatePhoneNumber = (phonenumber) => {
 
 export const formatDate = (date, format) => {
   if (date) {
-    return moment(date).format(format)
+    return moment(date).format(format);
   }
 };
 
@@ -78,4 +78,23 @@ export const getLangCode = (lang) => {
 
 export const isFunction = (value) => {
   return value && {}.toString.call(value) === '[object Function]';
+};
+
+export const getMonth = (m) => {
+  if (isEmpty(m)) return '';
+  const months = [
+    { value: '01', name: 'IDS_JANUARY' },
+    { value: '02', name: 'IDS_FEBRUARY' },
+    { value: '03', name: 'IDS_MARCH' },
+    { value: '04', name: 'IDS_APRIL' },
+    { value: '05', name: 'IDS_MAY' },
+    { value: '06', name: 'IDS_JUNE' },
+    { value: '07', name: 'IDS_JULY' },
+    { value: '08', name: 'IDS_AUGUST' },
+    { value: '09', name: 'IDS_SEPTEMBER' },
+    { value: '10', name: 'IDS_OCTOBER' },
+    { value: '11', name: 'IDS_NOVEMBER' },
+    { value: '12', name: 'IDS_DECEMBER' },
+  ];
+  return months.find((v) => v.value === m).name;
 };

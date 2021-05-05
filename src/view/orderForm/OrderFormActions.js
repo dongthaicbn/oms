@@ -19,9 +19,6 @@ export const getOrderCategoriesDetail = (params) => {
 export const saveOrder = (data) => {
   return api({ method: 'post', url: '/api/v1/order/save', data });
 };
-export const createOrder = (data) => {
+export const submitOrder = (data) => {
   return api({ method: 'post', url: '/api/v1/order/submit', data });
-};
-export const getAccountDetail = (params) => {
-  return api({ method: 'get', url: '/api/v1/account/detail', params });
 };

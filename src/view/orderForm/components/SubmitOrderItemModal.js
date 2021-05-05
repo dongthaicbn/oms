@@ -5,31 +5,35 @@ import * as icons from 'assets';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { actionSnackBar } from 'view/system/systemAction';
-import { createOrder } from '../OrderFormActions';
+import { submitOrder } from '../OrderFormActions';
 import IconLoading from 'components/icon-loading/IconLoading';
 
 const SubmitOrderItemModal = (props) => {
   const [loading, setLoading] = useState(false);
-  const { handleClose } = props;
+  const { handleClose, fetchData } = props;
 
   const handleSave = async () => {
     try {
       setLoading(true);
-      const { data } = await createOrder({});
-      // props.actionSnackBar({
-      //   open: true,
-      //   type: 'success', //or success
-      //   message: 'Today Order form created',
-      // });
+      const { data } = await submitOrder({});
+      if (data.result.status === 200) {
+        fetchData();
+        props.actionSnackBar({
+          open: true,
+          type: 'success',
+          message: 'Today Order form created',
+        });
+      } else {
+        props.actionSnackBar({
+          open: true,
+          type: 'error',
+          message: data.result.message,
+        });
+      }
     } catch (error) {
     } finally {
       handleClose();
       setLoading(false);
-      props.actionSnackBar({
-        open: true,
-        type: 'success', //or success
-        message: 'Today Order form created',
-      });
     }
   };
   return (

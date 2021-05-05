@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { Row, Col, Space, Radio, List, Card, Typography, Tag, Divider } from 'antd';
+import {
+  Row,
+  Col,
+  Space,
+  Radio,
+  List,
+  Card,
+  Typography,
+  Tag,
+  Divider
+} from 'antd';
 import Layout from 'components/layout/Layout';
 import StatusTag from 'components/statusTag/StatusTag';
 import InfoGroup from 'components/infoGroup/InfoGroup';
@@ -12,7 +22,7 @@ import * as icons from 'assets';
 import { getOrderList } from './OrderRecordService';
 import './OrderRecord.scss';
 
-const {Title, Paragraph, Text} = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 const items = [
   {
@@ -77,54 +87,65 @@ const items = [
   }
 ];
 
-const OrderRecord = (props) => {
-
+const OrderRecord = props => {
   const [orderStatus, setOrderStatus] = useState(0);
   const [data, setData] = useState([]);
 
-  const fetchData = async (orderStatus) => {
+  const fetchData = async orderStatus => {
     try {
       const res = await getOrderList(1, orderStatus);
       if (!isEmpty(res.data)) {
         setData(res.data.data.orders);
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   };
 
   useEffect(() => {
     // fetchData(orderStatus);
     switch (orderStatus) {
-      case 0 : {
-        setData(items);
-      }
+      case 0:
+        {
+          setData(items);
+        }
         break;
 
-      case 1: {
-        setData(items.filter(item => item.status === 'pending'));
-      }
+      case 1:
+        {
+          setData(items.filter(item => item.status === 'pending'));
+        }
         break;
 
-      case 2: {
-        setData(items.filter(item => item.status === 'received'));
-      }
+      case 2:
+        {
+          setData(items.filter(item => item.status === 'received'));
+        }
         break;
     }
   }, [orderStatus]);
 
-  const renderDeliveryInfo = (item) => {
+  const renderDeliveryInfo = item => {
     switch (item.status) {
       case STATUS_PENDING:
         return (
-          <InfoGroup labelID="IDS_ESTIMATED_DELIVERY" className="estimated-delivery-color">
+          <InfoGroup
+            labelID="IDS_ESTIMATED_DELIVERY"
+            className="estimated-delivery-color"
+          >
             {formatDate(item.estimated_delivery, 'DD MMM')}
           </InfoGroup>
         );
 
       case STATUS_RECEIVED:
         return (
-          <InfoGroup labelID="IDS_DELIVERY_DATE" className="delivery-date-color">
-            <img className="delivery-date-icon" src={icons.ic_tick} alt="icon_tick"/>
+          <InfoGroup
+            labelID="IDS_DELIVERY_DATE"
+            className="delivery-date-color"
+          >
+            <img
+              className="delivery-date-icon"
+              src={icons.ic_tick}
+              alt="icon_tick"
+            />
             {formatDate(item.received_date, 'DD MMM')}
           </InfoGroup>
         );
@@ -133,13 +154,13 @@ const OrderRecord = (props) => {
         return;
     }
   };
-  const renderListItems = (items) => {
+  const renderListItems = items => {
     if (isEmpty(items)) {
       return (
         <>
           <div className="order-record-message-container">
             <Text className="message">
-              <FormattedMessage id="IDS_NO_ORDER_RECORD_YET"/>
+              <FormattedMessage id="IDS_NO_ORDER_RECORD_YET" />
             </Text>
           </div>
         </>
@@ -156,20 +177,18 @@ const OrderRecord = (props) => {
                 <Card hoverable>
                   <Row>
                     <Col span={10}>
-                      <InfoGroup labelID="IDS_SUPPLIER">
-                        {item.name}
-                      </InfoGroup>
+                      <InfoGroup labelID="IDS_SUPPLIER">{item.name}</InfoGroup>
                     </Col>
-                    <Col span={1}/>
-                    <Col span={9}>
-                      {renderDeliveryInfo(item)}
-                    </Col>
+                    <Col span={1} />
+                    <Col span={9}>{renderDeliveryInfo(item)}</Col>
                     <Col span={4}>
                       <div className="order-date-status-info-group">
                         <Text className="order-date">
                           {formatDate(item.order_at, 'YYYY / MM / DD')}
                         </Text>
-                        <StatusTag status={item.status}>{item.status}</StatusTag>
+                        <StatusTag status={item.status}>
+                          {item.status}
+                        </StatusTag>
                       </div>
                     </Col>
                   </Row>
@@ -177,10 +196,12 @@ const OrderRecord = (props) => {
                     <Col span={24}>
                       <div className="order-no-receipt-no-info-group">
                         <Paragraph>
-                          <FormattedMessage id="IDS_ORDER_NO"/>:&nbsp;
+                          <FormattedMessage id="IDS_ORDER_NO" />
+                          :&nbsp;
                           <Text strong>{item.order_no}</Text>
-                          <Divider className="divider" type="vertical"/>
-                          <FormattedMessage id="IDS_RECEIPT_NO"/>:&nbsp;
+                          <Divider className="divider" type="vertical" />
+                          <FormattedMessage id="IDS_RECEIPT_NO" />
+                          :&nbsp;
                           <Text strong>{item.receipt_no}</Text>
                         </Paragraph>
                       </div>
@@ -191,7 +212,10 @@ const OrderRecord = (props) => {
                       <div className="total-order-number-info">
                         <Tag>
                           <Text>
-                            <FormattedMessage id="IDS_ORDERED_ITEMS" values={{value: item.total_order_number}}/>
+                            <FormattedMessage
+                              id="IDS_ORDERED_ITEMS"
+                              values={{ value: item.total_order_number }}
+                            />
                           </Text>
                         </Tag>
                       </div>
@@ -211,31 +235,35 @@ const OrderRecord = (props) => {
         <div className="app-content-container">
           <Row>
             <Col span={24}>
-              <Title level={3}><FormattedMessage id="IDS_ORDER_RECORD"/></Title>
+              <Title level={3}>
+                <FormattedMessage id="IDS_ORDER_RECORD" />
+              </Title>
             </Col>
           </Row>
           <Row className="status-filter-container">
             <Col span={24}>
-              <Radio.Group defaultValue="ALL" buttonStyle="solid"
-                           onChange={(e) => setOrderStatus(e.target.value)} value={orderStatus}>
+              <Radio.Group
+                defaultValue="ALL"
+                buttonStyle="solid"
+                onChange={e => setOrderStatus(e.target.value)}
+                value={orderStatus}
+              >
                 <Space size={24}>
                   <Radio.Button value={0}>
-                    <FormattedMessage id="IDS_ALL"/>
+                    <FormattedMessage id="IDS_ALL" />
                   </Radio.Button>
                   <Radio.Button value={1}>
-                    <FormattedMessage id="IDS_PROCESSING"/>
+                    <FormattedMessage id="IDS_PROCESSING" />
                   </Radio.Button>
                   <Radio.Button value={2}>
-                    <FormattedMessage id="IDS_RECEIVED"/>
+                    <FormattedMessage id="IDS_RECEIVED" />
                   </Radio.Button>
                 </Space>
               </Radio.Group>
             </Col>
           </Row>
           <Row>
-            <Col span={24}>
-              {renderListItems(data)}
-            </Col>
+            <Col span={24}>{renderListItems(data)}</Col>
           </Row>
         </div>
       </div>
@@ -243,5 +271,4 @@ const OrderRecord = (props) => {
   );
 };
 
-export default connect()
-(withRouter(OrderRecord));
+export default connect()(withRouter(OrderRecord));

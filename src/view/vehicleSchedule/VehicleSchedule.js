@@ -10,14 +10,14 @@ import { getLangCode, isEmpty } from 'utils/helpers/helpers';
 import Layout from 'components/layout/Layout';
 import { routes } from 'utils/constants/constants';
 
-const VehicleSchedule = props => {
-  const { locale } = props;
+const VehicleSchedule = (props) => {
+  const { locale, account } = props;
   const [data, setData] = useState({});
 
   const fetchData = async () => {
     try {
       const { data } = await getScheduleCategories({
-        lang_code: getLangCode(locale)
+        lang_code: getLangCode(locale),
       });
 
       if (!isEmpty(data.data)) setData(data.data);
@@ -31,6 +31,8 @@ const VehicleSchedule = props => {
       `${routes.VEHICLE_SCHEDULE_DETAIL.replace(':id', item.id)}?type=${type}`
     );
   };
+  const { store } = account;
+  // const { store, user } = account;
   return (
     <Layout>
       <div className="scrollable-container">
@@ -39,11 +41,9 @@ const VehicleSchedule = props => {
             <div className="left-header">
               <span className="title-info">
                 <FormattedMessage id="IDS_STORE" />
-                <span className="title-value">: HP003 Lake Silver</span>
-              </span>
-              <span className="title-info">
-                <FormattedMessage id="IDS_DEPT" />
-                <span className="title-value">: Management team</span>
+                {!isEmpty(store) && (
+                  <span className="title-value">: {store.company_name}</span>
+                )}
               </span>
             </div>
           </div>
@@ -88,8 +88,9 @@ const VehicleSchedule = props => {
 };
 
 export default connect(
-  state => ({
-    locale: state.system.locale
+  (state) => ({
+    locale: state.system.locale,
+    account: state.system.account,
   }),
   { actionToggleMenu }
 )(withRouter(VehicleSchedule));

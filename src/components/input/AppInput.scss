@@ -1,0 +1,27 @@
+.app-input-container {
+  .ant-input-affix-wrapper {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid #B5B6FF;
+    border-radius: 10px;
+    padding: 16px 18px;
+    align-items: center;
+
+    .ant-input-prefix {
+      margin-right: 18px;
+      width: 20px;
+      height: 20px;
+
+      .app-input-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .ant-input[type="text"] {
+    background: none;
+    font-size: 18px;
+    font-weight: 400;
+    color: #4F4E66;
+  }
+}

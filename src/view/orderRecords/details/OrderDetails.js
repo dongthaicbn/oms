@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 import {
   routes,
   STATUS_PENDING,
-  STATUS_RECEIVED,
+  STATUS_RECEIVED
 } from 'utils/constants/constants';
 import { formatDate, isEmpty } from 'utils/helpers/helpers';
 import * as icons from 'assets';
@@ -28,7 +28,7 @@ const order = {
     order_at: Date.parse('2020-10-30 00:00:00'),
     estimated_delivery: null,
     received_date: Date.parse('2020-11-02 00:00:00'),
-    status: 'received',
+    status: 'received'
   },
   items: [
     {
@@ -41,7 +41,7 @@ const order = {
       ordered_qty: 12,
       received_qty: 0,
       image:
-        'https://www.waveinn.com/f/13754/137543456/gaby-the-grass-carp-giant.jpg',
+        'https://www.waveinn.com/f/13754/137543456/gaby-the-grass-carp-giant.jpg'
     },
     {
       id: 2,
@@ -53,7 +53,7 @@ const order = {
       ordered_qty: 11,
       received_qty: 3,
       image:
-        'https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/publications/feed/feednavigator.com/article/2017/12/20/neovia-acquires-us-shrimp-feed-probiotic-expert/7674068-1-eng-GB/Neovia-acquires-US-shrimp-feed-probiotic-expert_wrbm_large.jpg',
+        'https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/publications/feed/feednavigator.com/article/2017/12/20/neovia-acquires-us-shrimp-feed-probiotic-expert/7674068-1-eng-GB/Neovia-acquires-US-shrimp-feed-probiotic-expert_wrbm_large.jpg'
     },
     {
       id: 3,
@@ -65,7 +65,7 @@ const order = {
       ordered_qty: 5,
       received_qty: 10,
       image:
-        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg',
+        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg'
     },
     {
       id: 4,
@@ -77,7 +77,7 @@ const order = {
       ordered_qty: 5,
       received_qty: null,
       image:
-        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg',
+        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg'
     },
     {
       id: 5,
@@ -89,7 +89,7 @@ const order = {
       ordered_qty: 5,
       received_qty: 10,
       image:
-        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg',
+        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg'
     },
     {
       id: 6,
@@ -101,7 +101,7 @@ const order = {
       ordered_qty: 5,
       received_qty: 10,
       image:
-        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg',
+        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg'
     },
     {
       id: 7,
@@ -113,7 +113,7 @@ const order = {
       ordered_qty: 5,
       received_qty: null,
       image:
-        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg',
+        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg'
     },
     {
       id: 8,
@@ -125,7 +125,7 @@ const order = {
       ordered_qty: 5,
       received_qty: 10,
       image:
-        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg',
+        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg'
     },
     {
       id: 9,
@@ -137,7 +137,7 @@ const order = {
       ordered_qty: 5,
       received_qty: 10,
       image:
-        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg',
+        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg'
     },
     {
       id: 10,
@@ -149,16 +149,16 @@ const order = {
       ordered_qty: 5,
       received_qty: 10,
       image:
-        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg',
-    },
-  ],
+        'https://dayanandboholahseafoods.com/wp-content/uploads/2017/11/thon-Rouge1.jpg'
+    }
+  ]
 };
 
 const itemColumns = [
   {
     title: <FormattedMessage id="IDS_ITEMS" />,
     key: 'items',
-    render: (item) => (
+    render: item => (
       <div className="app-flex-container items-info-cell">
         <RoundImage src={item.image} alt="Item Image" />
         <div>
@@ -178,7 +178,7 @@ const itemColumns = [
           </InfoGroup>
         </div>
       </div>
-    ),
+    )
   },
   {
     title: <FormattedMessage id="IDS_ACTUAL_QUANTITY" />,
@@ -186,14 +186,14 @@ const itemColumns = [
     key: 'actualQuantity',
     width: 110,
     align: 'center',
-    render: (value) => {
+    render: value => {
       if (value)
         return (
           <div className="item-quantity-container">
             <Paragraph className="actual-quantity">{value}</Paragraph>
           </div>
         );
-    },
+    }
   },
   {
     title: <FormattedMessage id="IDS_RECEIVED_QUANTITY" />,
@@ -201,22 +201,22 @@ const itemColumns = [
     key: 'receivedQuantity',
     width: 120,
     align: 'center',
-    render: (value) => {
+    render: value => {
       if (value)
         return (
           <div className="item-quantity-container">
             <Paragraph className="received-quantity">{value}</Paragraph>
           </div>
         );
-    },
-  },
+    }
+  }
 ];
 
-const OrderDetails = (props) => {
+const OrderDetails = props => {
   const { orderNo } = props.match.params;
   let [data, setData] = useState({});
 
-  const fetchData = async (orderNo) => {
+  const fetchData = async orderNo => {
     try {
       const res = await getOrderDetail(1, orderNo);
       if (!isEmpty(res.data)) {
@@ -230,7 +230,7 @@ const OrderDetails = (props) => {
     setData(order);
   }, [orderNo]);
 
-  const renderDeliveryInfo = (order) => {
+  const renderDeliveryInfo = order => {
     switch (order?.status) {
       case STATUS_PENDING:
         return (

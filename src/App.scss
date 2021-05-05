@@ -11,10 +11,14 @@ body {
   background-color: #f3f3f9;
 }
 #root {
+  height: 100%;
+  background-color: #f3f3f9;
+}
+#root {
   background-color: #f3f3f9;
 }
 .app-container {
-  // min-height: 100vh;
+  height: 100%;
   background-color: #f3f3f9;
 }
 
@@ -118,9 +122,9 @@ body {
     background: #f7f7fd;
   }
 
-  .ant-btn:hover {
-    color: #ffffff;
-    background: #6461b4;
+  .ant-btn:not(.ant-btn-primary):hover {
+    color: #6461b4;
+    background: #f2f2f2;
     border: 2px solid #6461b4;
   }
 
@@ -216,8 +220,10 @@ body {
 }
 
 .app-content-container {
+  height: 100%;
   min-width: 863px;
-  padding: 32px 24px;
+  padding: 32px 0;
+  margin: 0 12px;
   background: #f3f3f9;
 }
 
@@ -249,13 +255,35 @@ body {
 
     .ant-popover-inner {
       border-radius: 4px;
-      background: #E2E7F5;
-      border: 2px solid #D0D1FF;
+      background: #e2e7f5;
+      border: 2px solid #d0d1ff;
       box-shadow: 0 5px 16px -5px rgba(85, 81, 180, 0.3);
 
       .ant-popover-inner-content {
         padding: 0;
       }
     }
+  }
+}
+
+.app-progress {
+}
+.active-icon {
+  cursor: pointer;
+  path {
+    fill: #6461b4;
+  }
+}
+
+.modal-progress-container {
+  padding-top: 32px;
+
+  .MuiCircularProgress-root {
+    width: 48px;
+    height: 48px;
+  }
+
+  .MuiCircularProgress-colorPrimary {
+    color: #6461b4;
   }
 }

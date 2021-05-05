@@ -9,11 +9,13 @@ import IconButton from 'components/button/IconButton';
 import RoundImage from 'components/image/RoundImage';
 import InfoGroup from 'components/infoGroup/InfoGroup';
 import AppTable from 'components/table/AppTable';
-import { formatDate, isEmpty } from 'utils/helpers/helpers';
+import { formatDate, isEmpty, getLangCode } from 'utils/helpers/helpers';
 import { routes } from 'utils/constants/constants';
 import * as icons from 'assets';
+import FilterModal from './components/FilterModal';
 import { ReactComponent as FilterIcon } from 'assets/icons/ic_filter.svg';
 import './Favourite.scss';
+import { getFavouriteList } from './FavouriteActions';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -691,94 +693,42 @@ const order = {
   ],
 };
 
-const renderDayColumn = (columnData, dayName) => (
-  <div>
-    <div>{formatDate(columnData[dayName]?.date, 'DD/MM')}</div>
-    <div>
-      (<FormattedMessage id={`IDS_${dayName.toUpperCase()}`} />)
-    </div>
-  </div>
-);
-
-const renderItemQuantity = (item, dayName, actionProvider) => {
-  let dayDetail = item.day_detail_map[dayName];
-  let disabled = !dayDetail || !dayDetail.is_available;
-  let content;
-  let button = (
-    <Button disabled={disabled}>
-      {actionProvider.getItemCurrentQuantity(dayName, item.code) || 0}
-    </Button>
-  );
-  content = button;
-  return (
-    <div className="app-button order-detail-item-quantity-button">
-      {content}
-    </div>
-  );
-};
-
-const itemColumns = [
-  {
-    title: <FormattedMessage id="IDS_ITEMS" />,
-    render: (item) => (
-      <div className="app-flex-container items-info-cell">
-        <RoundImage src={item.image} alt="Item Image" />
-        <div>
-          <InfoGroup
-            label={
-              <>
-                <Text>{item.code}</Text>
-                <Divider type="vertical" />
-                <FormattedMessage id="IDS_UNIT" />
-                :&nbsp;
-                <Text>{item.unit}</Text>
-              </>
-            }
-            noColon={true}
-          >
-            {item.name}&nbsp;
-            <FormattedMessage
-              id="IDS_WEIGHT_PER_PACKS"
-              values={{ weight: item.pack_weight }}
-            />
-          </InfoGroup>
-        </div>
-      </div>
-    ),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'fri'),
-    align: 'center',
-    width: '130px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'fri', actionProvider),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'sat'),
-    key: 'sat',
-    align: 'center',
-    width: '130px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'sat', actionProvider),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'sun'),
-    key: 'sun',
-    align: 'center',
-    width: '130px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'sun', actionProvider),
-  },
-];
-
 const Favourite = (props) => {
-  const { catId } = props.match.params;
+  const { locale } = props;
   const { showPrice } = parseQueryString(props.location.search, {
     parseBooleans: true,
   });
   let [data, setData] = useState({});
+  let [dataFavourite, setDataFavourite] = useState({});
   let [mapFormData, setMapFormData] = useState({});
   let [formErrors, setFormErrors] = useState({});
+  let [open, setOpen] = useState(false);
+  let [filterValue, setFilterValue] = useState(false);
+
+  const openFilter = () => setOpen(true);
+
+  const renderColumnTitle = (title) => (
+    <p style={{ margin: 0, padding: 8 }}>{title}</p>
+  );
+
+  const renderItemQuantity = (item, dayName, actionProvider) => {
+    let dayDetail = item.day_detail_map[dayName];
+    let disabled = !dayDetail || !dayDetail.is_available;
+
+    return (
+      <div
+        className="app-button order-detail-item-quantity-button"
+        style={{ padding: '0 8px' }}
+      >
+        <Button
+          disabled={disabled}
+          style={{ width: '100%', padding: '0 20px' }}
+        >
+          Add to list
+        </Button>
+      </div>
+    );
+  };
 
   const initData = (suppliers, mapFormData) => {
     suppliers.forEach((supplier) => {
@@ -860,8 +810,19 @@ const Favourite = (props) => {
     }
   };
 
+  const fetchData = async () => {
+    try {
+      const { data } = await getFavouriteList({
+        lang_code: getLangCode(locale),
+      });
+      if (!isEmpty(data.data) && data.result.status === 200) {
+        setDataFavourite(data.data);
+      }
+    } catch (error) {}
+  };
+
   useEffect(() => {
-    // fetchData(orderNo);
+    fetchData();
     initData(order.suppliers, mapFormData);
     setData(order);
     setMapFormData(mapFormData);
@@ -922,6 +883,53 @@ const Favourite = (props) => {
       setFormErrors(errors);
     }
   };
+  const { favourte_categories, orders } = dataFavourite;
+  // console.log('categories', favourte_categories);
+  // console.log('orders', orders);
+  const getColumns = () => {
+    let result = [
+      {
+        title: <FormattedMessage id="IDS_ITEMS" />,
+        render: (item) => (
+          <div className="app-flex-container items-info-cell">
+            <RoundImage src={item.image} alt="Item Image" />
+            <div>
+              <InfoGroup
+                label={
+                  <>
+                    <Text>{item.code}</Text>
+                    <Divider type="vertical" />
+                    <FormattedMessage id="IDS_UNIT" />
+                    :&nbsp;
+                    <Text>{item.unit}</Text>
+                  </>
+                }
+                noColon={true}
+              >
+                {item.name}&nbsp;
+                <FormattedMessage
+                  id="IDS_WEIGHT_PER_PACKS"
+                  values={{ weight: item.pack_weight }}
+                />
+              </InfoGroup>
+            </div>
+          </div>
+        ),
+      },
+    ];
+    if (!isEmpty(favourte_categories)) {
+      favourte_categories.forEach((el) => {
+        result.push({
+          title: (columnData) => renderColumnTitle(el.name),
+          align: 'center',
+          width: '130px',
+          render: (item, actionProvider) =>
+            renderItemQuantity(item, 'fri', actionProvider),
+        });
+      });
+    }
+    return result;
+  };
 
   return (
     <Layout>
@@ -934,7 +942,12 @@ const Favourite = (props) => {
               </div>
             </Col>
             <Col span={4}>
-              <div className="app-flex-container flex-end filter-button-container">
+              <div
+                className={`app-flex-container flex-end filter-button-container ${
+                  filterValue ? 'active-btn' : ''
+                }`}
+                onClick={openFilter}
+              >
                 <IconButton icon={<FilterIcon />}>
                   <FormattedMessage id="IDS_FILTER" />
                 </IconButton>
@@ -944,11 +957,13 @@ const Favourite = (props) => {
           <Row className="order-detail-table">
             <Col span={24}>
               <AppTable
-                columns={itemColumns}
+                columns={getColumns()}
                 columnDataSource={mapFormData}
                 dataSource={data.suppliers}
-                itemsKey="items"
                 groupKey="supplier_name"
+                // dataSource={!isEmpty(orders) ? orders[0].categories : []}
+                // groupKey="name"
+                itemsKey="items"
                 groupExpandable={createGroupExpandable()}
                 rowExpandable={createRowExpandable()}
                 groupError={(item) => formErrors[item.supplier_id]}
@@ -975,8 +990,21 @@ const Favourite = (props) => {
           </Button>
         </div>
       </div>
+      {open && (
+        <FilterModal
+          handleClose={() => setOpen(false)}
+          suppliers={order.suppliers}
+          handleFilter={() => setFilterValue(true)}
+        />
+      )}
     </Layout>
   );
 };
 
-export default connect()(withRouter(Favourite));
+export default connect(
+  (state) => ({
+    locale: state.system.locale,
+    account: state.system.account,
+  }),
+  {}
+)(withRouter(Favourite));

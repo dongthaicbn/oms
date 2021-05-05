@@ -1,30 +1,16 @@
 import api from 'utils/helpers/api';
 
-export const getTodayList = (params) => {
-  return api({ method: 'get', url: '/api/v1/order/today/list', params });
+// holiday
+export const getDeliveryStoreList = (params) => {
+  return api({ method: 'get', url: '/api/v1/delivery/storeList', params });
 };
-export const getTodayDetail = (params) => {
+export const getDeliveryCategories = (params) => {
+  return api({ method: 'get', url: '/api/v1/delivery/categories', params });
+};
+export const getDeliveryCategoriesDetail = (params) => {
   return api({
     method: 'get',
-    url: '/api/v1/order/today/supplierDetail',
+    url: '/api/v1/delivery/category/detail',
     params,
   });
-};
-export const getOrderCategories = (params) => {
-  return api({ method: 'get', url: '/api/v1/order/categories', params });
-};
-export const getOrderCategoriesDetail = (params) => {
-  return api({ method: 'get', url: '/api/v1/order/category/detail', params });
-};
-export const saveOrder = (data) => {
-  return api({ method: 'post', url: '/api/v1/order/save', data });
-};
-export const createOrder = (data) => {
-  return api({ method: 'post', url: '/api/v1/order/submit', data });
-};
-export const getAccountDetail = (params) => {
-  return api({ method: 'get', url: '/api/v1/account/detail', params });
-};
-export const getScheduleDetail = (params) => {
-  return api({ method: 'get', url: '/api/v1/vehicleSchedule/detail', params });
 };
