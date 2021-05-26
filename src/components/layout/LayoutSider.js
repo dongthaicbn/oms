@@ -4,10 +4,10 @@ import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import * as icons from 'assets';
 import { routes } from 'utils/constants/constants';
-import { actionToggleMenu } from 'view/system/systemAction';
+import { actionToggleMenu, actionLayoutSliderRouting } from 'view/system/systemAction';
 
 const LayoutSider = (props) => {
-  const { location } = props;
+  const { location, empty } = props;
 
   const menuList = [
     {
@@ -44,6 +44,7 @@ const LayoutSider = (props) => {
     },
   ];
   const handleClickMenu = (el) => {
+    props.actionLayoutSliderRouting(props.location.pathname);
     props.history.push(el.url);
   };
   const openMenu = () => {
@@ -58,11 +59,11 @@ const LayoutSider = (props) => {
           marginTop: 12,
           cursor: 'pointer',
           borderRadius: 8,
-          marginBottom: 56,
+
         }}
         onClick={openMenu}
       />
-      {menuList.map((el, i) => {
+      {!empty && menuList.map((el, i) => {
         return (
           <div
             key={i}
@@ -81,5 +82,5 @@ export default connect(
   (state) => ({
     // locale: state.system.locale,
   }),
-  { actionToggleMenu }
+  { actionToggleMenu, actionLayoutSliderRouting }
 )(withRouter(LayoutSider));

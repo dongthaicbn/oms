@@ -1,0 +1,22 @@
+.qr-scanner-modal {
+  width: 512px !important;
+  height: 512px !important;
+
+  .ant-modal-content {
+    padding: 24px;
+
+    .ant-modal-body {
+      margin-top: 40px;
+      position: relative;
+
+      .qr-reader {
+        width: 100%;
+        height: auto;
+
+        section {
+          border-radius: 10px;
+        }
+      }
+    }
+  }
+}

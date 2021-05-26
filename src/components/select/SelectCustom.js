@@ -1,9 +1,8 @@
+import React from 'react';
 import { memo } from 'react';
 import { List, ListItem, Popover, Typography, Radio } from '@material-ui/core';
+import * as icons from 'assets';
 import { withStyles } from '@material-ui/core/styles';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-// import DoneIcon from '@material-ui/icons/Done';
-import React from 'react';
 import { BootstrapInput } from './BootstrapInput';
 
 const CustomRadio = withStyles({
@@ -52,7 +51,15 @@ const SelectCustom = (props) => {
         value={valueString}
         innerRef={inputRef}
         isView={isView}
-        endAdornment={isView ? null : <>{iconRight || <ArrowDropDownIcon />}</>}
+        endAdornment={
+          isView ? null : (
+            <>
+              {iconRight || (
+                <img className="dropDown" src={icons.ic_drop_down} />
+              )}
+            </>
+          )
+        }
         inputProps={{
           ...rest.inputProps,
           style: {
@@ -62,6 +69,7 @@ const SelectCustom = (props) => {
             lineHeight: '30px',
             color: '#4F4E66',
             textAlign: 'center',
+            cursor: 'pointer',
           },
         }}
         onClick={handleClick}

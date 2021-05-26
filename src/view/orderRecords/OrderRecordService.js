@@ -1,15 +1,28 @@
-import api from "../../utils/helpers/api";
+import { pageApi, CancelToken } from 'utils/helpers/api';
+import { DEFAULT_NUMBER_OF_ITEMS } from 'utils/constants/constants';
 
-export const getOrderList = (langCode, orderStatus) => {
-    return api({
-        method: 'GET',
-        url: '/api/v1/order/list',
-        params: {
-            lang_code: langCode,
-            order_status: orderStatus
-        },
-        headers: {
-            Authorization: 'Bearer sWe11gw22iiw7XyoyuZ0kAt66OUnEYwSMBhN7Dsk'
-        }
-    })
+let cancelTokenSource;
+
+export const getOrderList = (langCode, orderStatus, lastItemOrderNo) => {
+  cancelCurrentGetOrderListRequest();
+  cancelTokenSource = CancelToken.source();
+  return pageApi({
+    method: 'GET',
+    url: '/api/v1/order/list',
+    params: {
+      lang_code: langCode,
+      order_status: orderStatus,
+      last_item_id: lastItemOrderNo,
+      number_of_items: DEFAULT_NUMBER_OF_ITEMS
+    },
+    cancelToken: cancelTokenSource.token,
+    arrayField: 'orders'
+  });
+};
+
+export const cancelCurrentGetOrderListRequest = () => {
+  if (cancelTokenSource) {
+    cancelTokenSource.cancel();
+    cancelTokenSource = undefined;
+  }
 };

@@ -1,102 +1,164 @@
-.items-info-cell {
-  .info-group-container {
-    .text-label {
-      font-weight: 400;
-      color: #4F4E66;
+.order-detail-container {
+  height: 100%;
 
-      .ant-divider {
-        border-color: #4F4E66;
-      }
-    }
-
-    .text-info {
-      font-weight: 700;
-      font-size: 18px;
-    }
-  }
-}
-
-.order-detail-scrollable-container {
-  height: calc(100vh - 118px);
-}
-
-.order-detail-content-container {
-  h3.ant-typography {
-    margin-bottom: 16px;
-  }
-}
-
-.action-container {
-  height: 118px;
-  min-width: 620px;
-  padding: 24px;
-  position: sticky;
-  bottom: 0;
-
-  .action-button {
+  .layout-container {
     height: 100%;
-  }
 
-  .back-button {
-    width: 226px;
-  }
-}
+    .app-content-container {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0;
 
-.order-info-card-container {
-  .info-card {
-    border-radius: 8px;
-    margin-right: 12px;
-    margin-bottom: 8px;
+      .header-group {
+        .page-info-container {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-bottom: 16px;
 
-    .ant-card-body {
-      padding: 12px 16px;
+          .page-title {
+            flex: 1;
 
-      .estimated-delivery-color {
-        color: #FF884B;
+            .ant-typography {
+              font-family: NotoSansTCBlack;
+              font-size: 24px;
+              font-weight: 900;
+              color: #6461B4;
+              margin-bottom: 4px;
+            }
+          }
+
+          .status-tag-container {
+            display: flex;
+            justify-content: flex-end;
+          }
+
+          .info-card {
+            border-radius: 8px;
+            margin-right: 12px;
+            margin-bottom: 8px;
+
+            .ant-card-body {
+              padding: 12px 16px;
+
+              .estimated-delivery-color {
+                color: #FF884B;
+              }
+
+              .delivery-date-icon {
+                width: 16px;
+                height: 16px;
+                margin-right: 8px;
+                vertical-align: baseline;
+              }
+
+              .delivery-date-color {
+                color: #4BC09C;
+              }
+            }
+
+            &.card-1 {
+              width: 313px;
+            }
+
+            &.card-2 {
+              width: 361px;
+            }
+          }
+        }
       }
 
-      .delivery-date-icon {
-        width: 16px;
-        height: 16px;
-        margin-right: 8px;
-        vertical-align: baseline;
+      .body-group {
+        overflow-y: auto;
+        flex: 1;
+
+        .app-table {
+          .item-info-container {
+            .item-info {
+              font-weight: 700;
+              font-size: 18px;
+            }
+
+            .item-info-label {
+              font-weight: 400;
+              color: #4F4E66;
+
+              .ant-divider {
+                border-color: #4F4E66;
+              }
+            }
+          }
+
+          .input-cell {
+            font-size: 18px;
+            font-weight: 700;
+            color: #4f4e66;
+            text-align: center;
+
+            .ant-btn {
+              width: 100%;
+              height: 55px;
+              padding: 0;
+              border-radius: 10px;
+              border: 2px solid #b5b6ff;
+              font-size: 18px;
+              font-weight: 700;
+              color: #4f4e66;
+
+              //&:hover {
+              //  border: 4px solid #b530bc;
+              //  color: #4f4e66;
+              //  background: none;
+              //}
+              //
+              //&:focus {
+              //  border: 4px solid #b530bc;
+              //  color: #4f4e66;
+              //  background: none;
+              //}
+              //
+              //&.ant-popover-open {
+              //  border: 4px solid #b530bc;
+              //  color: #4f4e66;
+              //  background: none;
+              //}
+            }
+
+            &.actual-quantity {
+              width: 111px;
+
+              .ant-btn {
+                font-weight: 400;
+                color: #B5B6FF;
+              }
+            }
+
+            &.received-quantity {
+              width: 102px;
+            }
+          }
+        }
       }
 
-      .delivery-date-color {
-        color: #4BC09C;
+      .footer-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 24px 0 24px 0;
+
+        .ant-btn {
+          height: 70px;
+          padding: 0;
+        }
+
+        .back-button {
+          width: 226px;
+        }
+
+        .update-button {
+          width: 351px;
+        }
       }
     }
-  }
-
-  .card-1 {
-    width: 313px;
-  }
-
-  .card-2 {
-    width: 361px;
-  }
-}
-
-.item-quantity-container {
-  padding: 0 4px;
-
-  .ant-typography {
-    border: 2px solid #B5B6FF;
-    border-radius: 10px;
-    text-align: center;
-    padding: 14px 29px;
-    margin-bottom: 0;
-  }
-
-  .actual-quantity {
-    color: #B5B6FF;
-    font-size: 18px;
-    font-weight: normal;
-  }
-
-  .received-quantity {
-    color: #4F4E66;
-    font-size: 18px;
-    font-weight: 700;
   }
 }

@@ -78,12 +78,18 @@ const VehicleScheduleDetail = (props) => {
                             style={{ flexDirection: 'row' }}
                           >
                             <img
-                              src={icons.img_pic}
+                              src={
+                                !isEmpty(item.image)
+                                  ? item.image
+                                  : icons.img_placeholder
+                              }
                               alt=""
                               style={{
                                 maxWidth: 75,
                                 maxHeight: 60,
                                 marginRight: 12,
+                                borderRadius: 6,
+                                border: '1px solid #B5B6FF',
                               }}
                             />
                             <div className="items-column">

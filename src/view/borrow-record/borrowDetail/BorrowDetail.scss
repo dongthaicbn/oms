@@ -24,11 +24,13 @@
 
     .action-button {
       width: 351px;
+      height: 70px;
     }
 
     .back-button {
       width: 226px;
       margin-right: 10px;
+      height: 70px;
     }
   }
 }
@@ -40,6 +42,19 @@
     width: 213px;
     height: 70px;
     margin-right: 5px;
+    font-size: 18px;
+  }
+  .first-line-title-borrow {
+    display: flex;
+    .text-info {
+      font-family: NotoSansTCBlack;
+    }
+    .date-borrow {
+      margin-left: 50px;
+    }
+  }
+  .borrow-no {
+    margin-top: 8px;
   }
 }
 
@@ -49,9 +64,19 @@
   min-width: 911px;
 
   .app-table {
+    .ant-affix {
+      position: absolute !important;
+      overflow-y: hidden;
+      overflow-x: hidden;
+      top: 49px !important;
+    }
     .table-header {
       .header-row {
         .column-cell {
+          &:first-child {
+            color: #4f4e66;
+          }
+          
           div {
             text-align: center;
           }
@@ -121,4 +146,15 @@ canvas {
 }
 .icon-loading {
   margin-top: 20px;
+}
+@media only screen and (max-width: 576px) {
+  .borrow-detail-container {
+    .action-container {
+      padding: 24px 0;
+      .ant-btn {
+        padding: 0
+      }
+    }
+  }
+  
 }

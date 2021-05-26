@@ -8,6 +8,7 @@ import { requestForgetPassword } from './ForgetPasswordService';
 import { validateEmail } from '../../utils/helpers/helpers';
 import { notification } from 'antd';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { routes } from 'utils/constants/constants';
 
 export default function ForgetPassword(props) {
   const [sendDone, setSendDone] = useState(false);
@@ -68,11 +69,14 @@ export default function ForgetPassword(props) {
   const goToSignIn = () => {
     setLoadingRedirect(true);
     setTimeout(() => {
-      props.history.push('/');
+      props.history.push(routes.LOGIN);
       setLoadingRedirect(false);
     }, 5000);
   };
-
+  const onResend = () => {
+    setSendDone(false)
+    setValues({ email: '' })
+  }
   return (
     <ContainerLogin styleRowContainer={{ alignItems: 'center' }}>
       {/* title forget password */}
@@ -91,13 +95,14 @@ export default function ForgetPassword(props) {
             {msg => (
               <TextField
                 id="outlined-basic"
-                label={<FormattedMessage id="IDS_EMAIL_OR_ID" />}
+                label={<FormattedMessage id="IDS_EMAIL" />}
                 placeholder={msg}
                 variant="outlined"
                 fullWidth
                 onChange={handleChange('email')}
                 helperText={error ? error : null}
                 error={error}
+                value={values.email}
               />
             )}
           </FormattedMessage>
@@ -107,8 +112,8 @@ export default function ForgetPassword(props) {
           {loading ? (
             <CircularProgress style={{ color: '#fff' }} size={20} />
           ) : (
-            <FormattedMessage id="IDS_SEND" />
-          )}
+              <FormattedMessage id="IDS_SEND" />
+            )}
         </div>
       </div>
       <div
@@ -126,16 +131,16 @@ export default function ForgetPassword(props) {
           {loadingRedirect ? (
             <CircularProgress style={{ color: '#fff' }} size={20} />
           ) : (
-            <FormattedMessage id="IDS_GO_TO_SIGN_IN" />
-          )}
+              <FormattedMessage id="IDS_GO_TO_SIGN_IN" />
+            )}
         </div>
         {/* question receive email */}
         <div className="wapper-inline">
           <div className="text">
-            <FormattedMessage id="IDS_QUESTION_HAVE_ACCOUNT" />
+            <FormattedMessage id="IDS_NOT_RECEIVE_EMAIL" />
           </div>
-          <div className="text button-create-account">
-            <FormattedMessage id="IDS_CREATE_ACCOUNT" />
+          <div className="text button-create-account" onClick={onResend}>
+            <FormattedMessage id="IDS_SEND_AGAIN" />
           </div>
         </div>
       </div>

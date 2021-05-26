@@ -14,6 +14,16 @@ const initialState = {
     open: false,
     type: '',
     message: ''
+  },
+  lendingData: {
+    date: null,
+    shop_id: null,
+    shop_name: null,
+    categories: [],
+    borrowingNo: 'IB0200265201'
+  },
+  layoutSlider: {
+    previousUrl: null
   }
 };
 
@@ -32,7 +42,13 @@ const system = (state = initialState, action) => {
       return { ...state, selectedActionMenuItemId: action.payload };
     case constants.SNACK_BAR:
       return { ...state, snackBar: action.payload };
-
+    case constants.LAYOUT_SLIDER_ROUTING:
+      let newState = {...state};
+      newState.layoutSlider = {
+        ...newState.layoutSlider,
+        ...action.payload
+      };
+      return newState;
     default:
       return state;
   }

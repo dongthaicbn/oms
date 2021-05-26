@@ -39,7 +39,10 @@ const SubFooter = (props) => {
             >
               <FormattedMessage id="IDS_VEHICLE_SCHEDULE" />
             </p>
-            <p className="text-item pointer">
+            <p
+              className="text-item pointer"
+              onClick={() => handleChangeRoute(routes.HOLIDAY)}
+            >
               <FormattedMessage id="IDS_DELIVERY_HOLIDAY" />
             </p>
           </div>
@@ -49,23 +52,35 @@ const SubFooter = (props) => {
             <p className="title-item">
               <FormattedMessage id="IDS_RECEIVE" />
             </p>
-            <p className="text-item pointer">
+            <p
+              className="text-item pointer"
+              onClick={() => handleChangeRoute(routes.RECEIVED_DELIVERY)}
+            >
               <FormattedMessage id="IDS_RECEIVE_DELIVERY" />
             </p>
             <p className="title-item">
               <FormattedMessage id="IDS_OTHER_FORMS" />
             </p>
-            <p className="text-item pointer">
+            <p
+              className="text-item pointer"
+              onClick={() => handleChangeRoute(routes.BORROW_RECORD)}
+            >
               <FormattedMessage id="IDS_INVENTORY_BORROWING" />
             </p>
           </div>
         </Col>
         <Col xs={24} sm={8} md={6} lg={6} xl={6} xxl={6}>
           <div className="item-group">
-            <p className="title-item">
+            <p
+              className="title-item pointer"
+              onClick={() => handleChangeRoute(routes.CONTACT)}
+            >
               <FormattedMessage id="IDS_CONTACT_US" />
             </p>
-            <p className="title-item">
+            <p
+              className="title-item pointer"
+              onClick={() => handleChangeRoute(routes.NEWS_AND_PROMOTION)}
+            >
               <FormattedMessage id="IDS_NEW_PROMOTION" />
             </p>
           </div>

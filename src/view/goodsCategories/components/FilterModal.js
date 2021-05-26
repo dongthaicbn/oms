@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, Modal } from 'antd';
 import { withStyles } from '@material-ui/core/styles';
 import { Radio, FormControlLabel } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import * as icons from 'assets';
-import { isEmpty } from 'utils/helpers/helpers';
+import { isEmpty, removeDuplicateName } from 'utils/helpers/helpers';
 import SelectCustom from 'components/select/SelectCustom';
 import { BootstrapInput } from 'components/select/BootstrapInput';
 
@@ -18,29 +19,52 @@ const CustomRadio = withStyles({
   },
   checked: {},
 })((props) => <Radio color="default" {...props} />);
+const useStyles = makeStyles({
+  noOptions: {
+    color: '#4F4E66',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+    lineHeight: '24px',
+  },
+});
 
 const FilterModal = (props) => {
   const intl = useIntl();
-  const { suppliers, handleClose, visible } = props;
-  const convertArrayData = (data) => {
-    return data.map((el) => ({
-      ...el,
-      name: el.supplier_name,
-      id: el.supplier_id,
-    }));
+  const styles = useStyles();
+  const { suppliers, handleClose, visible, filterValue, handleFilter } = props;
+  const getTotalItem = () => {
+    let result = [];
+    if (!isEmpty(suppliers)) {
+      suppliers.forEach((it) => {
+        if (!isEmpty(it.items)) result = [...result, ...it.items];
+      });
+    }
+    return removeDuplicateName(result);
   };
-  const [itemsSelected, setSelected] = useState(
-    !isEmpty(suppliers) ? convertArrayData([suppliers[0]]) : []
+  const totalItems = getTotalItem();
+
+  const [itemsSelected, setSelected] = useState(filterValue.suppliers || []);
+  const [subItemSelected, setSubItemSelected] = useState(
+    filterValue.items || []
   );
-  const [subItemSelected, setSubItemSelected] = useState([]);
-  const [filled, setFilled] = useState(null);
+  const [filled, setFilled] = useState(filterValue.filled || null);
 
   const handleReset = () => {
+    // setSubItemSelected(filterValue.items || []);
+    // setSelected(filterValue.suppliers || []);
+    // setFilled(filterValue.filled || null);
     setSubItemSelected([]);
     setSelected([]);
     setFilled(null);
   };
   const handleSave = () => {
+    if (handleFilter)
+      handleFilter({
+        suppliers: itemsSelected,
+        items: subItemSelected,
+        filled: filled,
+      });
     handleClose();
   };
   const startAdornment = (
@@ -50,19 +74,24 @@ const FilterModal = (props) => {
       style={{ margin: '0 8px 0 16px', cursor: 'pointer' }}
     />
   );
-  const getItems = () => {
+  const getSuppliers = () => {
     let result = [];
-    if (!isEmpty(itemsSelected)) {
-      itemsSelected.forEach((el) => {
-        result = [...result, ...el.items];
+    if (!isEmpty(subItemSelected)) {
+      suppliers.forEach((el) => {
+        if (
+          el.items.find((v) => subItemSelected.find((it) => it.name === v.name))
+        ) {
+          result.push(el);
+        }
       });
-    }
+    } else result = [...suppliers];
     return result;
   };
   return (
     <Modal
       visible={visible}
       title={null}
+      centered
       closeIcon={<img src={icons.ic_close} alt="" />}
       onOk={handleClose}
       onCancel={handleClose}
@@ -79,21 +108,11 @@ const FilterModal = (props) => {
         </p>
         <Autocomplete
           id="combo-box-demo"
-          options={getItems()}
+          classes={{ noOptions: styles.noOptions }}
+          noOptionsText={intl.formatMessage({ id: 'IDS_NO_KEYWORD_MATCH' })}
+          options={totalItems}
           getOptionLabel={(option) => option.name}
           style={{ width: '100%' }}
-          onChange={(event, value, reason) => {
-            if (reason !== 'clear') {
-              const result = subItemSelected.find((v) => v.code === value.code);
-              if (result) {
-                setSubItemSelected(
-                  subItemSelected.filter((v) => v.code !== result.code)
-                );
-              } else {
-                setSubItemSelected([...subItemSelected, value]);
-              }
-            }
-          }}
           renderInput={(params) => {
             const { InputLabelProps, InputProps, ...rest } = params;
             return (
@@ -108,29 +127,49 @@ const FilterModal = (props) => {
               />
             );
           }}
-          // renderOption={(option) => (
-          //   <Typography noWrap>{option.name}</Typography>
-          // )}
+          renderOption={(option) => (
+            <p
+              key={option.id}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+              }}
+              onClick={() => {
+                const result = subItemSelected.find(
+                  (v) => v.name === option.name
+                );
+                if (result) {
+                  setSubItemSelected(
+                    subItemSelected.filter((v) => v.name !== result.name)
+                  );
+                } else {
+                  setSubItemSelected([...subItemSelected, option]);
+                }
+              }}
+            >
+              <span>{option.name}</span>
+              <CustomRadio
+                checked={Boolean(
+                  subItemSelected.find((v) => v.id === option.id)
+                )}
+              />
+            </p>
+          )}
         />
-        {/* <Input
-          size="large"
-          placeholder={intl.formatMessage({
-            id: 'IDS_PLACEHOLDER_SEARCH_ITEMS',
-          })}
-          prefix={startAdornment}
-        /> */}
 
         <div className="tag-group">
           {!isEmpty(subItemSelected) &&
             subItemSelected.map((el) => (
-              <span className="tag-item" key={el.code}>
+              <span className="tag-item" key={el.id}>
                 {el.name}{' '}
                 <img
                   src={icons.ic_close}
                   alt=""
                   onClick={() => {
                     setSubItemSelected(
-                      subItemSelected.filter((v) => v.code !== el.code)
+                      subItemSelected.filter((v) => v.id !== el.id)
                     );
                   }}
                 />
@@ -142,9 +181,9 @@ const FilterModal = (props) => {
           <FormattedMessage id="IDS_SUPPLIER" />
         </p>
         <SelectCustom
-          options={convertArrayData(suppliers || [])}
+          options={getSuppliers()}
           multiple
-          getOptionLabel={(v) => v.name}
+          getOptionLabel={(v) => v.supplier_name}
           onSelectOption={(value) => {
             const result = itemsSelected.find((v) => v.id === value.id);
             if (result) {
@@ -182,14 +221,6 @@ const FilterModal = (props) => {
         <p className="title-item">
           <FormattedMessage id="IDS_STATUS" />
         </p>
-        {/* <Radio.Group className="status-group">
-          <CustomRadio value={0}>
-            <FormattedMessage id="IDS_FILLED" />
-          </CustomRadio>
-          <CustomRadio value={1}>
-            <FormattedMessage id="IDS_NOT_FILLED" />
-          </CustomRadio>
-        </Radio.Group> */}
         <FormControlLabel
           value={0}
           control={<CustomRadio checked={filled === 0} />}

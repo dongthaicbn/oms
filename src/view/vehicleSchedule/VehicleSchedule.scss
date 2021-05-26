@@ -71,8 +71,8 @@
     }
     &.categories-group {
       flex-wrap: wrap;
-      width: 100%;
-      margin: 0;
+      width: calc(100% + 16px);
+      margin: 0 -8px;
       .normal-item {
         background: #ffffff;
         border: 2px solid #d0d1ff;
@@ -115,6 +115,7 @@
   }
 }
 .vehicle-detail {
+  padding: 0;
   .title-info {
     font-weight: 900;
     font-size: 24px;

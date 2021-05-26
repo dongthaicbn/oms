@@ -31,6 +31,13 @@ const VehicleSchedule = (props) => {
       `${routes.VEHICLE_SCHEDULE_DETAIL.replace(':id', item.id)}?type=${type}`
     );
   };
+
+  const handleBack = () => {
+    if (props.layoutSlider.previousUrl) {
+      props.history.push(props.layoutSlider.previousUrl);
+    }
+  };
+
   const { store } = account;
   // const { store, user } = account;
   return (
@@ -77,7 +84,7 @@ const VehicleSchedule = (props) => {
             </div>
           </div>
           <div className="page-footer">
-            <Button className="footer-btn" onClick={props.history.goBack}>
+            <Button className="footer-btn" onClick={handleBack}>
               <FormattedMessage id="IDS_BACK" />
             </Button>
           </div>
@@ -91,6 +98,7 @@ export default connect(
   (state) => ({
     locale: state.system.locale,
     account: state.system.account,
+    layoutSlider: state.system.layoutSlider,
   }),
   { actionToggleMenu }
 )(withRouter(VehicleSchedule));

@@ -18,30 +18,33 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { notification } from 'antd';
 import { routes, TOKEN } from '../../utils/constants/constants';
 import { encrypt } from '../../utils/helpers/helpers';
-import { actionSnackBar } from '../../view/system/systemAction';
+import {
+  actionSnackBar,
+  updateAccountInfo,
+} from '../../view/system/systemAction';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { validateEmail } from '../../utils/helpers/helpers';
 
-const Login = props => {
+const Login = (props) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [showError, setshowError] = React.useState('');
   const [values, setValues] = React.useState({
     username: '',
-    password: ''
+    password: '',
   });
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleChange = prop => event => {
+  const handleChange = (prop) => (event) => {
     if (showError) {
       setshowError('');
     }
     setValues({ ...values, [prop]: event.target.value });
   };
-  const handleMouseDownPassword = event => {
+  const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
   const handleClickShowPassword = () => {
@@ -57,7 +60,6 @@ const Login = props => {
     }
     setLoading(true);
     const encryptText = encrypt(values.password);
-
     try {
       const { data } = await requestLogin(values.username, encryptText);
       handleResultLogin(data);
@@ -67,18 +69,19 @@ const Login = props => {
   };
   const intl = useIntl();
 
-  const openNotificationError = message => {
+  const openNotificationError = (message) => {
     notification['error']({
       message: intl.formatMessage({ id: 'IDS_ERROR' }),
-      description: message
+      description: message,
     });
   };
-  const handleResultLogin = data => {
+  const handleResultLogin = (data) => {
     let status = data && data.result && data.result.status;
     switch (status) {
       case 200:
-        props.history.replace('/');
+        props.updateAccountInfo({ ...props.account, logined: true });
         localStorage.setItem(TOKEN, data && data.data.token);
+        props.history.push(routes.ORDER_FORM);
         break;
       case 400:
         setshowError(
@@ -90,7 +93,7 @@ const Login = props => {
     }
     setLoading(false);
   };
-  const redirectionPage = event => {
+  const redirectionPage = (event) => {
     props.history.push(event.target.id);
   };
 
@@ -105,7 +108,7 @@ const Login = props => {
 
       <div className="input-field">
         <FormattedMessage id="IDS_PLACEHOLDER_EMAIL_OR_ID">
-          {msg => (
+          {(msg) => (
             <TextField
               id="outlined-basic"
               label={<FormattedMessage id="IDS_EMAIL_OR_ID" />}
@@ -136,7 +139,7 @@ const Login = props => {
             onChange={handleChange('password')}
             fullWidth
             inputProps={{
-              autoComplete: 'new-password'
+              autoComplete: 'new-password',
             }}
             endAdornment={
               <InputAdornment position="end">
@@ -199,4 +202,9 @@ const Login = props => {
   );
 };
 
-export default connect(state => ({}), { actionSnackBar })(withRouter(Login));
+export default connect(
+  (state) => ({
+    account: state.system.account,
+  }),
+  { actionSnackBar, updateAccountInfo }
+)(withRouter(Login));

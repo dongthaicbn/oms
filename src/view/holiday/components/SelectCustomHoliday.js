@@ -58,6 +58,7 @@ const SelectCustomHoliday = (props) => {
             lineHeight: '30px',
             color: '#4F4E66',
             textAlign: 'center',
+            cursor: 'pointer',
           },
         }}
         onClick={handleClick}

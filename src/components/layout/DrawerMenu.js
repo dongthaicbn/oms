@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Drawer, Typography } from 'antd';
 import AvatarImage from 'components/image/AvatarImage';
-import LogoutModal from './LogoutModal';
 import { FormattedMessage } from 'react-intl';
 import * as icons from 'assets';
 import { ReactComponent as HomeIcon } from 'assets/icons/ic_home.svg';
@@ -36,46 +35,46 @@ const actionMenuItems = [
     icon: <OrderIcon />,
     textID: 'IDS_ORDER',
     loggedInRequired: true,
-    route: '/order-record'
+    route: routes.ORDER_FORM
   },
   {
     id: 3,
     icon: <ReceivedDeliveryIcon />,
     textID: 'IDS_RECEIVED_DELIVERY',
     loggedInRequired: true,
-    route: ''
+    route: routes.RECEIVED_DELIVERY
   },
   {
     id: 4,
     icon: <InventoryBorrowingIcon />,
     textID: 'IDS_INVENTORY_BORROWING',
     loggedInRequired: true,
-    route: ''
+    route: routes.BORROW_RECORD
   },
   {
     id: 5,
     icon: <InventoryIcon />,
     textID: 'IDS_INVENTORY',
     loggedInRequired: true,
-    route: ''
+    route: routes.INVENTORY
   },
   {
     id: 6,
     icon: <NewPromotionIcon />,
     textID: 'IDS_NEW_PROMOTION',
     loggedInRequired: false,
-    route: ''
+    route: routes.NEWS_AND_PROMOTION
   }
 ];
 
 const DrawerMenu = props => {
   const { showMenu, selectedActionMenuItemId, account } = props;
   const closeMenu = () => props.actionToggleMenu(false);
-  let [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const logout = () => {
-    setShowLogoutModal(true);
+    localStorage.clear();
     closeMenu();
+    props.history.push(routes.LOGIN);
   };
 
   const onActionMenuItemSelected = item => {
@@ -93,10 +92,10 @@ const DrawerMenu = props => {
       loginInfo = (
         <>
           <div className="app-button login-info app-flex-container">
-            <AvatarImage src={account?.user?.avatar} alt="" />
+            <AvatarImage src={account ?.user ?.avatar} alt="" />
             <Paragraph ellipsis={true}>
-              {`${account?.store?.company_name}` || '_'}
-              <div> {`${account?.user?.email}` || ''}</div>
+              {`${account ?.store ?.company_name}` || '_'}
+              <div> {`${account ?.user ?.email}` || ''}</div>
             </Paragraph>
           </div>
         </>
@@ -157,7 +156,9 @@ const DrawerMenu = props => {
         )}
         <div className="side-bar-content">
           <div className="header-menu">
-            <img src={icons.ic_logo} alt="" />
+            <Link to={isLoggedIn()? routes.ORDER_FORM : routes.HOME}>
+              <img src={icons.ic_logo} alt="" />
+            </Link>
           </div>
 
           {renderMenuBody()}
@@ -193,9 +194,6 @@ const DrawerMenu = props => {
           </div>
         </div>
       </Drawer>
-      {showLogoutModal && (
-        <LogoutModal closeModal={() => setShowLogoutModal(false)} />
-      )}
     </>
   );
 };

@@ -11,6 +11,7 @@ import Layout from 'components/layout/Layout';
 import { routes } from 'utils/constants/constants';
 
 const GoodsCategories = (props) => {
+  const { account } = props;
   const [data, setData] = useState({});
 
   const fetchData = async () => {
@@ -33,8 +34,11 @@ const GoodsCategories = (props) => {
     );
   };
   const handleBack = () => {
-    props.history.push(routes.ORDER_FORM);
+    if (props.layoutSlider.previousUrl) {
+      props.history.push(props.layoutSlider.previousUrl);
+    }
   };
+  const { store, user } = account;
   return (
     <Layout>
       <div className="scrollable-container">
@@ -43,15 +47,20 @@ const GoodsCategories = (props) => {
             <div className="left-header">
               <span className="title-info">
                 <FormattedMessage id="IDS_STORE" />
-                <span className="title-value">: HP003 Lake Silver</span>
+                <span className="title-value">
+                  : {store && store.company_name}
+                </span>
               </span>
-              <span className="title-info">
+              {/* <span className="title-info">
                 <FormattedMessage id="IDS_DEPT" />
                 <span className="title-value">: Management team</span>
-              </span>
+              </span> */}
             </div>
           </div>
-          <div className="page-content">
+          <div
+            className="page-content"
+            style={{ height: 'calc(100vh - 202px)' }}
+          >
             <div className="item-group">
               {!isEmpty(data.favourite_categories) &&
                 data.favourite_categories.map((el, i) => (
@@ -80,11 +89,14 @@ const GoodsCategories = (props) => {
                 ))}
             </div>
           </div>
-          <div className="page-footer">
-            <Button className="footer-btn" onClick={handleBack}>
-              <FormattedMessage id="IDS_BACK" />
-            </Button>
-          </div>
+        </div>
+        <div
+          className="page-footer order-form-footer"
+          style={{ background: '#f3f3f9' }}
+        >
+          <Button className="footer-btn" onClick={handleBack}>
+            <FormattedMessage id="IDS_BACK" />
+          </Button>
         </div>
       </div>
     </Layout>
@@ -94,6 +106,8 @@ const GoodsCategories = (props) => {
 export default connect(
   (state) => ({
     locale: state.system.locale,
+    account: state.system.account,
+    layoutSlider: state.system.layoutSlider,
   }),
   { actionToggleMenu }
 )(withRouter(GoodsCategories));

@@ -4,10 +4,11 @@ import './Layout.scss';
 import LayoutSider from './LayoutSider';
 
 const Layout = props => {
+  let { emptyDrawer } = props;
   return (
     <>
       <div className="layout-container">
-        <LayoutSider />
+        <LayoutSider empty={emptyDrawer}/>
         <div className="layout-content">{props.children}</div>
       </div>
     </>

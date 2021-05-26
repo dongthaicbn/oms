@@ -21,10 +21,19 @@ const App = (props) => {
       if (!isEmpty(data.data)) {
         props.updateAccountInfo(data.data);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   useEffect(() => {
-    if (localStorage.getItem(TOKEN)) fetchAccountDetail(); // eslint-disable-next-line
+    if (localStorage.getItem(TOKEN)) fetchAccountDetail();
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+    window.addEventListener("resize", () => {
+      vh = window.innerHeight * 0.01;
+      // Then we set the value in the --vh custom property to the root of the document
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
   }, []);
   return (
     <Layout className="app-container">
@@ -38,7 +47,7 @@ const App = (props) => {
 
 export default connect(
   (state) => ({
-    // showMenu: state.system.showMenu,
+    account: state.system.account,
   }),
   { updateAccountInfo }
 )(withRouter(App));

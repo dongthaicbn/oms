@@ -5,14 +5,20 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   actionToggleMenu,
-  actionChangeLang
+  actionChangeLang,
 } from '../../view/system/systemAction';
-const Header = props => {
+import { routes } from 'utils/constants/constants';
+import { isLoggedIn } from 'utils/helpers/helpers';
+const Header = (props) => {
   const openMenu = () => {
     props.actionToggleMenu(true);
   };
-  const changeLanguage = language => () => {
+  const changeLanguage = (language) => () => {
     props.actionChangeLang(language);
+  };
+  const clickLogo = () => {
+    if (isLoggedIn()) props.history.push(routes.ORDER_FORM);
+    else props.history.push(routes.HOME);
   };
   return (
     <div className="header-home padding-common">
@@ -23,7 +29,12 @@ const Header = props => {
           className="icon-menu"
           onClick={openMenu}
         />
-        <img src={icons.ic_logo_text} alt="" className="ic-logo-text" />
+        <img
+          src={icons.ic_logo_text}
+          alt=""
+          className="ic-logo-text pointer"
+          onClick={clickLogo}
+        />
       </div>
       <div className="container-language">
         <div
@@ -53,9 +64,9 @@ const Header = props => {
   );
 };
 export default connect(
-  state => ({
+  (state) => ({
     // users: state.system.users,
-    locale: state.system.locale
+    locale: state.system.locale,
   }),
   { actionToggleMenu, actionChangeLang }
 )(withRouter(Header));

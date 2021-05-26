@@ -31,6 +31,7 @@ const CalendarModal = (props) => {
       className="modal-container"
       width={496}
       footer={null}
+      style={{ position: 0 }}
     >
       <div className="modal-filter-content">
         <CalendarCustom
@@ -39,6 +40,7 @@ const CalendarModal = (props) => {
           setStartDate={setStartDate}
           setEndDate={setEndDate}
           type={'single'}
+          selectAnyDate={true}
         />
         <div className="filter-footer" style={{ marginTop: 24 }}>
           <Button className="outline-btn" onClick={handleReset}>

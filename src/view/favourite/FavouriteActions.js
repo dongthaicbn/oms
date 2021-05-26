@@ -10,15 +10,9 @@ export const getTodayDetail = (params) => {
     params,
   });
 };
-export const getOrderCategories = (params) => {
-  return api({ method: 'get', url: '/api/v1/order/categories', params });
+export const addFavourite = (data) => {
+  return api({ method: 'post', url: '/api/v1/favourite/add', data });
 };
-export const getOrderCategoriesDetail = (params) => {
-  return api({ method: 'get', url: '/api/v1/order/category/detail', params });
-};
-export const saveOrder = (data) => {
-  return api({ method: 'post', url: '/api/v1/order/save', data });
-};
-export const createOrder = (data) => {
-  return api({ method: 'post', url: '/api/v1/order/submit', data });
+export const removeFavourite = (data) => {
+  return api({ method: 'delete', url: '/api/v1/favourite/remove', data });
 };

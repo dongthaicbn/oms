@@ -12,9 +12,9 @@ export const getBorrowDetail = (langCode, id) => {
 };
 export const updateBorrowing = (id, action, sign_image) => {
   return api({
-    method: 'PUT',
+    method: 'POST',
     url: '/api/v1/borrowing/update',
-    params: {
+    data: {
       id,
       action,
       sign_image

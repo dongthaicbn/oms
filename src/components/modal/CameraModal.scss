@@ -1,0 +1,48 @@
+.camera-modal {
+  width: 728px !important;
+  height: 704px !important;
+
+  .ant-modal-content {
+    padding: 24px;
+
+    .ant-modal-body {
+      margin-top: 40px;
+
+      .camera-container {
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .capture-action-group {
+        width: 680px;
+        height: 72px;
+        position: absolute;
+        bottom: 24px;
+        background: rgba(181, 182, 255, 0.5);
+        border-radius: 0 0 10px 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .capture-action {
+          width: 42px;
+          height: 42px;
+          background: #FFFFFF;
+          border: 3px solid #6461B4;
+          border-radius: 50%;
+
+          &:focus {
+            border: 3px solid #6461B4;
+          }
+
+          &:hover {
+            background: #efefef;
+            border: 3px solid #3844b4;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

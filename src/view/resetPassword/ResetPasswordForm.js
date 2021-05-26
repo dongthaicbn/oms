@@ -41,19 +41,21 @@ export default function ResetPasswordForm(props) {
     });
   };
   const handleCheckToken = data => {
-    if (data && data.status) {
-      switch (data.status) {
+    if (data && data.data && data.data.result && data.data.result.status) {
+      switch (data.data.result.status) {
         case 200:
           break;
-        case 400:
+        case 9:
           openNotificationError(
             intl.formatMessage({ id: 'IDS_TOKEN_EXPIRES' })
           );
+          props.history.replace(routes.PAGE_NOT_FOUND)
           break;
         default:
           openNotificationError(
             intl.formatMessage({ id: 'IDS_AN_ERROR_OCCURRED' })
           );
+          props.history.replace(routes.PAGE_NOT_FOUND)
       }
     }
   };

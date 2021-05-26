@@ -1,0 +1,46 @@
+.wrapper-page-not-found {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 100px;
+  .status-code {
+    font-family: NotoSansTCBlack;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 120px;
+    line-height: 174px;
+    text-align: center;
+    color: #B5B6FF;
+  }
+  .title-not-found {
+    font-family: NotoSansTC;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 48px;
+    text-align: center;
+    color: #6461B4;
+    margin-top: 8px;
+  }
+  .try-again {
+    font-family: NotoSansTC;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 35px;
+    text-align: center;
+
+    /* /Secondary Text */
+
+    color: #6461B4;
+    width: 600px;
+    margin-top: 8px;
+  }
+}
+@media only screen and (min-width: 1280px) {
+  .wrapper-page-not-found {
+    padding: 24px 150px;
+  }
+}

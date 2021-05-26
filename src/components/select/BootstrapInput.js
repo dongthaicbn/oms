@@ -1,5 +1,4 @@
 import { createStyles, InputBase, withStyles } from '@material-ui/core';
-import React from 'react';
 
 export const BootstrapInput = withStyles((theme) =>
   createStyles({
@@ -20,6 +19,9 @@ export const BootstrapInput = withStyles((theme) =>
       fontSize: 16,
       padding: '8px',
       color: '#4f4e66',
+    },
+    dropDown: {
+      marginRight: 21
     },
     focused: {
       border: '2px solid #b5b6ff',

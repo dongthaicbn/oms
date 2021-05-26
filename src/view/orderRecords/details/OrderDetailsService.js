@@ -7,9 +7,6 @@ export const getOrderDetail = (langCode, orderNo) => {
         params: {
             lang_code: langCode,
             order_no: orderNo
-        },
-        headers: {
-            Authorization: 'Bearer sWe11gw22iiw7XyoyuZ0kAt66OUnEYwSMBhN7Dsk'
         }
     })
 };

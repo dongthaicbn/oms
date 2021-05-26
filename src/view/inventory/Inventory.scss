@@ -1,0 +1,108 @@
+.inventory-container {
+  height: 100%;
+
+  .layout-container {
+    height: 100%;
+
+    .app-content-container {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0;
+
+      .header-group {
+        .page-info-container {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-bottom: 16px;
+
+          .page-title {
+            flex: 1;
+
+            h3.ant-typography {
+              font-family: NotoSansTCBlack;
+              font-size: 24px;
+              font-weight: 900;
+              color: #6461B4;
+              margin-bottom: 4px;
+            }
+
+            .ant-typography {
+              font-size: 17px;
+              font-weight: 700;
+              color: #4F4F4F;
+            }
+          }
+
+          .year-selection-container {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+
+            .app-select-container {
+              margin-right: 16px;
+
+              .ant-select {
+                .ant-select-selector {
+                  min-width: 213px;
+                  height: 58px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .body-group {
+        overflow-y: auto;
+        flex: 1;
+        padding-right: 12px;
+
+        .ant-list {
+          width: 100%;
+          height: 100%;
+
+          .ant-list-item {
+            padding: 0 0 12px 0;
+
+            .ant-card {
+              border: 1px solid #B5B6FF;
+              box-shadow: 0 5px 20px -5px rgba(132, 128, 255, 0.3);
+              border-radius: 6px;
+
+              .ant-card-body {
+                padding: 16px;
+
+                .deadline-color {
+                  color: #6461B4;
+                }
+
+                .date-icon {
+                  width: 16px;
+                  height: 16px;
+                  margin-right: 8px;
+                  vertical-align: baseline;
+                }
+
+                .submision-date-color {
+                  color: #4BC09C;
+                }
+
+                .item-action-container {
+                  display: flex;
+                  justify-content: flex-end;
+
+                  .ant-btn {
+                    width: 175px;
+                    height: 55px;
+                    padding: 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,102 +1,168 @@
-.status-filter-container {
-  margin-bottom: 16px;
-  .ant-radio-group {
-    font-weight: 900;
+.order-record-container {
+  height: 100%;
 
-    .ant-radio-button-wrapper {
-      height: auto;
-      padding: 8px 24px;
-      font-size: 20px;
+  .layout-content {
+    height: 100%;
+
+    .app-content-container {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0;
     }
 
-    .ant-radio-button-wrapper:first-child {
-      border: 0;
-    }
+    .header-group {
+      .page-info-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 16px;
 
-    .ant-radio-button-wrapper:first-child:last-child {
-      border-radius: 4px;
-    }
+        .page-title {
+          flex: 1;
 
-    .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-checked) {
-      background: transparent;
-      color: #ABAACA;
-    }
-  }
-}
-
-.list-order-record-container {
-  .ant-list-item {
-    padding: 0 0 12px 0;
-  }
-
-  .ant-card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    .ant-card-body {
-      padding: 16px;
-
-      .estimated-delivery-color {
-        color: #FF884B;
+          .ant-typography {
+            font-family: NotoSansTCBlack;
+            font-size: 32px;
+            font-weight: 900;
+            color: #6461B4;
+            margin-bottom: 0;
+          }
+        }
       }
 
-      .delivery-date-icon {
-        width: 16px;
-        height: 16px;
-        margin-right: 8px;
-        vertical-align: baseline;
+      .status-filter-container {
+        margin-bottom: 16px;
+
+        .ant-radio-group {
+          font-weight: 900;
+
+          .ant-radio-button-wrapper {
+            height: auto;
+            padding: 8px 24px;
+            font-size: 20px;
+          }
+
+          .ant-radio-button-wrapper:first-child {
+            border: 0;
+          }
+
+          .ant-radio-button-wrapper:first-child:last-child {
+            border-radius: 4px;
+          }
+
+          .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-checked) {
+            background: transparent;
+            color: #ABAACA;
+          }
+
+          .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+            background: #80B2FF;
+          }
+        }
+      }
+    }
+
+    .body-group {
+      flex: 1;
+      overflow: hidden;
+
+      &::-webkit-scrollbar-track {
+        background: none;
       }
 
-      .delivery-date-color {
-        color: #4BC09C;
+      .app-list {
+        .ant-list {
+          .ant-list-item {
+            padding: 0 0 12px 0;
+
+            .ant-card {
+              border: 1px solid #B5B6FF;
+              box-shadow: 0 5px 16px -5px rgba(85, 81, 180, 0.3);
+              border-radius: 6px;
+
+              .ant-card-body {
+                padding: 16px;
+
+                .supplier-name {
+                  font-family: NotoSansTCBlack;
+                }
+
+                .estimated-delivery {
+                  font-family: NotoSansTCBlack;
+                  color: #FF884B;
+                }
+
+                .delivery-date {
+                  font-family: NotoSansTCBlack;
+                  color: #4BC09C;
+
+                  img.icon {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 8px;
+                    vertical-align: baseline;
+                  }
+                }
+
+                .order-date-status-info-group {
+                  text-align: end;
+
+                  .order-date {
+                    display: block;
+                    font-size: 18px;
+                    color: #3056A3;
+                    font-weight: bold;
+                    margin-bottom: 12px;
+                  }
+                }
+
+                .order-no-receipt-no-info-group {
+                  .ant-typography {
+                    font-size: 16px;
+                    color: #4F4E66;
+                    margin-bottom: 16px;
+
+                    .divider {
+                      border-color: #4F4E66;
+                    }
+                  }
+                }
+
+                .total-order-number-info {
+                  .ant-tag {
+                    width: 100%;
+                    padding: 8px 16px;
+                    background-color: #F0F0FC;
+                    margin: 0;
+                    line-height: unset;
+                    border: none;
+                    border-radius: 4px;
+
+                    .ant-typography {
+                      color: #4F4E66;
+                      vertical-align: middle;
+                      font-size: 18px;
+                      font-weight: bold;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
 
-      .order-date-status-info-group {
-        text-align: end;
-        .order-date {
-          display: block;
-          font-size: 18px;
-          color: #3056A3;
+      .message-container {
+        width: 100%;
+        padding-top: 166px;
+        text-align: center;
+
+        .message {
+          color: #4F4E66;
+          font-size: 20px;
           font-weight: bold;
         }
       }
-
-      .order-no-receipt-no-info-group {
-        .ant-typography {
-          font-size: 16px;
-          color: #4F4E66;
-          margin-bottom: 16px;
-          .divider {
-            border-color: #4F4E66;
-          }
-        }
-      }
-
-      .total-order-number-info {
-        .ant-tag {
-          width: 100%;
-          padding: 8px 16px;
-          background-color: #F0F0FC;
-          margin: 0;
-
-          .ant-typography {
-            color: #4F4E66;
-            vertical-align: middle;
-            font-size: 18px;
-            font-weight: bold;
-          }
-        }
-      }
     }
-  }
-}
-
-.order-record-message-container {
-  width: 100%;
-  padding-top: 166px;
-  text-align: center;
-
-  .message {
-    color: #4F4E66;
-    font-size: 20px;
-    font-weight: bold;
   }
 }

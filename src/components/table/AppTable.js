@@ -14,7 +14,8 @@ const AppTable = (props) => {
     groupExpandable,
     groupError,
     itemError,
-    actionProviders
+    actionProviders,
+    renderBottom,
   } = props;
   dataSource = dataSource || [];
   columns = columns || [];
@@ -66,12 +67,12 @@ const AppTable = (props) => {
   const tableColumns = initTableColumns();
   const tableData = initTableData();
 
-  const renderTableRow = (className, renderCells = () => {}) => {
+  const renderTableRow = (className, renderCells = () => { }) => {
     return <Row className={className}>{renderCells()}</Row>;
   };
 
   const renderTableCells = (className, item, rowIndex,
-                            contentRender = (item, column, colIndex) => {}) => {
+    contentRender = (item, column, colIndex) => { }) => {
     return tableColumns.map((column, colIndex) => {
       return (
         <Col
@@ -133,11 +134,11 @@ const AppTable = (props) => {
   };
 
   const isGroupError = (item) => {
-    return groupError? groupError(item) : false;
+    return groupError ? groupError(item) : false;
   };
 
   const isItemError = (item) => {
-    return itemError? itemError(item) : false;
+    return itemError ? itemError(item) : false;
   };
 
   const renderTableItemContentCells = (item, rowIndex) => {
@@ -145,7 +146,7 @@ const AppTable = (props) => {
       (item, column, colIndex) => {
         return column.render ? column.render(
           column.dataIndex ? item[column.dataIndex] : item,
-          actionProviders
+          actionProviders, rowIndex
         ) : '';
       }
     );
@@ -187,12 +188,12 @@ const AppTable = (props) => {
     return dataSource.map((data, rowIndex) => {
       if (groupItemRowIndexes.has(rowIndex)) {
         return <Affix key={`row-${rowIndex}`} target={() => tableBodyRef}>
-          <Row className={`group-item-row ${isGroupError(data)? 'group-item-row-error' : ''}`}>
+          <Row className={`group-item-row ${isGroupError(data) ? 'group-item-row-error' : ''}`}>
             {renderTableItemCells(data, rowIndex)}
           </Row>
         </Affix>
       } else {
-        return <Row key={`row-${rowIndex}`} className={`item-row ${isItemError(data)? 'item-row-error' : ''}`}>
+        return <Row key={`row-${rowIndex}`} className={`item-row ${isItemError(data) ? 'item-row-error' : ''}`}>
           {renderTableItemCells(data, rowIndex)}
         </Row>
       }
@@ -206,6 +207,7 @@ const AppTable = (props) => {
       </div>
       <div className="table-body" ref={setTableBodyRef}>
         {renderTableItemRows(tableData)}
+        {renderBottom && renderBottom()}
       </div>
     </div>
   );

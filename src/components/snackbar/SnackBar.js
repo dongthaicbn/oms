@@ -34,17 +34,14 @@ const SnackBar = props => {
       return;
     }
     props.actionSnackBar({
-      open: false,
-      type: '',
-      message: '',
-      messageID: '',
-      messageParams: undefined,
+      ...props.snackBar,
+      open: false
     });
   };
 
   const renderMessage = () => {
     if (props.snackBar.messageID) {
-      return <FormattedMessage id={props.snackBar.messageID} values={props.snackBar.messageParams}/>
+      return <FormattedMessage id={props.snackBar.messageID} values={props.snackBar.messageParams} />
     }
     return props.snackBar.message;
   }
@@ -62,8 +59,8 @@ const SnackBar = props => {
             props.snackBar.type === 'success' ? (
               <CheckCircleIcon fontSize="inherit" />
             ) : (
-              <ReportProblemIcon fontSize="inherit" />
-            )
+                <ReportProblemIcon fontSize="inherit" />
+              )
           }
           className={
             props.snackBar.type === 'success'

@@ -36,4 +36,14 @@
       ),
       #ffffff;
   }
+  .Accepted {
+    background: linear-gradient(180deg, #FFB876 0%, #FF884B 100%);
+    border-radius: 6px;
+    color: #ffffff;
+  }
+  .Rejected {
+    background: linear-gradient(180deg, #F98786 0%, #FC537E 100%);
+    border-radius: 6px;
+    color: #ffffff;
+  }
 }

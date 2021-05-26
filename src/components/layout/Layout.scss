@@ -94,7 +94,7 @@
     }
   }
   .action-menu {
-    padding: 15px 8px 0 8px;
+    padding: 15px 8px 16px 8px;
     .menu-item {
       margin-bottom: 2px;
       .ant-btn {
@@ -174,7 +174,7 @@
       display: none;
       .button-language-choosed {
         background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         color: white;
       }
       .button-language-not-choosed {
@@ -243,6 +243,9 @@
   position: fixed;
   top: 0;
   height: calc(100vh - 24px);
+  img {
+    margin-bottom: 56px;
+  }
   .menu-sider-item {
     display: flex;
     flex-direction: column;
@@ -294,6 +297,7 @@
       margin: 0;
     }
     .side-bar-content {
+      height: calc(var(--vh, 1vh) * 100);
       .footer-menu {
         justify-content: space-between;
         align-items: flex-end;
@@ -302,6 +306,11 @@
           margin-bottom: 7px;
         }
       }
+    }
+  }
+  .layout-sider {
+    img {
+      margin-bottom: 0;
     }
   }
 }

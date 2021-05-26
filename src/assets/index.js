@@ -22,8 +22,14 @@ export { default as ic_subtract } from './icons/ic_subtract.svg';
 export { default as ic_calendar } from './icons/ic_calendar.svg';
 export { default as ic_dropdown } from './icons/ic_dropdown.svg';
 export { default as ic_backspace } from './icons/ic_backspace.svg';
+export { default as ic_back } from './icons/ic_back.svg';
+export { default as ic_edit } from './icons/ic_edit.svg';
+export { default as ic_delete } from './icons/ic_delete.svg';
+export { default as ic_check_white } from './icons/ic_check_white.svg';
+export { default as ic_drop_down } from './icons/ic_drop_down.svg';
 
 // image
 export { default as img_placeholder } from './images/image_placeholder.png';
 export { default as user_placeholder } from './images/user_placeholder.svg';
 export { default as img_pic } from './images/img_pic.svg';
+export { default as TOA_logo } from './images/TOA_logo.svg';

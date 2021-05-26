@@ -1,10 +1,17 @@
 import React, { useEffect } from 'react';
 import { Card } from 'antd';
+import moment from 'moment';
+import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import '../Home.scss';
+import { ReactComponent as DropDownIcon } from 'assets/icons/ic_dropdown.svg';
 
-const PromotionContent = props => {
+import { routes } from 'utils/constants/constants';
+import { isEmpty } from 'utils/helpers/helpers';
+
+const PromotionContent = (props) => {
   const { promotions } = props;
+  let refImage = [];
   useEffect(() => {
     const ele = document.getElementById('card-group');
     ele.style.cursor = 'grab';
@@ -29,7 +36,7 @@ const PromotionContent = props => {
     }
 
     function handlekeydownEvent() {
-      const mouseDownHandler = function(e) {
+      const mouseDownHandler = function (e) {
         ele.style.cursor = 'grabbing';
         ele.style.userSelect = 'none';
 
@@ -38,7 +45,7 @@ const PromotionContent = props => {
           top: ele.scrollTop,
           // Get the current mouse position
           x: e.clientX,
-          y: e.clientY
+          y: e.clientY,
         };
 
         document.addEventListener('mousemove', mouseMoveHandler);
@@ -63,20 +70,45 @@ const PromotionContent = props => {
       document.removeEventListener('mouseup', mouseUpHandler);
     };
   }, []);
+  const openViewMore = () => {
+    props.history.push(routes.NEWS_AND_PROMOTION);
+  };
+  const gotoDetail = (id) => {
+    props.history.push(routes.NEWS_AND_PROMOTION + `/detail/${id}`);
+  };
   return (
     <div className="promotion-content">
       <p className="promotion-title">
         <FormattedMessage id="IDS_NEW_PROMOTION" />
       </p>
       <div className="card-group" id="card-group">
-        {promotions.map(el => (
-          <Card key={el.id} cover={<img alt="example" src={el.banner_url} />}>
+        {promotions.map((el) => (
+          <Card
+            key={el.id}
+            cover={
+              <img
+                alt="example"
+                src={el.banner_url}
+                ref={(divElement) => {
+                  refImage.push(divElement);
+                }}
+              />
+            }
+            onClick={() => gotoDetail(el.id)}
+          >
             <Card.Meta
               title={el.title}
               description={
                 <>
                   <p style={{ marginBottom: 8 }}>{el.description}</p>
-                  <p style={{ marginBottom: 0 }}>{el.create_date}</p>
+                  <p style={{ marginBottom: 0 }} className="date-text">
+                    {!isEmpty(el.create_date) &&
+                      `${moment(el.create_date).format('DD')} ${moment(
+                        el.create_date
+                      ).format('MMM')} ${moment(el.create_date).format(
+                        'YYYY'
+                      )}`}
+                  </p>
                 </>
               }
             />
@@ -84,11 +116,16 @@ const PromotionContent = props => {
         ))}
       </div>
       <div className="view-more pointer">
-        <FormattedMessage id="IDS_VIEW_MORE" />
-        &nbsp;&#62;
+        <span style={{ cursor: 'pointer' }} onClick={openViewMore}>
+          <FormattedMessage id="IDS_VIEW_MORE" />
+          &nbsp;
+          <DropDownIcon
+            style={{ transform: 'rotate(-90deg)', marginBottom: -4 }}
+          />
+        </span>
       </div>
     </div>
   );
 };
 
-export default PromotionContent;
+export default withRouter(PromotionContent);

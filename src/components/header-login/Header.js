@@ -7,12 +7,14 @@ import {
   actionToggleMenu,
   actionChangeLang
 } from '../../view/system/systemAction';
+import { LANG } from 'utils/constants/constants';
 const Header = props => {
   const openMenu = () => {
     props.actionToggleMenu(true);
   };
   const changeLanguage = language => () => {
     props.actionChangeLang(language);
+    localStorage.setItem(LANG, language)
   };
   return (
     <div className="header">

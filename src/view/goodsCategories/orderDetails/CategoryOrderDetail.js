@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import { FormattedMessage } from 'react-intl';
-import { Row, Col, Typography, Divider, Button, Tag, Progress } from 'antd';
+import { Typography, Divider, Button, Tag } from 'antd';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Layout from 'components/layout/Layout';
-import IconButton from 'components/button/IconButton';
 import RoundImage from 'components/image/RoundImage';
 import InfoGroup from 'components/infoGroup/InfoGroup';
 import AppTable from 'components/table/AppTable';
@@ -15,26 +14,28 @@ import { formatDate, getLangCode, isEmpty } from 'utils/helpers/helpers';
 import { routes } from 'utils/constants/constants';
 import * as icons from 'assets';
 import { ReactComponent as FilterIcon } from 'assets/icons/ic_filter.svg';
-import './CategoryOrderDetail.scss';
 import FilterModal from '../components/FilterModal';
 import AppModal from 'components/modal/AppModal';
 import { actionSnackBar } from 'view/system/systemAction';
-import { getOrderCategoriesDetail } from '../../orderForm/OrderFormActions';
+import {
+  getOrderCategoriesDetail,
+  saveOrder,
+} from '../../orderForm/OrderFormActions';
+import './CategoryOrderDetail.scss';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
-const renderDayColumn = (columnData, dayName) => (
+const renderDayColumn = (weekday, date) => (
   <div>
-    <div>{formatDate(columnData[dayName]?.date, 'DD/MM')}</div>
+    <div>{formatDate(date, 'DD/MM')}</div>
     <div>
-      (<FormattedMessage id={`IDS_${dayName.toUpperCase()}`} />)
+      (<FormattedMessage id={`IDS_${weekday.toUpperCase()}`} />)
     </div>
   </div>
 );
 
 const renderItemQuantity = (item, dayName, actionProvider) => {
   let dayDetail = item.day_detail_map[dayName];
-  // let dayDetail = item.day_detail_map[dayName];
   let disabled = !dayDetail || !dayDetail.is_available;
   let content;
   let currentItemQuantity =
@@ -46,14 +47,8 @@ const renderItemQuantity = (item, dayName, actionProvider) => {
     content = (
       <NumberEditPopup
         value={currentItemQuantity}
-        minValue={0}
-        onPopupCancel={() =>
-          actionProvider.onItemQuantityChanged(
-            dayName,
-            item.code,
-            dayDetail.prefill_value
-          )
-        }
+        minValue={dayDetail.minimum_range > 0 ? dayDetail.minimum_range : 0}
+        maxValue={dayDetail.maximum_range > 0 ? dayDetail.maximum_range : 999}
         onCancel={() =>
           actionProvider.onItemQuantityChanged(
             dayName,
@@ -61,106 +56,52 @@ const renderItemQuantity = (item, dayName, actionProvider) => {
             dayDetail.prefill_value
           )
         }
-        onValueChanged={(valueChanged) =>
-          actionProvider.onItemQuantityChanged(
-            dayName,
-            item.code,
-            currentItemQuantity + valueChanged
-          )
+        onPopupCancel={(originValue) =>
+          actionProvider.onItemQuantityChanged(dayName, item.code, originValue)
+        }
+        onValueChanged={(newValue) =>
+          actionProvider.onItemQuantityChanged(dayName, item.code, newValue)
         }
       >
         {button}
       </NumberEditPopup>
     );
   }
-  return (
-    <div className="app-button order-detail-item-quantity-button">
-      {content}
-    </div>
-  );
+  return <div className="app-button quantity-button">{content}</div>;
 };
 
-const itemColumns = [
-  {
-    title: <FormattedMessage id="IDS_ITEMS" />,
-    render: (item) => (
-      <div className="app-flex-container items-info-cell">
-        <RoundImage src={item.image} alt="Item Image" />
-        <div>
-          <InfoGroup
-            label={
-              <>
-                <Text>{item.code}</Text>
-                <Divider type="vertical" />
-                <FormattedMessage id="IDS_UNIT" />
-                :&nbsp;
-                <Text>{item.unit}</Text>
-              </>
-            }
-            noColon={true}
-          >
-            {item.name}&nbsp;
-            <FormattedMessage
-              id="IDS_WEIGHT_PER_PACKS"
-              values={{ weight: item.pack_weight }}
-            />
-          </InfoGroup>
-        </div>
-      </div>
-    ),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'mon'),
-    align: 'center',
-    width: '66px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'mon', actionProvider),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'tue'),
-    align: 'center',
-    width: '66px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'tue', actionProvider),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'wed'),
-    align: 'center',
-    width: '66px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'wed', actionProvider),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'thu'),
-    align: 'center',
-    width: '66px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'thu', actionProvider),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'fri'),
-    align: 'center',
-    width: '66px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'fri', actionProvider),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'sat'),
-    key: 'sat',
-    align: 'center',
-    width: '66px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'sat', actionProvider),
-  },
-  {
-    title: (columnData) => renderDayColumn(columnData, 'sun'),
-    key: 'sun',
-    align: 'center',
-    width: '66px',
-    render: (item, actionProvider) =>
-      renderItemQuantity(item, 'sun', actionProvider),
-  },
-];
+const itemsColumn = {
+  title: <FormattedMessage id="IDS_ITEMS" />,
+  render: (item) => (
+    <div className="app-flex-container items-info-cell">
+      <RoundImage src={item.image} alt="Item Image" />
+      <InfoGroup
+        label={
+          <>
+            {item.code}
+            <Divider type="vertical" />
+            <FormattedMessage id="IDS_UNIT" values={{ value: item.unit }} />
+          </>
+        }
+        noColon={true}
+      >
+        {item.name} {item.pack_weight}
+      </InfoGroup>
+    </div>
+  ),
+};
+
+const weekdayColumn = (weekday, date) => ({
+  title: renderDayColumn(weekday, date),
+  key: weekday,
+  align: 'center',
+  width: '66px',
+  render: (item, actionProvider) =>
+    renderItemQuantity(item, weekday, actionProvider),
+});
+
+const defaultTableColumns = [itemsColumn];
+let mainSuppliers = [];
 
 const CategoryOrderDetail = (props) => {
   const { locale } = props;
@@ -174,6 +115,8 @@ const CategoryOrderDetail = (props) => {
   let [confirmLeaveModalVisible, setConfirmLeaveModalVisible] = useState(false);
   let [confirmSaveModalVisible, setConfirmSaveModalVisible] = useState(false);
   let [saveProgressVisible, setSaveProgressVisible] = useState(false);
+  let [filterValue, setFilterValue] = useState({});
+  let [tableColumns, setTableColumns] = useState(defaultTableColumns);
 
   const initData = (suppliers, mapFormData) => {
     suppliers.forEach((supplier) => {
@@ -188,7 +131,7 @@ const CategoryOrderDetail = (props) => {
           }
           mapFormData[day.weekday].items[item.code] = {
             supplier_id: supplier.supplier_id,
-            product_id: item.code,
+            product_id: item.id,
             order_qty: day.prefill_value,
             min_order_qty: day.minimum_range,
             max_order_qty: day.maximum_range,
@@ -201,6 +144,16 @@ const CategoryOrderDetail = (props) => {
         }, {});
       });
     });
+  };
+
+  const initTableColumns = (weekdayInfos) => {
+    let newTableColumns = [itemsColumn];
+    weekdayInfos.forEach((weekdayInfo) => {
+      newTableColumns.push(
+        weekdayColumn(weekdayInfo.weekday, weekdayInfo.date)
+      );
+    });
+    setTableColumns(newTableColumns);
   };
 
   const createGroupExpandable = () => {
@@ -225,7 +178,7 @@ const CategoryOrderDetail = (props) => {
       return {
         expandable: (item) => true,
         render: (item) => (
-          <div className="app-flex-container flex-end order-detail-total-cost-label">
+          <div className="total-cost-container">
             <Tag>
               <FormattedMessage
                 id="IDS_TOTAL_COST_PER_PACKS"
@@ -240,6 +193,7 @@ const CategoryOrderDetail = (props) => {
       };
     }
   };
+
   const fetchData = async () => {
     try {
       const { data } = await getOrderCategoriesDetail({
@@ -249,17 +203,17 @@ const CategoryOrderDetail = (props) => {
       });
 
       if (!isEmpty(data.data)) {
+        mainSuppliers = [...data.data.suppliers];
         initData(data.data.suppliers, mapFormData);
+        initTableColumns(data.data.weekdays);
         setData(data.data);
       }
     } catch (error) {}
   };
+
   useEffect(() => {
-    fetchData(); // eslint-disable-next-line
+    fetchData();
   }, [id]);
-  useEffect(() => {
-    setMapFormData(mapFormData);
-  }, []);
 
   const goBack = () => {
     props.history.push(routes.GOODS_CATEGORIES);
@@ -286,34 +240,34 @@ const CategoryOrderDetail = (props) => {
     }
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
     setSaveProgressVisible(true);
-    setTimeout(() => {
-      let submitData = {
-        dates: [],
-      };
-      Object.keys(mapFormData).forEach((weekDay) => {
-        let dayItems = mapFormData[weekDay].items;
-        submitData.dates.push({
-          date: formatDate(mapFormData[weekDay].date, 'YYYY-MM-DD'),
-          items: Object.keys(dayItems).map((itemId) => {
-            return {
-              product_id: dayItems[itemId].product_id,
-              order_qty: dayItems[itemId].order_qty,
-            };
-          }),
+    let submitData = {
+      dates: [],
+    };
+    Object.keys(mapFormData).forEach((weekDay) => {
+      let dayItems = mapFormData[weekDay].items;
+      submitData.dates.push({
+        date: formatDate(mapFormData[weekDay].date, 'YYYY-MM-DD'),
+        items: Object.keys(dayItems).map((itemId) => {
+          return {
+            product_id: dayItems[itemId].product_id,
+            order_qty: dayItems[itemId].order_qty || 0,
+          };
+        }),
+      });
+    });
+    try {
+      const { data } = await saveOrder(submitData);
+      if (data.result.status === 200) {
+        props.actionSnackBar({
+          open: true,
+          type: 'success',
+          messageID: 'IDS_TODAY_ORDER_FORM_CREATED',
         });
-      });
-      console.log(submitData);
-
-      props.actionSnackBar({
-        open: true,
-        type: 'success',
-        messageID: 'IDS_TODAY_ORDER_FORM_CREATED',
-      });
-
-      props.history.push(routes.ORDER_FORM);
-    }, 3000);
+        props.history.push(routes.ORDER_FORM);
+      }
+    } catch (error) {}
     return false;
   };
 
@@ -387,31 +341,118 @@ const CategoryOrderDetail = (props) => {
       setEditItems(editItems);
     }
   };
+  const checkFilled = (day_detail, filledVal) => {
+    // filledVal: 0 => filled, 1 - not filled
+    let temp = day_detail.find((v) => v.prefill_value > 0);
+    return filledVal === 0 ? Boolean(temp) : !Boolean(temp);
+  };
+  const handleFilter = (values) => {
+    setFilterValue(values);
+    let result = [];
+
+    if (!isEmpty(values.filled)) {
+      if (!isEmpty(values.items)) {
+        if (!isEmpty(values.suppliers)) {
+          values.suppliers.forEach((supplierItem) => {
+            result.push({
+              ...supplierItem,
+              items: supplierItem.items.filter(
+                (elm) =>
+                  values.items.find((el) => el.name === elm.name) &&
+                  checkFilled(elm.day_detail, values.filled)
+              ),
+            });
+          });
+        } else {
+          mainSuppliers.forEach((supplierItem) => {
+            let tempItems = supplierItem.items.filter(
+              (elm) =>
+                values.items.find((el) => el.name === elm.name) &&
+                checkFilled(elm.day_detail, values.filled)
+            );
+            if (!isEmpty(tempItems))
+              result.push({ ...supplierItem, items: tempItems });
+          });
+        }
+      } else {
+        if (!isEmpty(values.suppliers)) {
+          values.suppliers.forEach((supplierItem) => {
+            result.push({
+              ...supplierItem,
+              items: supplierItem.items.filter((elm) =>
+                checkFilled(elm.day_detail, values.filled)
+              ),
+            });
+          });
+        } else {
+          mainSuppliers.forEach((supplierItem) => {
+            result.push({
+              ...supplierItem,
+              items: supplierItem.items.filter((elm) =>
+                checkFilled(elm.day_detail, values.filled)
+              ),
+            });
+          });
+        }
+      }
+    } else {
+      if (!isEmpty(values.items)) {
+        if (!isEmpty(values.suppliers)) {
+          values.suppliers.forEach((supplierItem) => {
+            result.push({
+              ...supplierItem,
+              items: supplierItem.items.filter((elm) =>
+                values.items.find((el) => el.name === elm.name)
+              ),
+            });
+          });
+        } else {
+          mainSuppliers.forEach((supplierItem) => {
+            let tempItems = supplierItem.items.filter((elm) =>
+              values.items.find((el) => el.name === elm.name)
+            );
+            if (!isEmpty(tempItems))
+              result.push({ ...supplierItem, items: tempItems });
+          });
+        }
+      } else {
+        if (!isEmpty(values.suppliers)) {
+          result = [...values.suppliers];
+        } else {
+          result = [...mainSuppliers];
+        }
+      }
+    }
+    setData({ ...data, suppliers: result });
+  };
   return (
-    <Layout>
-      <div className="order-detail-container">
-        <div className="app-content-container content-container">
-          <Row className="order-detail-header">
-            <Col span={20}>
-              <div className="app-flex-container height-full flex-va-center">
-                <Title level={3}>{data.category?.name}</Title>
-              </div>
-            </Col>
-            <Col span={4}>
-              <div className="app-flex-container flex-end filter-button-container">
-                <IconButton
+    <div className="category-order-detail-container">
+      <Layout>
+        <div className="app-scrollable-container">
+          <div className="app-content-container">
+            <div className="header-group">
+              <div className="page-info-container app-button">
+                <div className="page-title">
+                  <Title level={3}>{data.category?.name}</Title>
+                </div>
+                <Button
+                  className={`${
+                    !isEmpty(filterValue.suppliers) ||
+                    !isEmpty(filterValue.items) ||
+                    !isEmpty(filterValue.filled)
+                      ? 'active-btn'
+                      : ''
+                  }`}
                   icon={<FilterIcon />}
                   onClick={() => setFilterModalVisible(true)}
                 >
                   <FormattedMessage id="IDS_FILTER" />
-                </IconButton>
+                </Button>
               </div>
-            </Col>
-          </Row>
-          <Row className="order-detail-table">
-            <Col span={24}>
+            </div>
+            <div className="body-group">
               <AppTable
-                columns={itemColumns}
+                columns={tableColumns}
                 columnDataSource={mapFormData}
                 dataSource={data.suppliers}
                 itemsKey="items"
@@ -429,52 +470,57 @@ const CategoryOrderDetail = (props) => {
                   getItemCurrentQuantity: getItemCurrentQuantity,
                 }}
               />
-            </Col>
-          </Row>
-        </div>
-        <div className="action-container app-button">
-          <Button className="action-button back-button" onClick={prepareGoBack}>
-            <FormattedMessage id="IDS_BACK" />
-          </Button>
-          <Button
-            type="primary"
-            className="action-button"
-            style={{ float: 'right' }}
-            onClick={() => prepareSubmitForm()}
-          >
-            <FormattedMessage id="IDS_SAVE" />
-          </Button>
-        </div>
-      </div>
-      <FilterModal
-        visible={filterModalVisible}
-        handleClose={() => setFilterModalVisible(false)}
-      />
-      <AppModal
-        visible={confirmLeaveModalVisible}
-        titleID="IDS_LEAVE_THIS_PAGE"
-        okTextID="IDS_LEAVE"
-        onOk={goBack}
-        cancelTextID="IDS_STAY"
-        onVisibleChange={(visible) => setConfirmLeaveModalVisible(visible)}
-      >
-        <FormattedMessage id="IDS_LEAVE_DESCRIPTION" />
-      </AppModal>
-      <AppModal
-        visible={confirmSaveModalVisible}
-        titleID="IDS_SAVE_ORDER_ITEM"
-        okTextID="IDS_SAVE"
-        onOk={submitForm}
-        onVisibleChange={(visible) => setConfirmSaveModalVisible(visible)}
-      >
-        <FormattedMessage id="IDS_ORDER_ITEM_DESCRIPTION" />
-        {saveProgressVisible && (
-          <div className="modal-progress-container">
-            <CircularProgress />
+            </div>
+            <div className="footer-group app-button">
+              <Button className="back-button" onClick={prepareGoBack}>
+                <FormattedMessage id="IDS_BACK" />
+              </Button>
+              <Button
+                type="primary"
+                className="save-button"
+                onClick={prepareSubmitForm}
+              >
+                <FormattedMessage id="IDS_SAVE" />
+              </Button>
+            </div>
           </div>
-        )}
-      </AppModal>
-    </Layout>
+        </div>
+        <FilterModal
+          visible={filterModalVisible}
+          handleClose={() => setFilterModalVisible(false)}
+          suppliers={(mainSuppliers || []).map((v) => {
+            if (v) return { ...v, id: v.supplier_id };
+            return v;
+          })}
+          filterValue={filterValue}
+          handleFilter={handleFilter}
+        />
+        <AppModal
+          visible={confirmLeaveModalVisible}
+          titleID="IDS_LEAVE_THIS_PAGE"
+          okTextID="IDS_LEAVE"
+          onOk={goBack}
+          cancelTextID="IDS_STAY"
+          onVisibleChange={(visible) => setConfirmLeaveModalVisible(visible)}
+        >
+          <FormattedMessage id="IDS_LEAVE_DESCRIPTION" />
+        </AppModal>
+        <AppModal
+          visible={confirmSaveModalVisible}
+          titleID="IDS_SAVE_ORDER_ITEM"
+          okTextID="IDS_SAVE"
+          onOk={submitForm}
+          onVisibleChange={(visible) => setConfirmSaveModalVisible(visible)}
+        >
+          <FormattedMessage id="IDS_ORDER_ITEM_DESCRIPTION" />
+          {saveProgressVisible && (
+            <div className="modal-progress-container">
+              <CircularProgress />
+            </div>
+          )}
+        </AppModal>
+      </Layout>
+    </div>
   );
 };
 

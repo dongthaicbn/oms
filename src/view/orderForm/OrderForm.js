@@ -72,9 +72,13 @@ const OrderForm = (props) => {
               <FormattedMessage id="IDS_NO_ORDER_ITEMS" />
             </div>
           ) : (
-            <>
+            <Box style={{ marginTop: 118 }}>
               {supplier.map((el, i) => (
-                <OrderItem item={el} key={i} />
+                <OrderItem
+                  item={el}
+                  key={i}
+                  isShowEdit={data.is_show_edit_button === 0}
+                />
               ))}
               <Box
                 style={{
@@ -93,7 +97,7 @@ const OrderForm = (props) => {
                     lineHeight: '24px',
                   }}
                 >
-                  <FormattedMessage id="IDS_TOTAL_ITEM" />: 242
+                  <FormattedMessage id="IDS_TOTAL_ITEM" />: {data.total_item}
                 </p>
                 <Divider className="custom-divider" />
                 <p
@@ -103,10 +107,10 @@ const OrderForm = (props) => {
                     lineHeight: '36px',
                   }}
                 >
-                  <FormattedMessage id="IDS_TOTAL" />: HK$22,542
+                  <FormattedMessage id="IDS_TOTAL" />: {data.total_cost}
                 </p>
               </Box>
-            </>
+            </Box>
           )}
           <div className="footer-content">
             <Button className="item-btn">

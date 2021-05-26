@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 // import { isMobile } from 'react-device-detect';
+import { isLoggedIn } from 'utils/helpers/helpers';
 import { routes } from './utils/constants/constants';
 import Login from './view/login/Login';
 import Home from 'view/home/Home';
@@ -26,9 +27,23 @@ import ReceivedDetail from 'view/reicivedDelivery/receivedDetail/ReceivedDetail'
 // import HolidayGoodsCategories from 'view/holiday/HolidayGoodsCategories';
 // import HolidayGoodsCategoriesDetail from 'view/holiday/HolidayGoodsCategoriesDetail';
 import LendingForm from 'view/lending-form/LendingForm';
+import LendingConfirm from 'view/lending-form/LendingConfirm';
 
+import LendingGoodsCategories from 'view/lending-form/goodCategories/LendingGoodsCategories';
+import LendingGoodCategoryDetail from 'view/lending-form/goodCategories/LendingGoodCategoryDetail';
+import Contact from 'view/home/Contact';
+import TermCondition from 'view/home/TermCondition';
+import Inventory from 'view/inventory/Inventory';
+import InventoryDetail from 'view/inventory/detail/InventoryDetail';
 
-const Routes = props => {
+import MyAccount from 'view/my-account/MyAccount';
+import NewAndPromotion from 'view/newsAndPromotion/newAndPromotion';
+import PageNotFound from 'view/pageNotFound/PageNotFound';
+
+const Routes = (props) => {
+  if (!isLoggedIn() && props.location.pathname !== routes.LOGIN) {
+    return <Redirect to={routes.LOGIN} />;
+  }
   return (
     <Switch>
       <Route exact path={routes.HOME} component={Home} />
@@ -68,10 +83,52 @@ const Routes = props => {
       <Route exact path={routes.BORROW_RECORD} component={Borrow} />
       <Route exact path={routes.BORROW_DETAIL} component={BorrowDetail} />
 
-      <Route exact path={routes.RECEIVED_DELIVERY} component={ReceivedDelivery} />
+      <Route
+        exact
+        path={routes.RECEIVED_DELIVERY}
+        component={ReceivedDelivery}
+      />
       <Route exact path={routes.LENDING_FORM} component={LendingForm} />
-      <Route exact path={routes.RECEIVED_DELIVERY_DETAIL} component={ReceivedDetail} />
-      <Route render={() => <Redirect to="/" />} />
+      <Route exact path={routes.LENDING_CONFIRM} component={LendingConfirm} />
+
+      <Route
+        exact
+        path={routes.LENDING_FORM_GOODS_CATEGORY}
+        component={LendingGoodsCategories}
+      />
+      <Route
+        exact
+        path={routes.LENDING_FORM_GOODS_CATEGORY_DETAIL}
+        component={LendingGoodCategoryDetail}
+      />
+      <Route exact path={routes.MY_ACCOUNT} component={MyAccount} />
+      <Route path={routes.NEWS_AND_PROMOTION} component={NewAndPromotion} />
+
+      <Route
+        exact
+        path={routes.RECEIVED_DELIVERY_DETAIL}
+        component={ReceivedDetail}
+      />
+      <Route exact path={routes.CONTACT} component={Contact} />
+      <Route exact path={routes.TERM_CONDITION} component={TermCondition} />
+      <Route exact path={routes.PRIVACY_POLICY} component={TermCondition} />
+      <Route exact path={routes.DISCLAIMER} component={TermCondition} />
+
+      <Route
+        exact
+        path={routes.RECEIVED_DELIVERY_DETAIL}
+        component={ReceivedDetail}
+      />
+      <Route
+        exact
+        path={routes.RECEIVED_DELIVERY_DETAIL_EDIT}
+        render={(props) => <ReceivedDetail {...props} editMode={true} />}
+      />
+
+      <Route exact path={routes.INVENTORY} component={Inventory} />
+      <Route exact path={routes.INVENTORY_DETAIL} component={InventoryDetail} />
+      <Route exact path={routes.PAGE_NOT_FOUND} component={PageNotFound} />
+      <Route render={() => <Redirect to={routes.PAGE_NOT_FOUND} />} />
     </Switch>
   );
 };

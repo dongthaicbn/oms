@@ -8,9 +8,16 @@ export const STATUS_ALL = 'all';
 export const STATUS_PENDING = 'pending';
 export const STATUS_RECEIVED = 'received';
 export const STATUS_DAMAGED = 'damaged';
+export const STATUS_SUBMITTED = 'submitted';
 
 export const TYPE_BORROW = 'borrow';
 export const TYPE_LEND = 'lend';
+export const TYPE_ACCEPT = 'Accepted';
+export const TYPE_REJECTED = 'Rejected';
+
+export const UPLOAD_TYPE_FILE = 1;
+export const UPLOAD_TYPE_URL = 2;
+
 export const DATE_FORMAT = 'DD/MM/YYYY';
 export const DATE_FORMAT_URL = 'YYYY-MM-DD';
 // routes
@@ -41,14 +48,48 @@ export const routes = {
   CATEGORY: '/category',
   GOODS_CATEGORY_ORDER_DETAIL: '/goods-categories/:id/order',
   RECEIVED_DELIVERY: '/received-delivery',
-  RECEIVED_DELIVERY_DETAIL: '/received-delivery/:id',
-  LENDING_FORM: '/lending-form',
-
   RECEIVED_DELIVERY_DETAIL: '/received-delivery/:orderNo',
+  RECEIVED_DELIVERY_DETAIL_EDIT: '/received-delivery/:orderNo/edit',
+  LENDING_FORM: '/lending-form',
+  LENDING_CONFIRM: '/lending-confirm',
+
+  LENDING_FORM_GOODS_CATEGORY: '/lending-form/goods-category',
+  LENDING_FORM_GOODS_CATEGORY_DETAIL: '/lending-form/goods-category/:id',
+  MY_ACCOUNT: '/my-account',
+  CONTACT: '/contact',
+  TERM_CONDITION: '/terms-conditions',
+  PRIVACY_POLICY: '/privacy-policy',
+  DISCLAIMER: '/disclaimer',
+  NEWS_AND_PROMOTION: '/news-and-promotions',
+  INVENTORY: '/inventory',
+  INVENTORY_DETAIL: '/inventory/:id',
+  PAGE_NOT_FOUND: '/page-not-found',
 };
 export const formItemLayout = {
   labelCol: { xs: { span: 24 }, sm: { span: 4 } },
-  wrapperCol: { xs: { span: 24 }, sm: { span: 24 } }
+  wrapperCol: { xs: { span: 24 }, sm: { span: 24 } },
 };
 export const NUMBER_REGEX = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
 export const URL_REGEX = /^((ftp|http|https):\/\/).*$/;
+
+export const reasonType = {
+  PACKAGE_DAMAGED: {
+    value: 1,
+    textID: 'IDS_PACKAGE_DAMAGED',
+  },
+  WRONG_PRODUCT: {
+    value: 2,
+    textID: 'IDS_WRONG_PRODUCT',
+  },
+  SPOILED: {
+    value: 3,
+    textID: 'IDS_SPOILED',
+  },
+  OTHER: {
+    value: 4,
+    textID: 'IDS_OTHER',
+  },
+};
+
+export const DEFAULT_NUMBER_OF_ITEMS = 8;
+

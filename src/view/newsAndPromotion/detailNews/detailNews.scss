@@ -1,0 +1,38 @@
+.wapper-detail-news {
+  padding: 24px;
+  min-height: 50vh;
+  .promotion-title {
+    font-weight: 900;
+    font-size: 30px;
+    line-height: 45px;
+    color: #4F4E66;
+  }
+  .title-news {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 36px;
+    color: #4F4F4F;
+    margin-bottom: 24px;
+  }
+  .create-date {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 18px;
+    color: #828282;
+  }
+  .image-news {
+    width: 100%;
+    margin: 16px 0;
+  }
+  .description-news {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #4F4F4F;
+  }
+}
+@media only screen and (min-width: 1280px) {
+  .wapper-detail-news {
+    padding: 24px 150px;
+  }
+}

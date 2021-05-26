@@ -4,78 +4,172 @@ import { FormattedMessage } from 'react-intl';
 import * as icons from 'assets';
 import './NumberEditPopup.scss'
 
+export const TYPE_PLUS_VALUE = 'PLUS';
+export const TYPE_APPEND_VALUE = 'APPEND';
+export const TYPE_APPEND_DOT_VALUE = 'APPEND_DOT';
+export const TYPE_BACKSPACE_VALUE = 'BACKSPACE';
+
+const plusValueBy = (originValue, ammount) => {
+  if (typeof originValue === 'string' && originValue.endsWith('.')) {
+    originValue = Number(backspaceValue(originValue));
+  }
+  return originValue + ammount;
+};
+
+const appendValueWithNumber = (originValue, appendValue) => {
+  if (originValue) {
+    return Number(`${originValue}${appendValue}`);
+  } else if (appendValue) {
+    return Number(appendValue);
+  }
+};
+
+const appendDot = (originValue) => {
+  if (originValue) {
+    if (typeof originValue === 'string' && originValue.endsWith('.')) {
+      return originValue;
+    }
+    return `${originValue}.`;
+  } else {
+    return '0.';
+  }
+};
+
+const backspaceValue = (originValue) => {
+  if (originValue) {
+    let result = String(originValue).slice(0, -1);
+    if (!result.endsWith('.')) {
+      result = Number(result);
+    }
+    return result;
+  }
+};
+
+const defaultHandleValueChangeEvent = (changeType, originValue, newValue) => {
+  switch (changeType) {
+    case TYPE_PLUS_VALUE: {
+      return plusValueBy(originValue, newValue);
+    }
+
+    case TYPE_APPEND_VALUE: {
+      return appendValueWithNumber(originValue, newValue);
+    }
+
+    case TYPE_APPEND_DOT_VALUE: {
+      return appendDot(originValue);
+    }
+
+    case TYPE_BACKSPACE_VALUE: {
+      return backspaceValue(originValue);
+    }
+
+    default: {
+      return originValue;
+    }
+  }
+};
+
+const isNumberValid = (value, minValue, maxValue, maxFractionalDigits) => {
+  if (minValue !== null && minValue !== undefined && value < minValue) {
+    return false;
+  }
+  if (maxValue !== null && maxValue !== undefined && value > maxValue) {
+    return false;
+  }
+  if (maxFractionalDigits) {
+    let numberParts = String(value).split('.');
+    if (numberParts.length > 1 && numberParts[1].length > maxFractionalDigits) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const defaultValidateValue = (value, minValue, maxValue, maxFractionalDigits) => {
+  let dataType = typeof value;
+  switch (dataType) {
+    case 'number': {
+      return isNumberValid(value, minValue, maxValue, maxFractionalDigits);
+    }
+
+    default: {
+      return true;
+    }
+  }
+};
+
+const defaultFormatValue= (value) => {
+  if (typeof value === 'string') {
+    if (value.endsWith('.')) {
+      value = backspaceValue(value);
+    }
+    return Number(value);
+  }
+  return value;
+};
+
 const NumberEditPopup = (props) => {
   let {
-    onSubmit, onValueChanged, onPopupCancel, onCancel,
-    value, maxValue, minValue,
-    disableFractional, maxFractionalDigits
+    onSubmit, onValueChanged, handleValueChangeEvent, validateValue, formatValue, onPopupCancel, onCancel, onError,
+    value, maxValue, minValue, expand,
+    disableFractional, maxFractionalDigits, onVisibleChange,
   } = props;
   let [visible, setVisible] = useState(false);
   let [submitted, setSubmitted] = useState(false);
   let [canceled, setCanceled] = useState(false);
-  let [expanded, setExpanded] = useState(false);
+  let [expanded, setExpanded] = useState(expand);
   let [originValue, setOriginValue] = useState(value);
 
+  handleValueChangeEvent = handleValueChangeEvent || defaultHandleValueChangeEvent;
+  validateValue = validateValue || defaultValidateValue;
+  formatValue = formatValue || defaultFormatValue;
+
   const onUpdateClicked = () => {
-    reformatValueNumber(value);
-    if (!onSubmit || onSubmit()) {
+    let newValue;
+    try {
+      newValue = formatValue(value);
+    } catch (e) {
+      if (onError) {
+        onError(e);
+      }
+      return;
+    }
+    if (newValue !== value) {
+      changeValue(newValue);
+    }
+    if (!onSubmit || onSubmit(newValue)) {
       setSubmitted(true);
       setCanceled(false);
-      setVisible(false)
+      setVisible(false);
+      if (onVisibleChange) {
+        onVisibleChange(false);
+      }
     }
   };
 
   const changeValue = (newValue) => {
-    if (typeof newValue !== 'string') {
-      if (!isNumberValid(newValue)) {
-        return;
-      }
-    } else if (!newValue.endsWith('.')) {
-      let numberValue = parseFloat(newValue);
-      if (!isNumberValid(numberValue)) {
-        return;
-      }
-      newValue = numberValue;
+    if (!validateValue(newValue, minValue, maxValue, maxFractionalDigits)) {
+      return;
     }
     if (newValue !== value && onValueChanged) {
       onValueChanged(newValue);
     }
   };
 
-  const isNumberValid = (value) => {
-    if (minValue !== null && minValue !== undefined && value < minValue) {
-      return false;
-    }
-    if (maxValue !== null && maxValue !== undefined && value > maxValue) {
-      return false;
-    }
-    if (maxFractionalDigits) {
-      let numberParts = String(value).split('.');
-      if (numberParts.length > 1 && numberParts[1].length > maxFractionalDigits) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  const reformatValueNumber = (value) => {
-    if (typeof value === 'string' && value.endsWith('.')) {
-      changeValue(Number(backspaceValue(value)));
-    }
-  }
-
-  const onVisibleChanged = (visible) => {
-    if (visible) {
+  const onVisibleChanged = (isVisible) => {
+    if (isVisible) {
       setOriginValue(value);
       setSubmitted(false);
       setCanceled(false);
     } else if (!submitted && !canceled) {
-      reformatValueNumber(value);
       if (onPopupCancel) {
         onPopupCancel(originValue);
       }
     }
-    setVisible(visible);
+    if (visible !== isVisible && onVisibleChange) {
+      onVisibleChange(isVisible);
+    }
+    setVisible(isVisible);
   };
 
   const cancel = () => {
@@ -83,31 +177,17 @@ const NumberEditPopup = (props) => {
     if (onCancel) {
       onCancel();
     }
-  }
-
-  const appendValue = (value, appendValue) => {
-    if (value) {
-      return `${value}${appendValue}`;
-    } else if (appendValue) {
-      return `${appendValue}`;
-    }
   };
 
-  const appendDot = (value) => {
-    if (value) {
-      if (isNaN(value) && value.endsWith('.')) {
-        return value;
+  const expandInput = (expand) => {
+    try {
+      formatValue(value);
+    } catch (e) {
+      if (onPopupCancel) {
+        onPopupCancel(originValue);
       }
-      return `${value}.`
-    } else {
-      return '0.';
     }
-  }
-
-  const backspaceValue = (value) => {
-    if (value) {
-      return String(value).slice(0, -1);
-    }
+    setExpanded(expand);
   };
 
   const renderContent = () => {
@@ -121,10 +201,10 @@ const NumberEditPopup = (props) => {
     return (
       <>
         <div className="app-flex-container middle-group">
-          <Button className="action-button" onClick={() => changeValue(value - 1)}>
+          <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_PLUS_VALUE, value, -1))}>
             -1
           </Button>
-          <Button className="action-button" onClick={() => changeValue(value + 1)}>
+          <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_PLUS_VALUE, value, 1))}>
             +1
           </Button>
           <Button className="btn-cancel" onClick={cancel}>
@@ -133,7 +213,7 @@ const NumberEditPopup = (props) => {
         </div>
         <div className="app-flex-container bottom-group">
           <Button className="btn-update" onClick={onUpdateClicked}>
-            <FormattedMessage id="IDS_UPDATE"/>
+            <FormattedMessage id="IDS_UPDATE" />
           </Button>
         </div>
       </>
@@ -145,39 +225,39 @@ const NumberEditPopup = (props) => {
       <div className="middle-group">
         <Row className="row-space" gutter={12}>
           <Col span={6}>
-            <Button className="action-button" onClick={() => changeValue(appendValue(value, 7))}>
+            <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 7))}>
               7
             </Button>
           </Col>
           <Col span={6}>
-            <Button className="action-button" onClick={() => changeValue(appendValue(value, 8))}>
+            <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 8))}>
               8
             </Button>
           </Col>
           <Col span={6}>
-            <Button className="action-button" onClick={() => changeValue(appendValue(value, 9))}>
+            <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 9))}>
               9
             </Button>
           </Col>
           <Col span={6}>
-            <Button className="action-button" onClick={() => changeValue(backspaceValue(value))}>
-              <img src={icons.ic_backspace} alt=""/>
+            <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_BACKSPACE_VALUE, value))}>
+              <img src={icons.ic_backspace} alt="" />
             </Button>
           </Col>
         </Row>
         <Row className="row-space" gutter={12}>
           <Col span={6}>
-            <Button className="action-button" onClick={() => changeValue(appendValue(value, 4))}>
+            <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 4))}>
               4
             </Button>
           </Col>
           <Col span={6}>
-            <Button className="action-button" onClick={() => changeValue(appendValue(value, 5))}>
+            <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 5))}>
               5
             </Button>
           </Col>
           <Col span={6}>
-            <Button className="action-button" onClick={() => changeValue(appendValue(value, 6))}>
+            <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 6))}>
               6
             </Button>
           </Col>
@@ -191,30 +271,30 @@ const NumberEditPopup = (props) => {
           <Col span={18}>
             <Row className="row-space" gutter={12}>
               <Col span={8}>
-                <Button className="action-button" onClick={() => changeValue(appendValue(value, 1))}>
+                <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 1))}>
                   1
                 </Button>
               </Col>
               <Col span={8}>
-                <Button className="action-button" onClick={() => changeValue(appendValue(value, 2))}>
+                <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 2))}>
                   2
                 </Button>
               </Col>
               <Col span={8}>
-                <Button className="action-button" onClick={() => changeValue(appendValue(value, 3))}>
+                <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 3))}>
                   3
                 </Button>
               </Col>
             </Row>
             <Row gutter={12}>
               <Col span={16}>
-                <Button className="action-button" onClick={() => changeValue(appendValue(value, 0))}>
+                <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_VALUE, value, 0))}>
                   0
                 </Button>
               </Col>
               <Col span={8}>
                 <Button className="action-button" disabled={disableFractional}
-                        onClick={() => changeValue(appendDot(value))}>
+                  onClick={() => changeValue(handleValueChangeEvent(TYPE_APPEND_DOT_VALUE, value))}>
                   .
                 </Button>
               </Col>
@@ -222,7 +302,7 @@ const NumberEditPopup = (props) => {
           </Col>
           <Col span={6}>
             <Button className="btn-update" onClick={onUpdateClicked}>
-              <FormattedMessage id="IDS_UPDATE"/>
+              <FormattedMessage id="IDS_UPDATE" />
             </Button>
           </Col>
         </Row>
@@ -233,18 +313,18 @@ const NumberEditPopup = (props) => {
   let expandIcon;
   if (expanded) {
     expandIcon = <>
-      <FormattedMessage id="IDS_COLLAPSE"/><img className="expand-icon" src={icons.ic_subtract} alt=""/>
+      <FormattedMessage id="IDS_COLLAPSE" /><img className="expand-icon" src={icons.ic_subtract} alt="" />
     </>;
   } else {
     expandIcon = <>
-      <FormattedMessage id="IDS_EXPAND"/><img className="expand-icon" src={icons.ic_plus} alt=""/>
+      <FormattedMessage id="IDS_EXPAND" /><img className="expand-icon" src={icons.ic_plus} alt="" />
     </>;
   }
 
   let content = (
-    <div className="quantity-edit-popup-content">
+    <div className="popup-content">
       <div className="app-flex-container flex-end top-group">
-        <Button type="text" className="btn-expand" onClick={() => setExpanded(!expanded)}>
+        <Button type="text" className="btn-expand" onClick={() => expandInput(!expanded)}>
           {expandIcon}
         </Button>
       </div>
@@ -252,7 +332,8 @@ const NumberEditPopup = (props) => {
     </div>
   );
   return (
-    <Popover content={content} trigger="click" placement="left" visible={visible} onVisibleChange={onVisibleChanged}>
+    <Popover overlayClassName="number-edit-popup" content={content} trigger="click"
+             placement="left" visible={visible} onVisibleChange={onVisibleChanged}>
       {props.children || ''}
     </Popover>
   )

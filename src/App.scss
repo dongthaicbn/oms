@@ -39,13 +39,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #e0e0e0;
+  background: none;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: #a0a0a0;
+  border-radius: 4px;
+  background: #bdbdbd;
 }
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -117,9 +118,9 @@ body {
   }
 
   .ant-btn:disabled {
-    border: 2px solid #f0f0fc;
-    color: #bdbdbd;
-    background: #f7f7fd;
+    border: 2px solid #F0F0FC;
+    background: #F0F0FC;
+    color: #BDBDBD;
   }
 
   .ant-btn:not(.ant-btn-primary):hover {
@@ -132,23 +133,27 @@ body {
     border: none;
     background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
     color: #ffffff;
+    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1), 0 1px 8px rgba(100, 97, 180, 0.12);
   }
 
   .ant-btn-primary:focus {
     border: none;
     background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
     color: #ffffff;
+    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1), 0 1px 8px rgba(100, 97, 180, 0.12);
   }
 
   .ant-btn-primary:active {
     border: none;
     background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
     color: #ffffff;
+    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1), 0 1px 8px rgba(100, 97, 180, 0.12);
   }
 
   .ant-btn-primary:hover {
     background: linear-gradient(92.72deg, #c5c2ff 0%, #938fff 100%);
     border: none;
+    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1), 0 1px 8px rgba(100, 97, 180, 0.12);
   }
 }
 
@@ -222,8 +227,7 @@ body {
 .app-content-container {
   height: 100%;
   min-width: 863px;
-  padding: 32px 0;
-  margin: 0 12px;
+  padding: 24px;
   background: #f3f3f9;
 }
 
@@ -286,4 +290,111 @@ body {
   .MuiCircularProgress-colorPrimary {
     color: #6461b4;
   }
+}
+
+.selection-item-odds {
+  background: #F9FAFF;
+}
+
+.selection-item-even {
+  background: #F1F4FC;
+}
+
+.selection-item {
+  display: flex;
+  flex-direction: row;
+  padding: 18px 24px;
+  align-items: center;
+
+  .item-code {
+    text-align: start;
+    width: 100px;
+    color: #4F4F4F;
+    font-size: 14px;
+    font-weight: 400;
+    margin-right: 22px;
+  }
+
+  .item-name {
+    flex: 1;
+    color: #4F4E66;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: start;
+  }
+
+  .item-action {
+    margin-left: 16px;
+
+    .ant-radio-wrapper {
+      margin-right: 0;
+    }
+  }
+}
+
+.ant-radio-wrapper {
+  --antd-wave-shadow-color: #6461B4;
+
+  &:hover {
+    .ant-radio {
+      border-color: #6461B4;
+    }
+  }
+
+  .ant-radio:not(.ant-radio-checked) {
+    .ant-radio-inner {
+      border-color: #B5B6FF;
+    }
+  }
+
+  .ant-radio.ant-radio-checked {
+    &:hover {
+      .ant-radio-inner {
+        border-color: #6461B4;
+      }
+    }
+
+    .ant-radio-input:focus + .ant-radio-inner {
+      border-color: #6461B4;
+    }
+  }
+
+  .ant-radio-checked {
+    .ant-radio-inner {
+      border-color: #6461B4;
+
+      &:after {
+        background: #6461B4;
+      }
+    }
+  }
+}
+
+.scrollable {
+  overflow: auto;
+  padding-right: 3px !important;
+}
+
+textarea.ant-input {
+  border: 1px solid #B5B6FF;
+  border-radius: 6px;
+  resize: none;
+  color: #4F4F4F;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.5);
+
+  &:hover {
+    border: 1px solid #6461B4 !important;
+    border-radius: 6px;
+  }
+
+  &:focus {
+    border: 1px solid #6461B4;
+    border-radius: 6px;
+    box-shadow: 0 5px 20px -5px rgba(132, 128, 255, 0.3);
+  }
+}
+
+.ant-list-empty-text {
+  display: none;
 }

@@ -4,4 +4,30 @@
   border: 1px solid #B5B6FF;
   border-radius: 6px;
   margin-right: 15px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.round-image-container {
+  margin-right: 15px;
+  position: relative;
+
+  .round-image {
+    margin-right: 0 !important;
+  }
+
+  .close-button {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+
+    path {
+      fill: #ffffff;
+    }
+  }
 }

@@ -1,0 +1,128 @@
+.wapper-my-account {
+  margin: 27px 27px 10px 27px;
+  .title-header {
+    font-weight: 900;
+    font-size: 32px;
+    line-height: 30px;
+    color: #6461B4;
+    margin-top: 10px;
+    margin-bottom: 38px;
+  }
+  .section-infor {
+    margin-bottom: 16px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 16px;
+    .title-infor {
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 27px;
+      color: #4F4E66;
+      margin-bottom: 16px;
+    }
+    .dash {
+      border: 1px solid #B5B6FF;
+    }
+  }
+  .row-account {
+    display: flex;
+    margin-top: 24px;
+    .col-account-left {
+      flex: 1
+    }
+    .col-account-right {
+      flex: 2
+    }
+    .title {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      color: #979797;
+    }
+    .value {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 24px;
+      color: #4F4E66;
+    }
+    .back-button {
+      border: 2px solid #6461B4;
+      box-sizing: border-box;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 27px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #6461B4;
+      padding: 20px 27px;
+      margin-top: 5px;
+    }
+  }
+}
+.modal-change-password {
+  .ant-modal-title {
+    font-family: NotoSansTCBlack;
+    font-size: 24px !important;
+  }
+  .ant-modal-content {
+    width: 376px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+.wapper-modal-my-account {
+  .input-field {
+    &:first-child {
+      margin-top: 18px;
+    }
+    padding: 12px;
+    .MuiFormControl-fullWidth {
+      width: 280px;
+      height: 53px;
+    }
+    .text-error-login {
+      font-size: 10px;
+      line-height: 15px;
+      color: #EF5F5F;
+      text-align: left;
+      margin-top: 5px;
+    }
+    .MuiFormLabel-root.Mui-error {
+      color: #EF5F5F;
+    }
+    .Mui-error .MuiOutlinedInput-notchedOutline {
+      // border-color: #EF5F5F;
+    }
+    .MuiInputLabel-shrink {
+      font-weight: bold;
+    }
+    .MuiInputLabel-outlined {
+      font-family: NotoSansTC;
+      color: #828282;
+    }
+    .MuiFormLabel-root.Mui-focused{
+      color: #3f51b5 !important;
+    }
+    .MuiOutlinedInput-notchedOutline {
+      border-color: #B5B6FF;
+    }
+    .MuiOutlinedInput-adornedEnd {
+      &:hover {
+        border-color: #B5B6FF;        
+      }
+    }
+   
+  }
+
+  .modal-button-container {
+    // padding: 0 40px;
+    justify-content: center;
+    .ant-btn-primary {
+      width: 280px;
+      height: 70px;
+      margin-top: 20px;
+    }
+  }
+}

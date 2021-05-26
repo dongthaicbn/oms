@@ -11,7 +11,7 @@ export const getAccountInfo = () => async dispatch => {
   try {
     const { data } = await api({ method: 'get', url: '/api/v1/accounts/me' });
     dispatch({ type: constants.FETCH_ACCOUNT, payload: data.data });
-  } catch (error) {}
+  } catch (error) { }
 };
 export const updateAccountInfo = data => ({
   type: constants.FETCH_ACCOUNT,
@@ -29,4 +29,11 @@ export const actionSelectActionMenuItem = data => ({
 export const actionSnackBar = data => ({
   type: constants.SNACK_BAR,
   payload: data
+});
+
+export const actionLayoutSliderRouting = currentUrl => ({
+  type: constants.LAYOUT_SLIDER_ROUTING,
+  payload: {
+    previousUrl: currentUrl
+  }
 });

@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core';
 import moment from 'moment';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getMonth, isEmpty } from 'utils/helpers/helpers';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/ic_arrow_down.svg';
 import { FormattedMessage } from 'react-intl';
@@ -8,7 +8,6 @@ import { FormattedMessage } from 'react-intl';
 const GREY_400 = '#BDBDBD';
 const DATE_FORMAT_BACK_END = 'DD-MM-YYYY';
 const TYPE_SINGLE = 'single';
-const cellStyle = { height: 64, width: 64, padding: 0 };
 const headerStyle = {
   padding: 8,
   fontWeight: 600,
@@ -19,11 +18,28 @@ const headerStyle = {
 };
 
 const CalendarCustom = (props) => {
-  const { startDate, endDate, setStartDate, setEndDate, type } = props;
+  const { startDate, endDate, setStartDate, setEndDate, type, selectAnyDate } = props;
   const [monthStart, setMonthStart] = useState(0);
   // const [hoverDate, setHoverDate] = useState(null);
+  const [innerWidth, setInnerWidth] = useState(0)
+  const cellStyle = { height: innerWidth > 576 ? 64 : 0, width: 64, padding: 0 };
 
+  // let innerWidth = window.innerWidth;
+  useEffect(() => {
+
+    function handleResize() {
+      // Set window width/height to state
+      setInnerWidth(window.innerWidth)
+    }
+    window.addEventListener("resize", handleResize);
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
+
+  }, [])
   const isOutsideRange = (date) => {
+    if (props.selectAnyDate) {
+      return false
+    }
     return date.isBefore(moment(), 'days');
   };
   const handleSelectDate = (day) => {
@@ -115,12 +131,12 @@ const CalendarCustom = (props) => {
             color: isEdge ? 'white' : '#1A202C',
             borderTopLeftRadius:
               (startDate && day.isSame(startDate, 'days')) ||
-              type === TYPE_SINGLE
+                type === TYPE_SINGLE
                 ? 64
                 : 0,
             borderBottomLeftRadius:
               (startDate && day.isSame(startDate, 'days')) ||
-              type === TYPE_SINGLE
+                type === TYPE_SINGLE
                 ? 64
                 : 0,
             borderTopRightRadius:
@@ -151,7 +167,7 @@ const CalendarCustom = (props) => {
               background: cellBG,
               borderRadius:
                 (startDate && day.isSame(startDate, 'days')) ||
-                (endDate && day.isSame(endDate, 'days'))
+                  (endDate && day.isSame(endDate, 'days'))
                   ? '50%'
                   : 0,
             }}
@@ -201,7 +217,7 @@ const CalendarCustom = (props) => {
     });
     return (
       <table
-        style={{ borderCollapse: 'collapse', width: 448 }}
+        style={{ borderCollapse: 'collapse', width: innerWidth > 576 ? 448 : 300, margin: 'auto' }}
         draggable={false}
       >
         <thead>

@@ -24,16 +24,16 @@
       .column-cell:first-child {
         font-size: 16px;
         font-weight: 700;
-        margin-left: 16px;
+        padding-left: 12px;
       }
     }
   }
 
   .table-body {
-    flex-grow: 1;
+    flex: 1;
     height: 0;
     overflow: scroll;
-    padding-right: 2px;
+    padding-right: 3px;
 
     &::-webkit-scrollbar-track {
       background: none;

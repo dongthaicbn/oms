@@ -1,113 +1,115 @@
-.quantity-edit-popup-content {
-  width: 428px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
+.number-edit-popup {
+  .popup-content {
+    width: 428px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
 
-  .top-group {
-    align-items: flex-start;
-    padding: 0 0 26px 0;
+    .top-group {
+      align-items: flex-start;
+      padding: 0 0 26px 0;
 
-    .btn-expand {
-      color: #6461B4;
-      font-size: 20px;
-      font-weight: 700;
-      height: auto;
-      display: flex;
+      .btn-expand {
+        color: #6461B4;
+        font-size: 20px;
+        font-weight: 700;
+        height: auto;
+        display: flex;
 
-      .expand-icon {
-        width: 30px;
-        height: 30px;
-        margin-left: 16px;
-      }
-    }
-
-    .btn-expand:focus {
-      background: transparent;
-    }
-  }
-
-  .middle-group {
-    margin-bottom: 10px;
-    justify-content: space-between;
-
-    .row-space {
-      margin-bottom: 12px;
-    }
-
-    .ant-row {
-      .ant-col {
-        .action-button {
-          width: 100%;
-          height: 70px;
-        }
-
-        .btn-cancel {
-          width: 100%;
-          height: 100%;
+        .expand-icon {
+          width: 30px;
+          height: 30px;
+          margin-left: 16px;
         }
       }
+
+      .btn-expand:focus {
+        background: transparent;
+      }
     }
 
-    .action-button {
-      width: 141px;
-      height: 118px;
-      background: #FFFFFF;
-      border: 2px solid #D0D1FF;
-      border-radius: 10px;
-      color: #4f4e66;
-      font-size: 24px;
-      font-weight: 700;
+    .middle-group {
+      margin-bottom: 10px;
+      justify-content: space-between;
 
-      &:hover {
-        background: #F3F3F9;
+      .row-space {
+        margin-bottom: 12px;
       }
 
-      &:disabled {
-        color: #9b9a9a;
+      .ant-row {
+        .ant-col {
+          .action-button {
+            width: 100%;
+            height: 70px;
+          }
+
+          .btn-cancel {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+
+      .action-button {
+        width: 141px;
+        height: 118px;
+        background: #FFFFFF;
+        border: 2px solid #D0D1FF;
+        border-radius: 10px;
+        color: #4f4e66;
+        font-size: 24px;
+        font-weight: 700;
+
+        &:hover {
+          background: #F3F3F9;
+        }
+
+        &:disabled {
+          color: #9b9a9a;
+          border: none;
+          background: #d7d7db;
+        }
+      }
+
+      .btn-cancel {
+        width: 90px;
+        height: 118px;
+        background: linear-gradient(81.97deg, #A69BEA 1.05%, #B530BC 84.79%);
         border: none;
-        background: #d7d7db;
+        border-radius: 10px;
+        color: #FFFFFF;
+        font-size: 24px;
+        font-weight: 700;
+
+        &:hover {
+          background: linear-gradient(92.72deg, #C5C2FF 0%, #938FFF 100%);
+        }
       }
     }
 
-    .btn-cancel {
-      width: 90px;
-      height: 118px;
-      background: linear-gradient(81.97deg, #A69BEA 1.05%, #B530BC 84.79%);
+    .btn-update {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(272.96deg, #28A9F1 0%, #65C8FF 100%);
       border: none;
       border-radius: 10px;
       color: #FFFFFF;
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 700;
 
       &:hover {
-        background: linear-gradient(92.72deg, #C5C2FF 0%, #938FFF 100%);
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(272.96deg, #28A9F1 0%, #65C8FF 50%);;
       }
     }
-  }
 
-  .btn-update {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(272.96deg, #28A9F1 0%, #65C8FF 100%);
-    border: none;
-    border-radius: 10px;
-    color: #FFFFFF;
-    font-size: 18px;
-    font-weight: 700;
-
-    &:hover {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(272.96deg, #28A9F1 0%, #65C8FF 50%);;
-    }
-  }
-
-  .bottom-group {
-    .btn-update {
-      width: 100%;
-      height: 90px;
-      font-size: 24px;
+    .bottom-group {
+      .btn-update {
+        width: 100%;
+        height: 90px;
+        font-size: 24px;
+      }
     }
   }
 }
