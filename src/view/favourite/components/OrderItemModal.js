@@ -73,11 +73,21 @@ const OrderItemModal = (props) => {
                 <div className="item-detail">
                   <span className="text-group">
                     <span className="title-item">{el.name}</span>
-                    <span className="value-item">{el.supplier_name}</span>
+                    <span
+                      className="value-item"
+                      style={{ background: 'transparent' }}
+                    >
+                      {el.supplier_name}
+                    </span>
                   </span>
                   <span className="text-group">
                     <span className="title-item right-text">{el.quantity}</span>
-                    <span className="value-item right-text">{el.cost}</span>
+                    <span
+                      className="value-item right-text"
+                      style={{ background: 'transparent' }}
+                    >
+                      {el.cost}
+                    </span>
                   </span>
                 </div>
               </div>

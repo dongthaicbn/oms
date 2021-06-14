@@ -134,7 +134,7 @@
   "IDS_SAT": " 週六",
   "IDS_SUN": " 週日",
   "IDS_TOTAL_COST_PER_PACKS": " 總計：{currency}{cost} / 包",
-  "IDS_WEIGHT_PER_PACKS": " （{weight} / 包）",
+  "IDS_WEIGHT_PER_PACKS": " {weight} ",
   "IDS_EXPAND": "展開",
   "IDS_COLLAPSE": "折疊",
   "IDS_UPDATE": " 更新",
@@ -240,7 +240,7 @@
   "IDS_CONFIRM": " 確認",
   "IDS_BACK_TO_EDIT": " 返回編輯頁面",
   "IDS_SUBMIT_INVENTORY_FORM": " 提交庫存表格",
-  "IDS_SUBMIT_INVENTORY_FORM_MESSAGE": " 您確定要提交此表格？你提交後不能再編輯",
+  "IDS_SUBMIT_INVENTORY_FORM_MESSAGE": "提交後，提交日期不會編輯。",
   "IDS_INVENTORY_SUBMIT_SUCCESS_MESSAGE": "已成功提交庫存表格",
   "IDS_INPUT_REQUIRED_VALIDATION_MESSAGE": " {field}是必需的",
   "IDS_PAGE_NOT_FOUND": "Page Not Found",
@@ -249,5 +249,6 @@
   "IDS_SEND_AGAIN": "Send again",
   "IDS_SCAN_QR_CODE_ERROR": "Scan QR Code Error: {message}",
   "IDS_CONFIRM_REDIRECT": "Confirm Redirect",
-  "IDS_SEARCH_ORDER_NO": "Search Order No"
+  "IDS_VIEW_ALL": "View all",
+  "IDS_CLOSE": "Close"
 }

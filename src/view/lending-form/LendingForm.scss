@@ -1,6 +1,6 @@
 .lending-form-container {
   .content-container {
-    height: calc(100vh - 118px);
+    height: calc(var(--vh, 1vh) * 100 - 118px);
     padding-bottom: 0;
     display: flex;
     flex-direction: column;
@@ -19,10 +19,13 @@
       }
     }
   }
+  .table-container {
+    padding: 24px 17px 0 24px;
+  }
   .action-container {
     background: #f3f3f9;
     height: 118px;
-    padding: 24px;
+    padding: 24px 24px 24px 24px;
     position: sticky;
     min-width: 100%;
     bottom: 0;
@@ -32,23 +35,37 @@
     .action-button {
       width: 351px;
       height: 70px;
+      padding: unset;
     }
 
     .back-button {
       width: 226px;
       margin-right: 10px;
       height: 70px;
+      padding: unset;
     }
   }
 }
 @media only screen and (max-width: 576px) {
   .lending-form-container {
     .action-container {
-      padding: 24px 0;
+      padding: 24px 0 24px 24px;
       .ant-btn {
-        padding: 0
+        padding: 0;
       }
     }
   }
-  
+}
+.button-background-gray {
+  background-color: #f7f9ff;
+}
+.MuiPaper-root {
+  background-color: #f9faff !important;
+  box-shadow: 0px 5px 16px -5px rgba(85, 81, 180, 0.3);
+  border-radius: 6px;
+  border: unset !important;
+
+  .MuiList-padding {
+    padding-bottom: 0;
+  }
 }

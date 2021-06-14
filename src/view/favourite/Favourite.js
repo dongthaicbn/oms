@@ -50,9 +50,7 @@ const Favourite = (props) => {
   }, []);
 
   const goBack = () => {
-    if (props.layoutSlider.previousUrl) {
-      props.history.push(props.layoutSlider.previousUrl);
-    }
+    props.history.goBack();
   };
   const { favourte_categories, orders } = data;
 
@@ -106,11 +104,13 @@ const Favourite = (props) => {
             <RoundImage src={item.image} alt="Item Image" />
             <div>
               <InfoGroup label={<Text>{item.code}</Text>} noColon={true}>
-                {item.name}&nbsp;
-                <FormattedMessage
-                  id="IDS_WEIGHT_PER_PACKS"
-                  values={{ weight: item.pack_weight }}
-                />
+                {item.name}
+                <div>
+                  <FormattedMessage
+                    id="IDS_WEIGHT_PER_PACKS"
+                    values={{ weight: item.pack_weight }}
+                  />
+                </div>
               </InfoGroup>
             </div>
           </div>
@@ -251,7 +251,7 @@ const Favourite = (props) => {
     <div className="category-order-detail-container">
       <Layout>
         <div className="app-scrollable-container favourite-page">
-          <div className="app-content-container">
+          <div className={`app-content-container app-content-container-favourite`}>
             <div className="header-group">
               <div className="page-info-container app-button">
                 <div className="page-title">

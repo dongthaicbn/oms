@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import { usePageCache } from 'components/hook/AppHook';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Col, Row, Tag, Typography, List, Button } from 'antd';
+import { Card, Col, Row, Typography, Button } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import * as icons from 'assets';
 import { routes, STATUS_SUBMITTED } from 'utils/constants/constants';
 import { getYearRange, isEmpty, getLangCode, getMonth, formatDate } from 'utils/helpers/helpers';
 import Layout from 'components/layout/Layout';
+import AppList from 'components/list/AppList';
 import AppSelect from 'components/select/AppSelect';
 import InfoGroup from 'components/infoGroup/InfoGroup';
 import { getMonthlyInventory } from './InventoryService';
 import './Inventory.scss'
 
 const {Title, Text} = Typography;
+
+const PAGE_CACHE_KEY = 'Inventory';
 
 const defaultSelectedYear = new Date().getFullYear();
 const yearSelections = getYearRange(defaultSelectedYear, 2015)
@@ -24,23 +28,55 @@ const yearSelections = getYearRange(defaultSelectedYear, 2015)
   });
 
 const Inventory = (props) => {
+  const [isUseCache, getPageCacheData, updatePageCacheData] = usePageCache(PAGE_CACHE_KEY, props);
   const [selectedYear, setSelectedYear] = useState(defaultSelectedYear);
   const [data, setData] = useState();
+  const [loadingData, setLoadingData] = useState();
+  const [scrollTop, setScrollTop] = useState(0);
+
+  useEffect(() => {
+    updatePageCacheData('year', selectedYear);
+  }, [selectedYear]);
+
+  const handleListScroll = (scrollTop) => {
+    updatePageCacheData('scrollTop', scrollTop);
+  };
+
+  useEffect(() => {
+    let year = defaultSelectedYear;
+    let scrollTop;
+    if (isUseCache) {
+      let cacheData = getPageCacheData();
+      year = cacheData.year;
+      scrollTop = cacheData.scrollTop;
+      setSelectedYear(cacheData.year);
+    }
+    refreshData(year, scrollTop)
+  }, []);
+
+  const refreshData = async (year, scrollTop) => {
+    setLoadingData(true);
+    let response = await fetchData(year);
+    setData(response.inventory_list);
+    setScrollTop(scrollTop);
+    setLoadingData(false);
+  };
 
   const fetchData = async (year) => {
     try {
       const res = await getMonthlyInventory(getLangCode(props.locale), year);
       if (!isEmpty(res.data)) {
-        let data = res.data.data?.inventory_list;
-        setData(data);
+        return res.data.data;
       }
     } catch (e) {
+      throw e;
     }
   };
 
-  useEffect(() => {
-    fetchData(selectedYear);
-  }, [selectedYear]);
+  const handleYearSelected = (newYear) => {
+    refreshData(newYear);
+    setSelectedYear(newYear);
+  };
 
   const nagigateToInventoryDetail = (item) => {
     props.history.push(routes.INVENTORY_DETAIL.replace(':id', item.id))
@@ -48,19 +84,19 @@ const Inventory = (props) => {
 
   const renderSubmissionInfo = (item) => {
     if (item.status === STATUS_SUBMITTED) {
-      return <InfoGroup labelID="IDS_DATE" className="submision-date-color">
+      return <InfoGroup labelID="IDS_DATE" noColon={true} className="submision-date">
         <img className="date-icon" src={icons.ic_tick} alt="icon_tick"/>
         {formatDate(item.submission_date, 'DD MMM')}
       </InfoGroup>
     }
-    return <InfoGroup labelID="IDS_DEADLINE" className="deadline-color">
+    return <InfoGroup labelID="IDS_DEADLINE" noColon={true} className="deadline">
       {formatDate(item.deadline, 'DD MMM')}
     </InfoGroup>
   };
 
   const renderItemActionButton = (item) => {
     if (item.status === STATUS_SUBMITTED) {
-      return <Button>
+      return <Button onClick={() => nagigateToInventoryDetail(item)}>
         <FormattedMessage id="IDS_VIEW"/>
       </Button>
     }
@@ -69,34 +105,32 @@ const Inventory = (props) => {
     </Button>
   };
 
-
-
   const renderListItems = (items) => {
     return (
-      <List
-        itemLayout="vertical"
-        dataSource={data}
-        renderItem={item => (
-          <List.Item>
-            <Card hoverable>
-              <Row>
-                <Col span={8}>
-                  <InfoGroup labelID="IDS_INVENTORY">
-                    <FormattedMessage id={getMonth(item.month)}/> {item.year}
-                  </InfoGroup>
-                </Col>
-                <Col span={8}>
-                  {renderSubmissionInfo(item)}
-                </Col>
-                <Col span={8}>
-                  <div className="app-button item-action-container">
-                    {renderItemActionButton(item)}
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </List.Item>
-        )}
+      <AppList dataSource={data}
+               showLoading={loadingData}
+               disableLoadMore={true}
+               scrollTop={scrollTop}
+               onScroll={handleListScroll}
+               renderItem={item => (
+                 <Card hoverable>
+                   <Row>
+                     <Col span={8}>
+                       <InfoGroup labelID="IDS_INVENTORY" noColon={true} className="inventory">
+                         <FormattedMessage id={getMonth(item.month)}/> {item.year}
+                       </InfoGroup>
+                     </Col>
+                     <Col span={8}>
+                       {renderSubmissionInfo(item)}
+                     </Col>
+                     <Col span={8}>
+                       <div className="app-button item-action-container">
+                         {renderItemActionButton(item)}
+                       </div>
+                     </Col>
+                   </Row>
+                 </Card>
+               )}
       />
     );
   };
@@ -117,7 +151,7 @@ const Inventory = (props) => {
                 </div>
                 <div className="year-selection-container">
                   <AppSelect selections={yearSelections}
-                             value={selectedYear} onChange={(newValue) => setSelectedYear(newValue)}>
+                             value={selectedYear} onChange={handleYearSelected}>
                   </AppSelect>
                 </div>
               </div>

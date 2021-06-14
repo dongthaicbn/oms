@@ -55,9 +55,9 @@ const Holiday = (props) => {
   const isDisabled = isEmpty(shop);
   return (
     <Layout>
-      <div className="scrollable-container">
+      <div className="scrollable-container" style={{ position: 'relative' }}>
         <div className="content-container">
-          <div className="header-container">
+          <div className="header-container" style={{ paddingLeft: 0 }}>
             <div className="left-header">
               <span className="title-info">
                 <FormattedMessage id="IDS_STORE" />
@@ -105,16 +105,23 @@ const Holiday = (props) => {
               </div>
             </div>
           </div>
-          <div className="page-footer holiday-footer">
-            <Button
-              className={`footer-btn save-btn ${isDisabled ? 'disabled' : ''}`}
-              onClick={() => {
-                if (!isDisabled) openCheck();
-              }}
-            >
-              <FormattedMessage id="IDS_CHECK" />
-            </Button>
-          </div>
+        </div>
+        <div
+          className="page-footer holiday-footer"
+          style={{
+            background: '#f3f3f9',
+            padding: '24px 12px',
+            width: 'calc(100% - 24px)',
+          }}
+        >
+          <Button
+            className={`footer-btn save-btn ${isDisabled ? 'disabled' : ''}`}
+            onClick={() => {
+              if (!isDisabled) openCheck();
+            }}
+          >
+            <FormattedMessage id="IDS_CHECK" />
+          </Button>
         </div>
       </div>
       {isCalendar && (

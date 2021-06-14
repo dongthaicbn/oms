@@ -40,7 +40,7 @@
             justify-content: flex-end;
 
             .app-select-container {
-              margin-right: 16px;
+              margin-right: 15px;
 
               .ant-select {
                 .ant-select-selector {
@@ -73,7 +73,12 @@
               .ant-card-body {
                 padding: 16px;
 
-                .deadline-color {
+                .inventory {
+                  font-family: NotoSansTCBlack;
+                }
+
+                .deadline {
+                  font-family: NotoSansTCBlack;
                   color: #6461B4;
                 }
 
@@ -84,7 +89,8 @@
                   vertical-align: baseline;
                 }
 
-                .submision-date-color {
+                .submision-date {
+                  font-family: NotoSansTCBlack;
                   color: #4BC09C;
                 }
 

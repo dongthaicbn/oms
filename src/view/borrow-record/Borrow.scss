@@ -10,7 +10,7 @@
   }
 }
 .page-content-borrow {
-  padding: 0 24px 0 12px;
+  padding: 0 24px;
   height: calc(100vh - 248px);
   overflow: auto;
   .list-borrow-record-container {
@@ -20,10 +20,10 @@
 
     .ant-card {
       // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-      background: #FFFFFF;
+      background: #ffffff;
       /* /Border 2 */
 
-      border: 1px solid #B5B6FF;
+      border: 1px solid #b5b6ff;
       box-sizing: border-box;
       /* Card Shadow */
 
@@ -33,20 +33,18 @@
         padding: 16px;
         .text-info {
           font-family: NotoSansTCBlack;
-
         }
-        
-          .borrow-date-type {
-            text-align: end;
-            .date {
-              display: block;
-              font-size: 18px;
-              color: #3056a3;
-              font-weight: bold;
-            }
+
+        .borrow-date-type {
+          text-align: end;
+          .date {
+            display: block;
+            font-size: 18px;
+            color: #3056a3;
+            font-weight: bold;
           }
-        
-        
+        }
+
         .borrow-no {
           display: flex;
           justify-content: space-between;
@@ -86,8 +84,9 @@
   margin-bottom: 0;
 }
 .header-container-borrow {
+  margin: 39px 0 17px 0;
   .title-borrow {
-    margin-bottom: 20px;
+    margin-bottom: 31px;
   }
   .ant-typography {
     font-family: NotoSansTCBlack;
@@ -95,10 +94,11 @@
     font-weight: 900;
     font-size: 32px;
     line-height: 30px;
-    color: #6461B4;
+    color: #6461b4;
+    margin-bottom: 0;
   }
   .ant-radio-button-wrapper-checked {
-    background: #80B2FF !important;
+    background: #80b2ff !important;
     border-radius: 4px !important;
     border: none !important;
     font-family: NotoSansTC;
@@ -107,7 +107,7 @@
     font-size: 20px;
     line-height: 30px;
     text-align: center;
-    color: #FFFFFF;
+    color: #ffffff;
     padding: 8px auto;
     height: 46px;
     align-items: center;
@@ -123,11 +123,10 @@
     line-height: 30px;
     text-align: center;
     padding: 8px auto;
-    color: #ABAACA;
+    color: #abaaca;
     transition: unset;
     -webkit-transition: unset;
   }
-
 }
 
 .borrow-record-container {
@@ -138,80 +137,54 @@
     .app-scrollable-container {
       overflow-y: hidden !important;
       height: unset;
+      -webkit-overflow-scrolling: touch;
       .app-content-container {
         display: flex;
         flex-direction: column;
         padding-bottom: 0;
         padding: 0;
         overflow: hidden;
-        .page-footer {
-          position: absolute;
-          bottom: 0;
-          padding: 10px 0 15px;
-          background: #f3f3f9;
-          width: calc(100% - 150px);
-          left: 135px;
-          right: 0;
-          .lending-form-btn {
-            background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
-            border: 1px solid #d8d8d8;
-            box-sizing: border-box;
-            /* Button Shardow */
-        
-            box-shadow: 0px 4px 20px rgba(100, 97, 180, 0.1),
-              0px 1px 8px rgba(100, 97, 180, 0.12);
-            border-radius: 10px;
-            width: 100%;
-            height: 70px;
-            color: #ffffff;
-            font-size: 20px;
-            margin-left: 10px;
-            font-weight: bold;
-          }
-        }
       }
-  
+
       .body-group {
         flex: 1;
         overflow: hidden;
-        padding-left: 12px; 
-        height: calc(var(--vh, 1vh) * 100 - 260px);
+        padding-left: 24px;
+        height: calc(var(--vh, 1vh) * 100 - 288px);
         &::-webkit-scrollbar-track {
           background: none;
         }
         .ant-list-item {
           padding: 0 0 12px 0;
         }
-    
+
         .ant-card {
           // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-          background: #FFFFFF;
+          background: #ffffff;
           /* /Border 2 */
-    
-          border: 1px solid #B5B6FF;
+
+          border: 1px solid #b5b6ff;
           box-sizing: border-box;
           /* Card Shadow */
-    
+
           box-shadow: 0px 5px 20px -5px rgba(132, 128, 255, 0.3);
           border-radius: 6px;
           .ant-card-body {
             padding: 16px;
             .text-info {
               font-family: NotoSansTCBlack;
-    
             }
-            
-              .borrow-date-type {
-                text-align: end;
-                .date {
-                  display: block;
-                  font-size: 18px;
-                  color: #3056a3;
-                  font-weight: bold;
-                }
+
+            .borrow-date-type {
+              text-align: end;
+              .date {
+                display: block;
+                font-size: 18px;
+                color: #3056a3;
+                font-weight: bold;
               }
-            
-            
+            }
+
             .borrow-no {
               display: flex;
               justify-content: space-between;
@@ -245,23 +218,48 @@
           }
         }
         .app-list {
-          height: calc(var(--vh, 1vh) * 100 - 260px);
+          height: calc(var(--vh, 1vh) * 100 - 288px);
         }
       }
     }
-    
+    .page-footer {
+      position: absolute;
+      bottom: 0;
+      padding: 24px 0 24px;
+      background: #f3f3f9;
+      width: calc(100% - 162px);
+      left: 135px;
+      right: 0;
+      .lending-form-btn {
+        background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
+        border: 1px solid #d8d8d8;
+        box-sizing: border-box;
+        /* Button Shardow */
+
+        box-shadow: 0px 4px 20px rgba(100, 97, 180, 0.1),
+          0px 1px 8px rgba(100, 97, 180, 0.12);
+        border-radius: 10px;
+        width: 100%;
+        height: 70px;
+        color: #ffffff;
+        font-size: 20px;
+
+        font-weight: bold;
+      }
+    }
   }
- 
 }
 @media only screen and (min-width: 1200px) {
   .borrow-record-container {
-    .layout-content {
-      .app-content-container {
-        .page-footer {
-          width: calc(1200px - 150px) !important;
-          left: calc((100vw - 1200px)/2 + 125px ) !important;
-        }
+    .page-footer {
+      width: calc(1200px - 150px) !important;
+      left: calc((100vw - 1200px) / 2 + 125px) !important;
+      .lending-form-btn {
+        margin-left: 10px;
       }
     }
   }
+}
+.container-margin-right {
+  margin-right: 12px;
 }

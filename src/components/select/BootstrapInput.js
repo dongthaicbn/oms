@@ -12,6 +12,7 @@ export const BootstrapInput = withStyles((theme) =>
       transition: theme.transitions.create(['border-color', 'box-shadow']),
       overflow: 'hidden',
       border: '2px solid #b5b6ff',
+      cursor: 'pointer',
     },
     input: {
       borderRadius: 4,
@@ -21,7 +22,7 @@ export const BootstrapInput = withStyles((theme) =>
       color: '#4f4e66',
     },
     dropDown: {
-      marginRight: 21
+      marginRight: 21,
     },
     focused: {
       border: '2px solid #b5b6ff',

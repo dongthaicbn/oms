@@ -13,11 +13,12 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
 import { requestLogin } from './LoginService';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { notification } from 'antd';
 import { routes, TOKEN } from '../../utils/constants/constants';
-import { encrypt } from '../../utils/helpers/helpers';
+import { getAccountDetail } from 'view/home/HomeActions';
+import { encrypt, isEmpty, getLangCode } from '../../utils/helpers/helpers';
 import {
   actionSnackBar,
   updateAccountInfo,
@@ -75,11 +76,22 @@ const Login = (props) => {
       description: message,
     });
   };
+  const fetchAccountDetail = async () => {
+    try {
+      const { data } = await getAccountDetail({
+        lang_code: getLangCode(props.locale),
+      });
+      if (!isEmpty(data.data)) {
+        props.updateAccountInfo({ ...data.data, logined: true });
+      }
+    } catch (error) {}
+  };
   const handleResultLogin = (data) => {
     let status = data && data.result && data.result.status;
     switch (status) {
       case 200:
-        props.updateAccountInfo({ ...props.account, logined: true });
+        fetchAccountDetail();
+        // props.updateAccountInfo({ ...props.account, logined: true });
         localStorage.setItem(TOKEN, data && data.data.token);
         props.history.push(routes.ORDER_FORM);
         break;
@@ -180,7 +192,7 @@ const Login = (props) => {
       {/* forgot password */}
       <div
         className="text-forgot-password"
-        onClick={redirectionPage}
+        onClick={() => props.history.push(routes.FORGET_PASSWORD)}
         id={routes.FORGET_PASSWORD}
       >
         <FormattedMessage id="IDS_FORGOT_PASSWORD" />
@@ -204,6 +216,7 @@ const Login = (props) => {
 
 export default connect(
   (state) => ({
+    locale: state.system.locale,
     account: state.system.account,
   }),
   { actionSnackBar, updateAccountInfo }

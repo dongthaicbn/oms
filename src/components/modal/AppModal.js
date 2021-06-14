@@ -93,7 +93,7 @@ const AppModal = props => {
     <Modal
       visible={visible}
       closable={closable ? closable : false}
-      closeIcon={<img src={icons.ic_close} alt="" />}
+      closeIcon={<img src={icons.ic_close} alt="" height={24} />}
       maskClosable={true}
       title={titleID ? <FormattedMessage id={titleID} /> : title}
       className={`app-modal ${className || ''}`}

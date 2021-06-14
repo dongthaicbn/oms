@@ -17,15 +17,14 @@ import IconLoading from 'components/icon-loading/IconLoading';
 import { routes } from 'utils/constants/constants';
 import moment from 'moment';
 
-
 const { Title, Text, Paragraph } = Typography;
-const TYPE_REJECT = 2
-const TYPE_ACCEPT = 1
+const TYPE_REJECT = 2;
+const TYPE_ACCEPT = 1;
 
 const itemColumns = [
   {
     title: <FormattedMessage id="IDS_ITEMS" />,
-    render: item => (
+    render: (item) => (
       <div className="app-flex-container items-info-cell">
         <RoundImage src={item.image} alt="Item Image" />
         <div>
@@ -45,41 +44,49 @@ const itemColumns = [
           </InfoGroup>
         </div>
       </div>
-    )
+    ),
   },
   {
-    title: 'Actual weight',
+    title: 'Borrowed Qty',
     align: 'center',
     width: '100px',
-    render: item => <div className="borrowed-qty">{item.borrowed_qty.toFixed(1)}</div>
+    render: (item) => (
+      <div className="borrowed-qty">{item.borrowed_qty.toFixed(1)}</div>
+    ),
   },
   {
-    title: 'Received qty',
+    title: 'Unit',
     align: 'center',
     width: '100px',
-    render: item => <div className="unit">{item.unit}</div>
-  }
+    render: (item) => <div className="unit">{item.unit}</div>,
+  },
 ];
-const BorrowDetail = props => {
+const BorrowDetail = (props) => {
   let [data, setData] = useState({});
   let [sigCanvas, setSigCanvas] = useState(null);
   let [modalVisible, setModalVisible] = useState(false);
   let [loading, setLoading] = useState(false);
   let [imageSign, setImageSign] = useState(null);
-  let [stateAction, setStateAction] = useState(null)
+  let [stateAction, setStateAction] = useState(null);
+  let [showEdit, setShowEdit] = useState(false);
   const fetchData = async () => {
     try {
       const res = await getBorrowDetail(1, props.match.params.id);
       if (!isEmpty(res.data)) {
         setData(res.data.data);
+        if (res.data.data && res.data.data.borrowing && res.data.data.borrowing.status == "Processing" && res.data.data.borrowing.type != 'lend') {
+          setShowEdit(true)
+        }
       }
     } catch (e) { }
   };
   const intl = useIntl();
   const goBack = () => {
+    console.log("goBack")
     props.history.goBack();
   };
   useEffect(() => {
+
     fetchData();
   }, []);
   const onClearSign = () => {
@@ -87,10 +94,10 @@ const BorrowDetail = props => {
       sigCanvas.clear();
     }
   };
-  const openNotificationError = message => {
+  const openNotificationError = (message) => {
     notification['error']({
       message: intl.formatMessage({ id: 'IDS_ERROR' }),
-      description: message
+      description: message,
     });
   };
   const onOk = async () => {
@@ -98,85 +105,87 @@ const BorrowDetail = props => {
     setImageSign(sigCanvas.toDataURL());
 
     try {
-      const res = await updateBorrowing(props.match.params.id, stateAction, sigCanvas.toDataURL());
+      const res = await updateBorrowing(
+        props.match.params.id,
+        stateAction,
+        sigCanvas.toDataURL()
+      );
       handleResultUpdate(res.data);
     } catch (e) {
       setLoading(false);
       sigCanvas.clear();
-      openNotificationError("An error occurred")
+      openNotificationError('An error occurred');
     }
-
-
   };
-  const handleResultUpdate = res => {
+  const handleResultUpdate = (res) => {
     let status = res && res.result && res.result.status;
     switch (status) {
       case 200:
-        localStorage.setItem("idItemUpdateBorrow", data.borrowing ?.no)
-        localStorage.setItem("typeUpdateBorrow", stateAction)
-        setModalVisible(false)
+        localStorage.setItem('idItemUpdateBorrow', data.borrowing ?.no);
+        localStorage.setItem('typeUpdateBorrow', stateAction);
+        setModalVisible(false);
         setLoading(false);
         sigCanvas.clear();
-        props.history.push(routes.BORROW_RECORD)
+        props.history.push(routes.BORROW_RECORD);
         break;
       default:
         openNotificationError(res.result && res.result.message);
-        setModalVisible(false)
+        setModalVisible(false);
         setLoading(false);
         sigCanvas.clear();
     }
-
   };
   const onReject = () => {
-    setStateAction(TYPE_REJECT)
-    setModalVisible(true)
-
-  }
+    setStateAction(TYPE_REJECT);
+    setModalVisible(true);
+  };
   const onConfirm = () => {
-    setStateAction(TYPE_ACCEPT)
-    setModalVisible(true)
-  }
+    setStateAction(TYPE_ACCEPT);
+    setModalVisible(true);
+  };
   return (
-    <Layout emptyDrawer={true}>
+    <div>
       <div className="borrow-detail-container">
         <div className="app-content-container content-container">
           <Row className="borrow-detail-header">
-            <Col span={20}>
+            <Col span={16}>
               {/* <div className="app-flex-container height-full flex-va-center">
                 <Title level={3}>{data.borrowing?.name}</Title>
               </div> */}
               <div className="first-line-title-borrow">
                 <InfoGroup labelID="IDS_BORROW_FROM" noColon>
-                  {data.borrowing ?.name}
+                  {data ?.borrowing ?.name}
                 </InfoGroup>
                 <div className="date-borrow">
                   <InfoGroup labelID="IDS_DATE" noColon>
-                    {data && data.borrowing && data.borrowing.date ? moment(data && data.borrowing.date).format("DD MMM") : '_'}
+                    {data && data.borrowing && data.borrowing.date
+                      ? moment(data && data.borrowing.date).format('DD MMM')
+                      : '_'}
                   </InfoGroup>
                 </div>
-
               </div>
               <div className="borrow-no">
                 <Paragraph>
                   <FormattedMessage id="IDS_BORROWING_NO" />
                   :&nbsp;
-                  <Text strong>{data.borrowing ?.no}</Text>
+                  <Text strong>{data ?.borrowing ?.no}</Text>
                 </Paragraph>
               </div>
             </Col>
-            <Col span={4}>
+            <Col span={8}>
               <div className="app-flex-container flex-end app-button modal-button-container">
                 {/* <IconButton icon={<FilterIcon />}>
                   <FormattedMessage id="IDS_FILTER" />
                 </IconButton> */}
-                <Button
-                  type="primary"
-                  className="action-button reject-button-container"
-                  style={{ float: 'right' }}
-                  onClick={onReject}
-                >
-                  <FormattedMessage id="IDS_REJECT" />
-                </Button>
+                {showEdit ?
+                  <Button
+                    type="primary"
+                    className="action-button reject-button-container"
+                    style={{ float: 'right' }}
+                    onClick={onReject}
+                  >
+                    <FormattedMessage id="IDS_REJECT" />
+                  </Button> : null}
               </div>
             </Col>
           </Row>
@@ -204,20 +213,25 @@ const BorrowDetail = props => {
           <Button className="action-button back-button" onClick={goBack}>
             <FormattedMessage id="IDS_BACK" />
           </Button>
-          <Button
-            type="primary"
-            className="action-button"
-            style={{ float: 'right' }}
-            onClick={onConfirm}
-          >
-            <FormattedMessage id="IDS_COMFIRM" />
-          </Button>
+          {showEdit ?
+            <Button
+              type="primary"
+              className="action-button"
+              style={{ float: 'right' }}
+              onClick={onConfirm}
+            >
+              <FormattedMessage id="IDS_COMFIRM" />
+            </Button> : null}
         </div>
       </div>
       <AppModal
         visible={modalVisible}
-        titleID={stateAction === TYPE_REJECT ? "IDS_REJECT_BORROWING" : "IDS_CONFIRM_BORROWING"}
-        okTextID={stateAction === TYPE_REJECT ? "IDS_REJECT" : "IDS_COMFIRM"}
+        titleID={
+          stateAction === TYPE_REJECT
+            ? 'IDS_REJECT_BORROWING'
+            : 'IDS_CONFIRM_BORROWING'
+        }
+        okTextID={stateAction === TYPE_REJECT ? 'IDS_REJECT' : 'IDS_COMFIRM'}
         onOk={onOk}
         onClickNotCloseModal={true}
         cancelTextID="IDS_CLEAR"
@@ -227,7 +241,11 @@ const BorrowDetail = props => {
         hideCancelButton={loading}
         hideOkButton={loading}
       >
-        {stateAction === TYPE_REJECT ? <FormattedMessage id="IDS_PLEASE_SIGN_TO_REJECT" /> : <FormattedMessage id="IDS_PLEASE_SIGN_TO_CONFIRM" />}
+        {stateAction === TYPE_REJECT ? (
+          <FormattedMessage id="IDS_PLEASE_SIGN_TO_REJECT" />
+        ) : (
+            <FormattedMessage id="IDS_PLEASE_SIGN_TO_CONFIRM" />
+          )}
 
         {loading ? (
           <div>
@@ -243,15 +261,15 @@ const BorrowDetail = props => {
                 width: 420,
                 height:
                   window.innerHeight - 300 > 300 ? 300 : window.innerHeight - 300,
-                className: 'sigCanvas'
+                className: 'sigCanvas',
               }}
-              ref={ref => {
+              ref={(ref) => {
                 setSigCanvas(ref);
               }}
             />
           )}
       </AppModal>
-    </Layout>
+    </div>
   );
 };
 export default connect()(withRouter(BorrowDetail));

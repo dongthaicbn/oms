@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 import { FormattedMessage } from 'react-intl';
 import { Button, Divider, Typography, List, Radio, Input, Card } from 'antd';
 import { isEmpty, getReasonType, getLangCode, formatNumber } from 'utils/helpers/helpers';
@@ -13,7 +14,7 @@ import AppModal from 'components/modal/AppModal';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CameraModal from 'components/modal/CameraModal';
 import { actionSnackBar } from 'view/system/systemAction';
-import { routes, reasonType, UPLOAD_TYPE_FILE, UPLOAD_TYPE_URL } from 'utils/constants/constants';
+import { reasonType, UPLOAD_TYPE_FILE, UPLOAD_TYPE_URL, ACTION_ADD_PHOTO, ACTION_REMOVE_PHOTO, ORDER_ID_TYPE, ORDER_NO_TYPE, STATUS_DAMAGED, STATUS_PENDING, STATUS_RECEIVED } from 'utils/constants/constants';
 import { ReactComponent as PlusIcon } from 'assets/icons/ic_plus.svg';
 import * as icons from 'assets';
 import {
@@ -28,6 +29,23 @@ const {TextArea} = Input;
 const MAX_REPORT_DAMAGED_PHOTOS = 3;
 const MODE_ADD = 'add';
 const MODE_EDIT = 'edit';
+const MODE_VIEW = 'view';
+
+const getMode = (status) => {
+  switch (status) {
+    case STATUS_PENDING: {
+      return MODE_ADD;
+    }
+
+    case STATUS_DAMAGED:
+    case STATUS_RECEIVED: {
+      return MODE_EDIT;
+    }
+
+    default:
+      return MODE_ADD;
+  }
+};
 
 const itemColumns = [
   {
@@ -61,16 +79,25 @@ const itemColumns = [
       if (item.show_actual_weight) {
         let actualWeight = actionProviders.getItemById(item.id)?.actual_weight;
         let editing = actionProviders.isItemActualWeightEditing(item.id);
+        let pageMode = actionProviders.getPageMode();
+        let content = <Button>
+          {editing? (actualWeight?.editValue || '0') : formatNumber(actualWeight?.editValue || '00.00', '0.00')}
+        </Button>;
+        if (pageMode === MODE_VIEW) {
+          return (
+            <div className="app-button quantity-button actual-quantity">
+              {content}
+            </div>
+          );
+        }
         return (
           <div className="app-button quantity-button actual-quantity">
             <NumberEditPopup value={actualWeight?.editValue} minValue={0} maxValue={99999} maxFractionalDigits={2}
-                             onCancel={() => actionProviders.updateItemActualWeight(item.id, item.actual_weight)}
-                             onPopupCancel={(originValue) => actionProviders.updateItemActualWeight(item.id, originValue)}
-                             onValueChanged={(newValue) => actionProviders.updateItemActualWeight(item.id, newValue)}
-                             onVisibleChange={(visible) => actionProviders.updateEditingActualWeightItemId(visible? item.id : null)}>
-              <Button>
-                {editing? (actualWeight?.editValue || '0') : formatNumber(actualWeight?.editValue || '00.00', '0.00')}
-              </Button>
+                                onCancel={() => actionProviders.updateItemActualWeight(item.id, item.actual_weight)}
+                                onPopupCancel={(originValue) => actionProviders.updateItemActualWeight(item.id, originValue)}
+                                onValueChanged={(newValue) => actionProviders.updateItemActualWeight(item.id, newValue)}
+                                onVisibleChange={(visible) => actionProviders.updateEditingActualWeightItemId(visible? item.id : null)}>
+              {content}
             </NumberEditPopup>
           </div>
         );
@@ -84,15 +111,24 @@ const itemColumns = [
     align: 'center',
     render: (item, actionProviders) => {
       let value = actionProviders.getItemById(item.id)?.received_qty?.editValue;
+      let pageMode = actionProviders.getPageMode();
+      let content = <Button>
+        {value || 0}
+      </Button>;
+      if (pageMode === MODE_VIEW) {
+        return (
+          <div className="app-button quantity-button received-quantity">
+            {content}
+          </div>
+        );
+      }
       return (
         <div className="app-button quantity-button received-quantity">
           <NumberEditPopup value={value} minValue={0} maxValue={99999} disableFractional={true}
                            onCancel={() => actionProviders.updateItemReceivedQty(item.id, item.received_qty)}
                            onPopupCancel={(originValue) => actionProviders.updateItemReceivedQty(item.id, originValue)}
                            onValueChanged={(newValue) => actionProviders.updateItemReceivedQty(item.id, newValue)}>
-            <Button>
-              {value || 0}
-            </Button>
+            {content}
           </NumberEditPopup>
         </div>
       );
@@ -101,8 +137,10 @@ const itemColumns = [
 ];
 
 const ReceivedDetail = (props) => {
-  const {orderNo} = props.match.params;
-  const [data, setData] = useState([]);
+  const { orderCode } = props.match.params;
+  const paramsUrl = queryString.parse(props.location.search);
+  const [data, setData] = useState({});
+  const [loadingData, setLoadingData] = useState();
   const [mapItems, setMapItems] = useState({});
   const [rpDmgMeta, setRpDmgMeta] = useState({
     items: [],
@@ -123,33 +161,46 @@ const ReceivedDetail = (props) => {
   });
   const [editingActualWeightItemId, setEditingActualWeightItemId] = useState();
 
-  const fetchData = async (orderNo) => {
+  const fetchData = async (orderCode) => {
     try {
-      const res = await getReceivedDeliveryDetail(getLangCode(props.locale), orderNo);
+      const res = await getReceivedDeliveryDetail(getLangCode(props.locale), paramsUrl.type || ORDER_NO_TYPE, orderCode);
       if (!isEmpty(res.data)) {
-        let data = res.data.data;
-        setData(data);
-        initMapItems(data.items);
+        return res.data;
       }
     } catch (e) {
+      throw e;
     }
   };
 
   const initMapItems = (items) => {
     let result = {};
-    items.forEach(item => result[item.id] = {
-      ...item,
-      actual_weight: {
-        originValue: item.actual_weight || 0,
-        editValue: item.actual_weight || 0
-      },
-      received_qty: {
-        originValue: item.received_qty || 0,
-        editValue: item.received_qty || 0
+    items.forEach(item => {
+      let actualWeight = item.actual_weight || 0;
+      let receivedQty = item.received_qty ||  item.ordered_qty || 0;
+      result[item.id] = {
+        ...item,
+        actual_weight: {
+          originValue: actualWeight,
+          editValue: actualWeight
+        },
+        received_qty: {
+          originValue: receivedQty,
+          editValue: receivedQty
+        }
       }
     });
     setMapItems(result);
   };
+
+  const refreshData = async () => {
+    setLoadingData(true);
+    let response = await fetchData(orderCode);
+    setData(response.data);
+    initMapItems(response.data.items);
+    setLoadingData(false);
+  };
+
+  useEffect(() => refreshData(), []);
 
   const getItemById = (itemId) => {
     return mapItems[itemId];
@@ -161,6 +212,10 @@ const ReceivedDetail = (props) => {
       item.actual_weight.editValue = newWeight;
       setMapItems({...mapItems});
     }
+  };
+
+  const getPageMode = () => {
+    return getMode(data.order?.status);
   };
 
   const isItemActualWeightEditing = (itemId) => {
@@ -179,8 +234,6 @@ const ReceivedDetail = (props) => {
     }
   };
 
-  useEffect(() => fetchData(orderNo), []);
-
   const receiveDelivery = async () => {
     setReceivedDeliveryModalVisible(true);
 
@@ -190,7 +243,7 @@ const ReceivedDetail = (props) => {
       received_qty: mapItems[itemId].received_qty.editValue || 0
     }));
 
-    await receivedDeliveryOrder(orderNo, items);
+    await receivedDeliveryOrder(data.order.order_id, items);
 
     setReceivedDeliveryModalVisible(false);
     props.actionSnackBar({
@@ -198,7 +251,7 @@ const ReceivedDetail = (props) => {
       type: 'success',
       messageID: 'IDS_RECEIVED_DELIVERY_SUCCESSFULLY',
       messageParams: {
-        orderNo: orderNo
+        orderNo: data.order?.order_no
       }
     });
     goBack();
@@ -302,11 +355,11 @@ const ReceivedDetail = (props) => {
     let items = Object.keys(rpDmgMeta.items).map((itemId) => ({id: itemId}));
     let photos = rpDmgMeta.report.photos;
     if (rpDmgFormModalMeta.mode === MODE_ADD) {
-      await addDamageRecord(orderNo, reasonType, otherReason, items, photos);
+      await addDamageRecord(data.order?.order_id, reasonType, otherReason, items, photos);
     } else if (rpDmgFormModalMeta.mode === MODE_EDIT) {
       await updateDamageRecord(rpDmgMeta.report.report_id, reasonType, otherReason, items, photos);
     }
-    fetchData(orderNo);
+    fetchData(orderCode);
   };
 
   const showCameraModal = () => {
@@ -317,17 +370,37 @@ const ReceivedDetail = (props) => {
     });
   };
 
-  const renderAddImageButton = (photos) => {
-    if (!photos || photos.length < MAX_REPORT_DAMAGED_PHOTOS) {
-      return <div className="item-photo item-add" onClick={() => showCameraModal()}>
-        <PlusIcon/>
-      </div>
+  const renderImageButtons = (report) => {
+    let result = report?.photos.map((photo, index) => {
+      if (photo.action === ACTION_ADD_PHOTO) {
+        return <RoundImage key={index} className="item-photo"
+                           src={photo.file} deletable={true} onDelete={() => handleRemoveImage(index)}
+                           disablePreview={true}/>
+      }
+    });
+    if (report?.photos?.length < MAX_REPORT_DAMAGED_PHOTOS) {
+      return <>
+        {result}
+        {renderAddImageButton()}
+      </>;
     }
+    return result;
+  };
+
+  const renderAddImageButton = () => {
+    return <div className="item-photo item-add" onClick={() => showCameraModal()}>
+      <PlusIcon/>
+    </div>
   };
 
   const handleRemoveImage = (index) => {
     let newRpDmgMeta = {...rpDmgMeta};
-    newRpDmgMeta.report.photos.splice(index, 1);
+    let photo = newRpDmgMeta.report.photos[index];
+    if (photo.upload_type === UPLOAD_TYPE_URL) {
+      photo.action = ACTION_REMOVE_PHOTO;
+    } else {
+      newRpDmgMeta.report.photos.splice(index, 1);
+    }
     setRpDmgMeta(newRpDmgMeta);
   };
 
@@ -343,11 +416,24 @@ const ReceivedDetail = (props) => {
   };
 
   const handleCaptureImage = (base64Image) => {
-    let newRpDmgMeta = {...rpDmgMeta};
-    newRpDmgMeta.report.photos.push({
+    const temp = [];
+    if (!isEmpty(rpDmgMeta.report.photos)) {
+      rpDmgMeta.report.photos.forEach((it, idx) => {
+        temp.push({ ...it, position: idx + 1 });
+      });
+    }
+    temp.push({
+      action: ACTION_ADD_PHOTO,
       upload_type: UPLOAD_TYPE_FILE,
-      file: base64Image
+      file: base64Image,
+      position: temp.length + 1
     });
+    let newRpDmgMeta = { ...rpDmgMeta, report: { ...rpDmgMeta.report, photos: temp } };
+    // newRpDmgMeta.report.photos.push({
+    //   action: ACTION_ADD_PHOTO,
+    //   upload_type: UPLOAD_TYPE_FILE,
+    //   file: base64Image,
+    // });
     setRpDmgMeta(newRpDmgMeta);
     reportDamageForm();
   };
@@ -361,8 +447,10 @@ const ReceivedDetail = (props) => {
         other_reason: report.other_reason || '',
         photos: report.photos?.sort((photo1, photo2) => photo1.position - photo2.position)
           .map(photo => ({
+            action: ACTION_ADD_PHOTO,
             upload_type: UPLOAD_TYPE_URL,
-            file: photo.file_url
+            file: photo.file_url,
+            position: photo.position
           })) || []
       }
     });
@@ -371,7 +459,7 @@ const ReceivedDetail = (props) => {
 
   const handleDeleteDamageReport = async () => {
     await deleteDamageRecord(confirmDeleteModalMeta.deleteReportId, getLangCode(props.locale));
-    fetchData(orderNo);
+    fetchData(orderCode);
     props.actionSnackBar({
       open: true,
       type: 'success',
@@ -380,11 +468,7 @@ const ReceivedDetail = (props) => {
   };
 
   const goBack = () => {
-    if (props.editMode) {
-      props.history.push(routes.ORDER_DETAILS.replace(':orderNo', orderNo));
-    } else {
-      props.history.push(routes.RECEIVED_DELIVERY);
-    }
+    props.history.goBack();
   };
 
   const renderDamageReports = () => {
@@ -435,19 +519,46 @@ const ReceivedDetail = (props) => {
     })
   };
 
+  const renderBodyGroup = () => {
+    if (loadingData) {
+      return (
+        <div className="loading-progress-container">
+          <CircularProgress/>
+        </div>
+      )
+    }
+    return <>
+      {renderDamageReports()}
+      <AppTable columns={itemColumns}
+                dataSource={data.items}
+                showLoading={loadingData}
+                actionProviders={{
+                  getItemById: getItemById,
+                  updateItemActualWeight: updateItemActualWeight,
+                  updateItemReceivedQty: updateItemReceivedQty,
+                  updateEditingActualWeightItemId: updateEditingActualWeightItemId,
+                  isItemActualWeightEditing: isItemActualWeightEditing,
+                  getPageMode: getPageMode
+                }}/>
+    </>;
+  }
+
   const renderActionButton = () => {
     let buttonLabel;
-    if (props.editMode) {
+    let mode = getPageMode();
+    if (mode === MODE_ADD) {
+      buttonLabel = <FormattedMessage id="IDS_RECEIVE_DELIVERY"/>;
+    } else if (mode === MODE_EDIT) {
       buttonLabel = <FormattedMessage id="IDS_UPDATE"/>;
-    } else {
-      buttonLabel = <FormattedMessage id="IDS_RECEIVED_DELIVERY"/>;
     }
-    return (
-      <Button type="primary" className="received-delivery-button"
-              onClick={receiveDelivery}>
-        {buttonLabel}
-      </Button>
-    );
+    if (buttonLabel) {
+      return (
+        <Button type="primary" className="received-delivery-button"
+                onClick={receiveDelivery}>
+          {buttonLabel}
+        </Button>
+      );
+    }
   };
 
   return (
@@ -471,16 +582,7 @@ const ReceivedDetail = (props) => {
               </div>
             </div>
             <div className="body-group">
-              {renderDamageReports()}
-              <AppTable columns={itemColumns}
-                        dataSource={data.items}
-                        actionProviders={{
-                          getItemById: getItemById,
-                          updateItemActualWeight: updateItemActualWeight,
-                          updateItemReceivedQty: updateItemReceivedQty,
-                          updateEditingActualWeightItemId: updateEditingActualWeightItemId,
-                          isItemActualWeightEditing: isItemActualWeightEditing
-                        }}/>
+              {renderBodyGroup()}
             </div>
             <div className="footer-group app-button">
               <Button className="back-button" onClick={goBack}>
@@ -631,14 +733,7 @@ const ReceivedDetail = (props) => {
             </Card>
             <Card title={<FormattedMessage id="IDS_PHOTOS_MAX" values={{max: MAX_REPORT_DAMAGED_PHOTOS}}/>}>
               <div className="list-photos">
-                {
-                  rpDmgMeta.report?.photos.map((photo, index) => {
-                    return <RoundImage key={index} className="item-photo"
-                                       src={photo.file} deletable={true} onDelete={() => handleRemoveImage(index)}
-                                       disablePreview={true}/>
-                  })
-                }
-                {renderAddImageButton(rpDmgMeta.report?.photos)}
+                {renderImageButtons(rpDmgMeta.report)}
               </div>
             </Card>
           </div>

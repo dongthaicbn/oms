@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import './ForgetPassword.scss';
 import * as icons from 'assets';
 import { requestForgetPassword } from './ForgetPasswordService';
-import { validateEmail } from '../../utils/helpers/helpers';
+import { validateEmail, getLangCode } from '../../utils/helpers/helpers';
 import { notification } from 'antd';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { routes } from 'utils/constants/constants';
@@ -25,7 +25,8 @@ export default function ForgetPassword(props) {
     } else {
       setLoading(true);
       try {
-        const { data } = await requestForgetPassword(values.email);
+        console.log(props.locale)
+        const { data } = await requestForgetPassword(values.email, getLangCode(props.locale));
         handleResultForgetPassword(data);
       } catch (data) {
         handleResultForgetPassword(data.data);

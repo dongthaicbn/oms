@@ -2,7 +2,7 @@ import axios from 'axios';
 import { routes, TOKEN } from '../constants/constants';
 // import { TOKEN, routes } from '../constants/constants';
 import config from '../constants/config';
-import { isEmpty } from './helpers';
+import { isEmpty, pageNeedCheckAuthen } from './helpers';
 
 export const CancelToken = axios.CancelToken;
 
@@ -29,7 +29,11 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   (response) => {
-    if (response.data.result && response.data.result.status === 401) {
+    if (
+      response.data.result &&
+      response.data.result.status === 401 &&
+      pageNeedCheckAuthen()
+    ) {
       window.location.href = routes.LOGIN;
     }
     return response;
@@ -38,7 +42,11 @@ request.interceptors.response.use(
     if (axios.isCancel(error)) {
       return new Promise(() => {});
     }
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      pageNeedCheckAuthen()
+    ) {
       window.location.href = routes.LOGIN;
     }
     return Promise.reject(error.response);

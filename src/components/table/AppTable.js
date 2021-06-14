@@ -1,85 +1,130 @@
-import React, { useState } from 'react';
-import { Row, Col, Affix } from 'antd';
-import { isEmpty, isFunction } from 'utils/helpers/helpers';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Row, Col } from 'antd';
+import { isEmpty, isFunction, isIPad } from 'utils/helpers/helpers';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import './AppTable.scss';
+
+const isIPadDevice = isIPad();
+const TABLE_ITEM_SPACING_PX = 8;
+
+const initTableColumns = (columns) => {
+  columns = columns || [];
+  let newTableColumns = [];
+  columns.forEach((column) => {
+    let tableColumn = Object.assign({}, column);
+    if (column.width) {
+      tableColumn['width'] = column.width;
+    } else {
+      tableColumn['flex'] = column.colSpan || 1;
+    }
+    newTableColumns.push(tableColumn);
+  });
+  return newTableColumns;
+};
+
+const initTableData = (dataSource, itemsKey) => {
+  dataSource = dataSource || [];
+  let newTableData = [];
+  dataSource.forEach((data, index) => {
+    let item = {
+      ...data,
+      _is_group: false,
+      _index: index
+    };
+    newTableData.push(item);
+    let childItems = [];
+    if (itemsKey) {
+      item._is_group = true;
+      let items = data[itemsKey];
+      if (items) {
+        items.forEach((item, itemIndex) => {
+          let childItem = {
+            ...item,
+            _is_group: false,
+            _index: itemIndex,
+            _group_index: index
+          };
+          childItems.push(childItem);
+        });
+      }
+      item.items = childItems;
+    }
+  });
+  return newTableData;
+};
 
 const AppTable = (props) => {
   let {
     dataSource,
+    showLoading,
     columns,
-    columnDataSource,
+    groupFilter,
+    itemFilter,
     itemsKey,
     groupKey,
+    noStickyGroup,
     rowExpandable,
     groupExpandable,
+    groupExtendable,
     groupError,
     itemError,
     actionProviders,
-    renderBottom,
+    renderBottom
   } = props;
-  dataSource = dataSource || [];
-  columns = columns || [];
+
   actionProviders = actionProviders || {};
-  let rowExpandableDisabled = isEmpty(rowExpandable);
-  let groupExpandableDisabled = isEmpty(groupExpandable);
-  let groupItemRowIndexes = new Set();
-  let groupItemDisabled;
 
-  let [tableBodyRef, setTableBodyRef] = useState(null);
+  let [tableHasScroll, setTableHasScroll] = useState(false);
+  let [tableColumns, setTableColumns] = useState([]);
+  let [tableData, setTableData] = useState([]);
 
-  const initTableColumns = () => {
-    let tableColumns = [];
-    let hasRenderGroup = false;
-    columns.forEach((column) => {
-      let tableColumn = Object.assign({}, column);
-      if (column.width) {
-        tableColumn['width'] = column.width;
-      } else {
-        tableColumn['flex'] = column.colSpan || 1;
-      }
-      tableColumns.push(tableColumn);
-      hasRenderGroup = column.renderGroup;
-    });
-    groupItemDisabled = !groupKey && !hasRenderGroup;
-    return tableColumns;
-  };
-
-  const initTableData = () => {
-    if (!itemsKey) {
-      return dataSource;
+  let tableBodyRef = React.createRef();
+  let setTableBodyRef = useCallback((ref) => {
+    tableBodyRef.current = ref;
+    if (tableBodyRef.current) {
+      setTableHasScroll(tableBodyRef.current.scrollHeight > tableBodyRef.current.clientHeight)
     }
-    let tableData = [];
-    dataSource.forEach((data) => {
-      if (!groupItemDisabled) {
-        tableData.push(data);
-        groupItemRowIndexes.add(tableData.length - 1);
-      }
-      let items = data[itemsKey];
-      if (items) {
-        items.forEach((item) => {
-          tableData.push(item);
-        });
-      }
-    });
-    return tableData;
+  }, []);
+
+  const isRowExpandableDisabled = () => {
+    return isEmpty(rowExpandable);
   };
 
-  const tableColumns = initTableColumns();
-  const tableData = initTableData();
+  const isGroupExpandableDisabled = () => {
+    return isEmpty(groupExpandable);
+  };
+
+  const isGroupExtendableDisabled = () => {
+    return isEmpty(groupExtendable);
+  };
+
+  useEffect(() => {
+    setTableColumns(initTableColumns(columns));
+  }, [columns]);
+
+  useEffect(() => {
+    setTableData(initTableData(dataSource, itemsKey));
+  }, [dataSource]);
+
+  useEffect(() => {
+    if (tableBodyRef?.current) {
+      setTableHasScroll(tableBodyRef.current.scrollHeight > tableBodyRef.current.clientHeight)
+    }
+  }, [tableData]);
 
   const renderTableRow = (className, renderCells = () => { }) => {
     return <Row className={className}>{renderCells()}</Row>;
   };
 
-  const renderTableCells = (className, item, rowIndex,
-    contentRender = (item, column, colIndex) => { }) => {
+  const renderTableCells = (className, item,
+                            contentRender = (item, column, colIndex) => { }) => {
     return tableColumns.map((column, colIndex) => {
       return (
         <Col
-          key={`col-${rowIndex}-${colIndex}`}
+          key={`col-${colIndex}`}
           className={className}
           flex={column.flex}
-          style={{ width: column.width, justifyContent: column.align }}
+          style={{ width: column.width, minWidth: column.minWidth, justifyContent: column.align, textAlign: column.align }}
         >
           {contentRender(item, column, colIndex)}
         </Col>
@@ -87,49 +132,53 @@ const AppTable = (props) => {
     });
   };
 
-  const renderTableHeaderRow = (columnDataSource, columns) => {
-    return renderTableRow('header-row',
-      () => renderTableCells('column-cell', columnDataSource, 0,
-        (item, column) => {
-          if (isFunction(column.title)) {
-            return column.title(columnDataSource, actionProviders);
-          }
-          return column.title || column.dataIndex
-        })
-    );
+  const renderTableGroupItemContentCells = (item) => {
+    return (
+      <Col className="group-item-content-cell"
+           span={24}>
+        {item[groupKey]}
+      </Col>
+    )
   };
 
-  const renderTableGroupItemContentCells = (item, rowIndex) => {
-    return renderTableCells('group-item-content-cell', item, rowIndex,
-      (item, column, colIndex) => {
-        if (column.renderGroup) {
-          return column.renderGroup(item, actionProviders);
-        } else if (colIndex === 0) {
-          return item[groupKey];
-        }
-      });
-  };
-
-  const renderTableGroupItemCells = (item, rowIndex) => {
-    if (!groupExpandableDisabled && isExpandable(item, groupExpandable)) {
-      return <Col span={24}>
+  const renderTableGroupItemCells = (item) => {
+    let isGroupExpandable = !isGroupExpandableDisabled() && isExpandable(item, groupExpandable);
+    let isGroupExtendable = !isGroupExtendableDisabled() && isExtendable(item, groupExtendable);
+    return <Col span={24}>
+      <div className={`group-item-head-wrapper ${isGroupExtendable? 'half-border-round' : 'full-border-round'}`}>
         {
           renderTableRow('group-item-content-row',
-            () => renderTableGroupItemContentCells(item, rowIndex))
+            () => renderTableGroupItemContentCells(item))
         }
         {
+          isGroupExpandable &&
           renderTableRow('group-item-expand-row',
             () => renderTableExpandCell('group-item-expand-cell', item, groupExpandable))
         }
-      </Col>
-    }
-    return renderTableGroupItemContentCells(item, rowIndex);
+      </div>
+      {
+        isGroupExtendable &&
+        <div className="group-item-body-wrapper">
+          {
+            renderTableRow('group-item-extend-row',
+              () => renderTableExpandCell('group-item-extend-cell', item, groupExtendable))
+          }
+        </div>
+      }
+    </Col>
   };
 
   const isExpandable = (item, config) => {
     return config &&
       config.expandable &&
       config.expandable(item) &&
+      config.render;
+  };
+
+  const isExtendable = (item, config) => {
+    return config &&
+      config.extendable &&
+      config.extendable(item) &&
       config.render;
   };
 
@@ -141,22 +190,15 @@ const AppTable = (props) => {
     return itemError ? itemError(item) : false;
   };
 
-  const renderTableItemContentCells = (item, rowIndex) => {
-    return renderTableCells('item-content-cell', item, rowIndex,
+  const renderTableItemContentCells = (item) => {
+    return renderTableCells('item-content-cell', item,
       (item, column, colIndex) => {
         return column.render ? column.render(
           column.dataIndex ? item[column.dataIndex] : item,
-          actionProviders, rowIndex
+          actionProviders
         ) : '';
       }
     );
-  };
-
-  const isRowExpandable = (item) => {
-    return !rowExpandableDisabled &&
-      rowExpandable.expandable &&
-      rowExpandable.expandable(item) &&
-      rowExpandable.render;
   };
 
   const renderTableExpandCell = (className, item, config) => {
@@ -165,15 +207,15 @@ const AppTable = (props) => {
     </Col>
   };
 
-  const renderTableItemCells = (item, rowIndex) => {
-    if (groupItemRowIndexes.has(rowIndex)) {
-      return renderTableGroupItemCells(item, rowIndex);
+  const renderTableItemCells = (item) => {
+    if (item._is_group) {
+      return renderTableGroupItemCells(item);
     }
-    if (!rowExpandableDisabled && isExpandable(item, rowExpandable)) {
+    if (!isRowExpandableDisabled() && isExpandable(item, rowExpandable)) {
       return <Col span={24}>
         {
           renderTableRow('item-content-row',
-            () => renderTableItemContentCells(item, rowIndex))
+            () => renderTableItemContentCells(item))
         }
         {
           renderTableRow('item-expand-row',
@@ -181,34 +223,82 @@ const AppTable = (props) => {
         }
       </Col>
     }
-    return renderTableItemContentCells(item, rowIndex);
+    return renderTableItemContentCells(item);
   };
 
-  const renderTableItemRows = (dataSource) => {
-    return dataSource.map((data, rowIndex) => {
-      if (groupItemRowIndexes.has(rowIndex)) {
-        return <Affix key={`row-${rowIndex}`} target={() => tableBodyRef}>
-          <Row className={`group-item-row ${isGroupError(data) ? 'group-item-row-error' : ''}`}>
-            {renderTableItemCells(data, rowIndex)}
-          </Row>
-        </Affix>
+  const renderTableHeaderRow = () => {
+    return renderTableRow('header-row',
+      () => renderTableCells('column-cell', null,
+        (item, column) => {
+          if (isFunction(column.title)) {
+            return column.title(actionProviders);
+          }
+          return column.title || column.dataIndex
+        })
+    );
+  };
+
+  const renderTableGroupItemRow = (groupItem) => {
+    let itemRows = groupItem.items.map((item, index) => (
+      <Row key={`row-${groupItem._group_index}-${index}`}
+           className={`item-row ${isItemError(item) ? 'item-row-error' : ''}`}>
+        {renderTableItemCells(item)}
+      </Row>
+    ));
+    return <>
+      <Row className={`group-item-row ${isGroupError(groupItem) ? 'group-item-row-error' : ''} ${noStickyGroup ? '' : 'group-item-sticky'}`}>
+        {renderTableItemCells(groupItem)}
+      </Row>
+      {itemRows}
+    </>;
+  };
+
+  const renderTableBody = () => {
+    if (showLoading) {
+      return (
+        <div className="table-progress-container">
+          <CircularProgress/>
+        </div>
+      )
+    }
+    return (
+      <div ref={setTableBodyRef}
+           className={`table-body ${tableHasScroll ? 'content-scrollable' : ''}`}>
+        {renderTableItemRows()}
+        {renderBottom && renderBottom()}
+      </div>
+    );
+  }
+
+  const renderTableItemRows = () => {
+    return tableData.map((item, index) => {
+      if (item._is_group) {
+        if (groupFilter? groupFilter(item) : true) {
+          return (
+            <div key={`group-${item._index}`}
+                 className="group-item-container">
+              {renderTableGroupItemRow(item)}
+            </div>
+          )
+        }
       } else {
-        return <Row key={`row-${rowIndex}`} className={`item-row ${isItemError(data) ? 'item-row-error' : ''}`}>
-          {renderTableItemCells(data, rowIndex)}
-        </Row>
+        if (itemFilter? itemFilter(item) : true) {
+          return (
+            <Row key={`row-${index}`} className={`item-row ${isItemError(item) ? 'item-row-error' : ''}`}>
+              {renderTableItemCells(item)}
+            </Row>
+          )
+        }
       }
     });
   };
 
   return (
-    <div className="app-table">
+    <div className={`app-table ${isIPadDevice? 'ipad-device' : ''}`}>
       <div className="table-header">
-        {renderTableHeaderRow(columnDataSource, tableColumns)}
+        {renderTableHeaderRow()}
       </div>
-      <div className="table-body" ref={setTableBodyRef}>
-        {renderTableItemRows(tableData)}
-        {renderBottom && renderBottom()}
-      </div>
+      {renderTableBody()}
     </div>
   );
 };

@@ -7,26 +7,27 @@ import { withRouter } from 'react-router-dom';
 import { actionSnackBar } from 'view/system/systemAction';
 import { submitOrder } from '../OrderFormActions';
 import IconLoading from 'components/icon-loading/IconLoading';
+import { getLangCode } from 'utils/helpers/helpers';
 
 const SubmitOrderItemModal = (props) => {
   const [loading, setLoading] = useState(false);
-  const { handleClose, fetchData } = props;
+  const { handleClose, fetchData, locale } = props;
 
   const handleSave = async () => {
     try {
       setLoading(true);
-      const { data } = await submitOrder({});
+      const { data } = await submitOrder({ lang_code: getLangCode(locale) });
       if (data.result.status === 200) {
         fetchData();
         props.actionSnackBar({
           open: true,
           type: 'success',
-          message: 'Today Order form created',
+          message: data.result.message,
         });
       } else {
         props.actionSnackBar({
           open: true,
-          type: 'error',
+          type: 'warning',
           message: data.result.message,
         });
       }
@@ -79,20 +80,20 @@ const SubmitOrderItemModal = (props) => {
             <IconLoading />
           </div>
         ) : (
-          <div className="filter-footer" style={{ marginTop: 16 }}>
-            <Button className="outline-btn" onClick={handleClose}>
-              <FormattedMessage id="IDS_CANCEL" />
-            </Button>
-            <Button className="primary-btn" onClick={handleSave}>
-              <FormattedMessage id="IDS_SAVE" />
-            </Button>
-          </div>
-        )}
+            <div className="filter-footer" style={{ marginTop: 16 }}>
+              <Button className="outline-btn" onClick={handleClose}>
+                <FormattedMessage id="IDS_CANCEL" />
+              </Button>
+              <Button className="primary-btn" onClick={handleSave}>
+                <FormattedMessage id="IDS_SAVE" />
+              </Button>
+            </div>
+          )}
       </div>
     </Modal>
   );
 };
 
-export default connect((state) => ({}), { actionSnackBar })(
-  withRouter(SubmitOrderItemModal)
-);
+export default connect((state) => ({ locale: state.system.locale }), {
+  actionSnackBar,
+})(withRouter(SubmitOrderItemModal));

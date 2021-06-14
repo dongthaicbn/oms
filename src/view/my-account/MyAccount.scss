@@ -1,5 +1,6 @@
 .wapper-my-account {
-  margin: 27px 27px 10px 27px;
+  margin: 27px 12px 10px 0;
+  min-width: 851px !important;
   .title-header {
     font-weight: 900;
     font-size: 32px;
@@ -7,6 +8,7 @@
     color: #6461B4;
     margin-top: 10px;
     margin-bottom: 38px;
+    font-family: NotoSansTCBlack;
   }
   .section-infor {
     margin-bottom: 16px;
@@ -21,12 +23,17 @@
       margin-bottom: 16px;
     }
     .dash {
-      border: 1px solid #B5B6FF;
+      border-top: 1px solid #B5B6FF;
     }
+
   }
   .row-account {
     display: flex;
     margin-top: 24px;
+    margin-left: 8px;
+    .email {
+      margin-bottom: 8px;
+    }
     .col-account-left {
       flex: 1
     }
@@ -56,8 +63,9 @@
       align-items: center;
       text-align: center;
       color: #6461B4;
-      padding: 20px 27px;
-      margin-top: 5px;
+      // padding: 24px 32px 27px;
+      margin: 5px 0 0;
+      height: 55px;
     }
   }
 }
@@ -70,6 +78,11 @@
     width: 376px;
     margin-left: auto;
     margin-right: auto;
+    border: 3px solid #D0D1FF;
+    box-shadow: 0px 3px 16px rgba(0, 0, 0, 0.04), 0px 1px 7px rgba(0, 0, 0, 0.08);
+  }
+  .ant-modal-header {
+    margin-top: 10px;
   }
 }
 .wapper-modal-my-account {
@@ -80,7 +93,6 @@
     padding: 12px;
     .MuiFormControl-fullWidth {
       width: 280px;
-      height: 53px;
     }
     .text-error-login {
       font-size: 10px;
@@ -89,21 +101,31 @@
       text-align: left;
       margin-top: 5px;
     }
+    .MuiOutlinedInput-root {
+      height: 53px;      
+    }
     .MuiFormLabel-root.Mui-error {
-      color: #EF5F5F;
+      color: #EF5F5F !important;
+    }
+    .PrivateNotchedOutline-legendLabelled-5{
+      font-weight: bold;
+      font-family: 'NotoSansTC';
+      font-size: 10px;
     }
     .Mui-error .MuiOutlinedInput-notchedOutline {
       // border-color: #EF5F5F;
     }
     .MuiInputLabel-shrink {
       font-weight: bold;
+      transform: translate(14.5px, -6px) scale(1);
+      font-size: 10px;
     }
     .MuiInputLabel-outlined {
       font-family: NotoSansTC;
       color: #828282;
     }
     .MuiFormLabel-root.Mui-focused{
-      color: #3f51b5 !important;
+      color: #3f51b5;
     }
     .MuiOutlinedInput-notchedOutline {
       border-color: #B5B6FF;
@@ -123,6 +145,7 @@
       width: 280px;
       height: 70px;
       margin-top: 20px;
+      text-shadow: unset;
     }
   }
 }

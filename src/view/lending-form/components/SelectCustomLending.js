@@ -90,7 +90,7 @@ const SelectCustomLending = (props) => {
                   handleClose();
                 }}
                 style={{
-                  background: index % 2 === 0 ? 'white' : '#F1F4FC',
+                  background: index % 2 === 0 ? '#F9FAFF' : '#F1F4FC',
                   display: 'flex',
                   alignItems: 'flex-start',
                   padding: '16px 24px',

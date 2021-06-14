@@ -43,7 +43,7 @@ const CalendarModal = (props) => {
           selectAnyDate={true}
         />
         <div className="filter-footer" style={{ marginTop: 24 }}>
-          <Button className="outline-btn" onClick={handleReset}>
+          <Button className="outline-btn button-background-gray" onClick={handleReset}>
             <FormattedMessage id="IDS_RESET" />
           </Button>
           <Button className="primary-btn" onClick={handleSave}>

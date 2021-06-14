@@ -44,9 +44,38 @@ const OrderForm = (props) => {
   const supplier = !isEmpty(data.supplier_forms)
     ? data.supplier_forms.filter((v) => v)
     : [];
+  const renderBottomButton = () => {
+    return (
+      <div className="footer-content">
+        <Button
+          className={`item-btn ${
+                    data.is_collect_available === 1 ? 'active-btn' : ''
+                  }`}
+                  onClick={() => {
+                    if (data.is_collect_available === 1) {
+                      props.history.push(routes.RECEIVED_DELIVERY);
+                    }
+                  }}
+                >
+                  <FormattedMessage id="IDS_COLLECT" />
+                </Button>
+                <Button
+                  className={`item-btn ${
+                    data.is_submitted_today === 1 ? 'active-btn' : ''
+                  }`}
+                  onClick={() => {
+                    if (data.is_submitted_today === 1)
+                      setTypeModal(TYPE_MODAL.SUBMIT);
+                  }}
+                >
+                  <FormattedMessage id="IDS_SUBMIT_TODAY_ORDER_FORM" />
+                </Button>
+      </div>
+    )
+  }
   return (
     <Layout>
-      <div className="scrollable-container">
+      <div className="scrollable-container order-form-container">
         <div className="content-container">
           <div className="header-order-container">
             <div className="left-header">
@@ -69,21 +98,30 @@ const OrderForm = (props) => {
           {/* <div className="page-order-content"> */}
           {isEmpty(supplier) ? (
             <div className="empty-text">
-              <FormattedMessage id="IDS_NO_ORDER_ITEMS" />
+              <div className="wapper-empty-text">
+                <FormattedMessage id="IDS_NO_ORDER_ITEMS" />
+              </div>
+              {renderBottomButton()}
             </div>
           ) : (
-            <Box style={{ marginTop: 118 }}>
-              {supplier.map((el, i) => (
+            <div
+              style={{
+                marginTop: 0,
+                overflow: 'auto',
+              }}
+              className="box-order-form"
+            >
+              {[...supplier].map((el, i) => (
                 <OrderItem
                   item={el}
                   key={i}
-                  isShowEdit={data.is_show_edit_button === 0}
+                  isShowEdit={data.is_show_edit_button !== 0}
                 />
               ))}
               <Box
                 style={{
                   width: 335,
-                  marginLeft: 'calc(100% - 335px)',
+                  marginLeft: 'calc(100% - 345px)',
                   marginTop: 86,
                   textAlign: 'right',
                   color: '#4F4E66',
@@ -99,40 +137,44 @@ const OrderForm = (props) => {
                 >
                   <FormattedMessage id="IDS_TOTAL_ITEM" />: {data.total_item}
                 </p>
-                <Divider className="custom-divider" />
+                <Divider
+                  className="custom-divider"
+                  style={{ margin: '0 0 28px 0' }}
+                />
                 <p
                   style={{
                     margin: '0 0 16px 0',
                     fontSize: 24,
                     lineHeight: '36px',
+                    fontFamily: 'NotoSansTC',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
                   }}
                 >
-                  <FormattedMessage id="IDS_TOTAL" />: {data.total_cost}
+                  <FormattedMessage id="IDS_TOTAL" />
+                  <span
+                    style={{
+                      marginLeft: 16,
+                      fontSize: 36,
+                      fontFamily: 'NotoSansTCBlack',
+                    }}
+                  >
+                    {data.total_cost}
+                  </span>
                 </p>
               </Box>
-            </Box>
-          )}
-          <div className="footer-content">
-            <Button className="item-btn">
-              <FormattedMessage id="IDS_COLLECT" />
-            </Button>
-            <Button
-              className={`item-btn ${!isEmpty(supplier) ? 'active-btn' : ''}`}
-              onClick={() => {
-                if (!isEmpty(supplier)) setTypeModal(TYPE_MODAL.SUBMIT);
-              }}
-            >
-              <FormattedMessage id="IDS_SUBMIT_TODAY_ORDER_FORM" />
-            </Button>
-          </div>
-          {/* </div> */}
-          {typeModal === TYPE_MODAL.SUBMIT && (
-            <SubmitOrderItemModal
-              handleClose={closeModal}
-              fetchData={fetchData}
-            />
+              {renderBottomButton()}
+            </div>
           )}
         </div>
+        
+        {typeModal === TYPE_MODAL.SUBMIT && (
+          <SubmitOrderItemModal
+            handleClose={closeModal}
+            fetchData={fetchData}
+          />
+        )}
+        {/* </div> */}
       </div>
     </Layout>
   );

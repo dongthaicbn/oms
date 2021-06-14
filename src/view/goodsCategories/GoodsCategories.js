@@ -34,16 +34,16 @@ const GoodsCategories = (props) => {
     );
   };
   const handleBack = () => {
-    if (props.layoutSlider.previousUrl) {
-      props.history.push(props.layoutSlider.previousUrl);
-    }
+    props.history.goBack();
   };
   const { store, user } = account;
   return (
     <Layout>
-      <div className="scrollable-container">
+      <div className="scrollable-container scrollable-container-categories" 
+      // style={{ position: 'relative' }}
+      >
         <div className="content-container">
-          <div className="header-container">
+          <div className="header-container" style={{ paddingLeft: 0 }}>
             <div className="left-header">
               <span className="title-info">
                 <FormattedMessage id="IDS_STORE" />
@@ -58,8 +58,7 @@ const GoodsCategories = (props) => {
             </div>
           </div>
           <div
-            className="page-content"
-            style={{ height: 'calc(100vh - 202px)' }}
+            className="page-content page-content-categories"
           >
             <div className="item-group">
               {!isEmpty(data.favourite_categories) &&
@@ -92,7 +91,10 @@ const GoodsCategories = (props) => {
         </div>
         <div
           className="page-footer order-form-footer"
-          style={{ background: '#f3f3f9' }}
+          style={{
+            background: '#f3f3f9',
+            padding: '24px 12px 12px 0'
+          }}
         >
           <Button className="footer-btn" onClick={handleBack}>
             <FormattedMessage id="IDS_BACK" />

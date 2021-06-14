@@ -108,10 +108,18 @@ const defaultFormatValue= (value) => {
   return value;
 };
 
+const adjustValue = (value, minValue, maxValue) => {
+  if (value > maxValue) {
+    return maxValue;
+  } else if (value < minValue) {
+    return minValue;
+  }
+};
+
 const NumberEditPopup = (props) => {
   let {
     onSubmit, onValueChanged, handleValueChangeEvent, validateValue, formatValue, onPopupCancel, onCancel, onError,
-    value, maxValue, minValue, expand,
+    value, maxValue, minValue, expand, jumpValue, autoAdjustValue,
     disableFractional, maxFractionalDigits, onVisibleChange,
   } = props;
   let [visible, setVisible] = useState(false);
@@ -120,6 +128,8 @@ const NumberEditPopup = (props) => {
   let [expanded, setExpanded] = useState(expand);
   let [originValue, setOriginValue] = useState(value);
 
+  jumpValue = jumpValue || 1;
+  autoAdjustValue = autoAdjustValue || false;
   handleValueChangeEvent = handleValueChangeEvent || defaultHandleValueChangeEvent;
   validateValue = validateValue || defaultValidateValue;
   formatValue = formatValue || defaultFormatValue;
@@ -149,7 +159,10 @@ const NumberEditPopup = (props) => {
 
   const changeValue = (newValue) => {
     if (!validateValue(newValue, minValue, maxValue, maxFractionalDigits)) {
-      return;
+      if (!autoAdjustValue) {
+        return;
+      }
+      newValue = adjustValue(newValue, minValue, maxValue);
     }
     if (newValue !== value && onValueChanged) {
       onValueChanged(newValue);
@@ -201,11 +214,11 @@ const NumberEditPopup = (props) => {
     return (
       <>
         <div className="app-flex-container middle-group">
-          <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_PLUS_VALUE, value, -1))}>
-            -1
+          <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_PLUS_VALUE, value, -jumpValue))}>
+            -{jumpValue}
           </Button>
-          <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_PLUS_VALUE, value, 1))}>
-            +1
+          <Button className="action-button" onClick={() => changeValue(handleValueChangeEvent(TYPE_PLUS_VALUE, value, jumpValue))}>
+            +{jumpValue}
           </Button>
           <Button className="btn-cancel" onClick={cancel}>
             C

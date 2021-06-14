@@ -1,210 +1,216 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { Button, Divider } from 'antd';
-import { actionToggleMenu } from '../system/systemAction';
-import { getDeliveryCategoriesDetail } from './HolidayActions';
-import { getLangCode, isEmpty } from 'utils/helpers/helpers';
+import { FormattedMessage } from 'react-intl';
+import { Divider, Typography, Tag, Button } from 'antd';
 import Layout from 'components/layout/Layout';
-import { routes } from 'utils/constants/constants';
-import { Fragment } from 'react';
+import AppTable from 'components/table/AppTable';
+import RoundImage from 'components/image/RoundImage';
+import InfoGroup from 'components/infoGroup/InfoGroup';
+import { getLangCode, isEmpty, formatDate } from 'utils/helpers/helpers';
 import { ReactComponent as DropDownIcon } from 'assets/icons/ic_dropdown.svg';
 import * as icons from 'assets';
+import { actionToggleMenu } from '../system/systemAction';
+import { getDeliveryCategoriesDetail } from './HolidayActions';
+import './HolidayGoodsCategoryDetail.scss';
+
+const { Title, Paragraph } = Typography;
+
+const MINIMAL_AVAILABLE_DATE_DISPLAY = 6;
+
+const columns = [
+  {
+    title: <FormattedMessage id="IDS_ITEMS" />,
+    render: (item) => (
+      <div className="app-flex-container items-info-cell">
+        <RoundImage src={item.image} alt="Item Image" />
+        <InfoGroup
+          label={
+            <>
+              {item.code}
+              <Divider type="vertical" />
+              <FormattedMessage id="IDS_UNIT" values={{ value: item.unit }} />
+            </>
+          }
+          noColon={true}
+        >
+          {item.name} {item.pack_weight}
+        </InfoGroup>
+      </div>
+    ),
+    renderGroup: (item) => item.name
+  },
+  {
+    title: <div className="item-info-column">
+      <FormattedMessage id="IDS_VEHICLE_SCHEDULE"/>
+    </div>,
+    width: '120px',
+    align: 'center',
+    render: (item) => (
+      item.vehicle_schdules &&
+      <Tag className="info-tag">{item.vehicle_schdules}</Tag>
+    )
+  },
+  {
+    title: <div className="item-info-column">
+      <FormattedMessage id="IDS_ORDER_BEFORE"/>
+    </div>,
+    width: '120px',
+    align: 'center',
+    render: (item) => (
+      item.vehicle_schdules &&
+      <Tag className="info-tag">{item.vehicle_schdules}</Tag>
+    )
+  }
+];
 
 const HolidayGoodsCategoriesDetail = (props) => {
-  const [dataDetail, setDataDetail] = useState({});
-  const [viewAll, setViewAll] = useState([]);
   const { id } = props.match.params;
   const paramsUrl = queryString.parse(props.location.search);
+  const [data, setData] = useState({});
+  const [suppliers, setSuppliers] = useState([]);
+  const [supplierMetas, setSupplierMetas] = useState([]);
 
-  const fetchData = async () => {
+  const togleAvailableDateView = (supplierIndex, viewAll) => {
+    let newSupplierMetas = [...supplierMetas];
+    newSupplierMetas[supplierIndex] = {
+      expanded: viewAll
+    };
+    setSupplierMetas(newSupplierMetas);
+  };
+
+  const createGroupExtendable = () => {
+    return {
+      extendable: (item) => true,
+      render: (item) => {
+        let expaned = supplierMetas[item._index]?.expanded;
+        let availableDates = item.date?.available_date || [];
+        let viewActionContent;
+        if (expaned) {
+          viewActionContent = <>
+            <FormattedMessage id="IDS_CLOSE"/>
+            <DropDownIcon/>
+          </>;
+        } else {
+          if (availableDates.length > MINIMAL_AVAILABLE_DATE_DISPLAY) {
+            availableDates = availableDates.slice(0, MINIMAL_AVAILABLE_DATE_DISPLAY);
+          }
+          viewActionContent = <>
+            <FormattedMessage id="IDS_VIEW_ALL"/>
+            <DropDownIcon/>
+          </>;
+        }
+        return (
+          <div className="supplier-delivery-info-container">
+            <div className="suspended-section">
+              <FormattedMessage id="IDS_DELIVERY_SUSPENDED"/>
+              {
+                item.date?.suspended_date?.length > 0 &&
+                <div className="delivery-suspended-dates">
+                  {
+                    item.date?.suspended_date?.map(date => (
+                      <Tag>{formatDate(date, 'DD/MM(dd)')}</Tag>
+                    ))
+                  }
+                </div>
+              }
+            </div>
+            <Divider/>
+            {
+              availableDates.length > 0 &&
+              <div className="available-section">
+                {
+                  availableDates.map(date => (
+                    <Tag>
+                      {formatDate(date.order_date, 'DD/MM(dd)')}
+                      <img src={icons.ic_arrow_right}/>
+                      {formatDate(date.delivery_date, 'DD/MM(dd)')}
+                    </Tag>
+                  ))
+                }
+              </div>
+            }
+            {
+              item.date?.available_date?.length > MINIMAL_AVAILABLE_DATE_DISPLAY &&
+              <>
+                <Divider/>
+                <div className="view-action-section">
+                  <div className="view-action" onClick={() => togleAvailableDateView(item._index, !expaned)}>
+                    {viewActionContent}
+                  </div>
+                </div>
+              </>
+            }
+          </div>
+        )
+      }
+    }
+  };
+
+  const fetchData = async (id, type, shop_id, start_date, end_date) => {
     try {
       const { data } = await getDeliveryCategoriesDetail({
         lang_code: getLangCode(props.locale),
-        is_favorite_category: paramsUrl.type === 'categories' ? 0 : 1,
+        is_favorite_category: type === 'categories' ? 0 : 1,
         id,
-        shop_id: paramsUrl.shop_id,
-        start_date: paramsUrl.start_date,
-        end_date: paramsUrl.end_date,
+        shop_id: shop_id,
+        start_date: start_date,
+        end_date: end_date,
       });
 
-      if (!isEmpty(data.data)) setDataDetail(data.data);
-    } catch (error) {}
+      if (!isEmpty(data.data)) {
+        return data.data;
+      }
+    } catch (e) {
+      throw e;
+    }
   };
+
+  const refreshData = async () => {
+    let response = await fetchData(id, paramsUrl.type,
+      paramsUrl.shop_id, paramsUrl.start_date, paramsUrl.end_date);
+    setData(response);
+    setSuppliers(response.suppliers);
+  };
+
   useEffect(() => {
-    fetchData(); // eslint-disable-next-line
-  }, [id]);
-  const handleBack = () => {
-    props.history.push(routes.HOLIDAY_GOOD_CATEGORY);
+    refreshData();
+  }, []);
+
+  const goBack = () => {
+    props.history.goBack();
   };
 
-  const { category, suppliers } = dataDetail;
   return (
-    <Layout>
-      <div className="scrollable-container">
-        <div className="content-container">
-          <div className="header-container vehicle-detail">
-            <span className="title-info">
-              {!isEmpty(category) ? category.name : ''}
-            </span>
-          </div>
-
-          <div className="page-content vehicle-detail">
-            <div className="header-fix">
-              <div className="header-group">
-                <div className="items-column">
-                  <FormattedMessage id="IDS_ITEMS" />
-                </div>
-                <div className="vehicle-column">
-                  <FormattedMessage id="IDS_VEHICLE_SCHEDULE" />
-                </div>
-                <div className="order-column">
-                  <FormattedMessage id="IDS_ORDER_BEFORE" />
+    <div className="holiday-goods-category-detail">
+      <Layout>
+        <div className="app-scrollable-container">
+          <div className="app-content-container">
+            <div className="header-group">
+              <div className="page-info-container">
+                <div className="page-title">
+                  <Title level={3}>{data.category?.name}</Title>
                 </div>
               </div>
             </div>
-
-            <div className="header-fill" />
-            <>
-              {!isEmpty(suppliers) &&
-                suppliers.map((el, index) => {
-                  const isViewAll = viewAll.includes(index);
-                  const { available_date, suspended_date } = el.date;
-                  return (
-                    <Fragment key={index}>
-                      <div className="wapper-title-vehicle">
-                        <p className="title-vehicle-item">{el.name}</p>{' '}
-                        <div className="header-item-info">
-                          <div className="red-text-info">
-                            <p>
-                              <FormattedMessage id="IDS_DELIVERY_SUSPENDED" />
-                            </p>
-                            {!isEmpty(suspended_date) && (
-                              <div style={{ display: 'flex' }}>
-                                {suspended_date.map((suspendEl, idx) => (
-                                  <span key={idx}>{suspendEl}</span>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                          <Divider />
-                          {!isEmpty(available_date) && (
-                            <>
-                              <div className="content-block-info">
-                                <div className="content-wrap">
-                                  {available_date.map(
-                                    (availableEl, availableIndex) => {
-                                      if (!isViewAll && availableIndex > 5)
-                                        return null;
-                                      return (
-                                        <div
-                                          className="text-info-item"
-                                          key={availableIndex}
-                                        >
-                                          {availableEl.order_date}
-                                          <DropDownIcon
-                                            style={{
-                                              margin: '0 8px',
-                                              transform: 'rotate(-90deg)',
-                                            }}
-                                          />
-                                          {availableEl.delivery_date}
-                                        </div>
-                                      );
-                                    }
-                                  )}
-                                </div>
-                              </div>
-                              {available_date.length > 6 && (
-                                <>
-                                  <Divider />
-                                  <div className="action-text-info">
-                                    <span
-                                      onClick={() => {
-                                        setViewAll(
-                                          isViewAll
-                                            ? viewAll.filter((v) => v !== index)
-                                            : [...viewAll, index]
-                                        );
-                                      }}
-                                    >
-                                      {isViewAll ? 'Close' : 'View all'}
-                                      <DropDownIcon style={{ marginLeft: 8 }} />
-                                    </span>
-                                  </div>
-                                </>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      </div>
-
-                      {!isEmpty(el.items) &&
-                        el.items.map((item, idx) => (
-                          <div className="header-group vehicle-item" key={idx}>
-                            <div
-                              className="items-column"
-                              style={{ flexDirection: 'row' }}
-                            >
-                              <img
-                                src={icons.img_pic}
-                                alt=""
-                                style={{
-                                  maxWidth: 75,
-                                  maxHeight: 60,
-                                  marginRight: 12,
-                                }}
-                              />
-                              <div className="items-column">
-                                <span
-                                  style={{
-                                    fontSize: 14,
-                                    lineHeight: '21px',
-                                    marginBottom: 2,
-                                  }}
-                                >
-                                  {item.code}
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: 18,
-                                    lineHeight: '27px',
-                                    fontWeight: 600,
-                                  }}
-                                >
-                                  {item.name}&nbsp;
-                                  {item.pack_weight}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="vehicle-column">
-                              <span className="value-item">
-                                {item.vehicle_schdules}
-                              </span>
-                            </div>
-                            <div className="order-column">
-                              <span className="value-item">
-                                {item.order_before_day}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                    </Fragment>
-                  );
-                })}
-            </>
-          </div>
-
-          <div className="page-footer">
-            <Button className="footer-btn" onClick={handleBack}>
-              <FormattedMessage id="IDS_BACK" />
-            </Button>
+            <div className="body-group">
+              <AppTable
+                columns={columns}
+                dataSource={suppliers}
+                itemsKey="items"
+                groupExtendable={createGroupExtendable()}
+              />
+            </div>
+            <div className="footer-group app-button">
+              <Button className="back-button" onClick={goBack}>
+                <FormattedMessage id="IDS_BACK" />
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+    </div>
   );
 };
 

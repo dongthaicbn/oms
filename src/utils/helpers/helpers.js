@@ -10,6 +10,7 @@ import {
   STATUS_PENDING,
   STATUS_RECEIVED,
   STATUS_DAMAGED,
+  routes,
 } from '../constants/constants';
 
 const has = Object.prototype.hasOwnProperty;
@@ -186,17 +187,27 @@ export const stringInsert = (target, position, insertValue) => {
 };
 export const showDate = (dateStr) => {
   let date = moment(dateStr);
-  if (moment().diff(date, 'days') === 1) {
-    return date.fromNow();
-  } else if (
-    moment().diff(date, 'days') > 1 ||
-    moment().diff(date, 'days') <= -1
-  ) {
-    return `${date.format('DD')} ${date.format('MMM')} ${
-      moment().format('YYYY') !== date.format('YYYY') ? date.format('YYYY') : ''
-    }`;
+  let yesterday = moment().add(-1, 'days');
+  if (date.isSame(moment(), 'days')) {
+    return `Today ${date.format('HH:mm')}`;
+  } else if (date.isSame(yesterday, 'days')) {
+    return `Yesterday ${date.format('HH:mm')}`;
   }
-  return `${date.calendar().split(' ')[0]} ${date.format('HH:mm')}`;
+  return `${date.format('D')} ${date.format('MMM')} ${
+    moment().format('YYYY') !== date.format('YYYY') ? date.format('YYYY') : ''
+  } ${date.format('HH:mm')}`;
+};
+export const showEstimateDate = (dateStr) => {
+  let date = moment(dateStr);
+  let yesterday = moment().add(-1, 'days');
+  if (date.isSame(moment(), 'days')) {
+    return `Today`;
+  } else if (date.isSame(yesterday, 'days')) {
+    return `Yesterday`;
+  }
+  return `${date.format('D')} ${date.format('MMM')} ${
+    moment().format('YYYY') !== date.format('YYYY') ? date.format('YYYY') : ''
+  }`;
 };
 
 export const removeDuplicateName = (arr) => {
@@ -222,4 +233,29 @@ export const formatNumber = (value, format) => {
     return value;
   }
   return numeral(value).format(format);
+};
+export const pageNeedCheckAuthen = () => {
+  const pathname = window.location.pathname;
+  return (
+    pathname !== routes.HOME &&
+    pathname !== routes.CONTACT &&
+    pathname !== routes.TERM_CONDITION &&
+    pathname !== routes.PRIVACY_POLICY &&
+    pathname !== routes.DISCLAIMER &&
+    pathname !== routes.NEWS_AND_PROMOTION &&
+    pathname !== routes.INVENTORY &&
+    pathname !== routes.INVENTORY_DETAIL &&
+    pathname !== routes.LOGIN &&
+    pathname !== routes.FORGET_PASSWORD &&
+    pathname !== routes.RESET_PASSWORD &&
+    pathname !== routes.RESET_PASSWORD_DONE &&
+    pathname !== routes.CREATE_PASSWORD &&
+    pathname !== routes.CREATE_PASSWORD_DONE &&
+    pathname !== routes.REGISTRATION &&
+    pathname !== routes.REGISTRATION_DONE
+  );
+};
+
+export const isIPad = () => {
+  return navigator.platform.indexOf('iPad') !== -1;
 };

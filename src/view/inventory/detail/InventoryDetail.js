@@ -5,7 +5,6 @@ import { Typography, Divider, Button, Row, Col, Form, Input } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { routes } from 'utils/constants/constants';
 import { isEmpty, getLangCode, formatDate, stringInsert, isDateValid, getMonth } from 'utils/helpers/helpers';
-import { requiredValidationRule } from 'utils/helpers/validationRules'
 import Layout from 'components/layout/Layout';
 import InfoGroup from 'components/infoGroup/InfoGroup';
 import AppTable from 'components/table/AppTable';
@@ -25,116 +24,6 @@ const {TextArea} = Input;
 const EXPIRY_DATE_DISPLAY_FORMAT = 'DD / MM';
 const EXPIRY_DATE_JSON_FORMAT = 'YYYY-MM-DD';
 
-// const item = {
-//   id: 12,
-//   year: 2020,
-//   month: 11,
-//   submission_date: '2020-11-30',
-//   deadline: '2020-11-30',
-//   status: 'submitted',
-//   items: [
-//     {
-//       product_id: 1,
-//       code: 'FB0001-01',
-//       unit: 'KG',
-//       name: 'Grass carp 1',
-//       pack_weight: '~1.25',
-//       remaining_qty: 5,
-//       expiry_date: undefined
-//     },
-//     {
-//       product_id: 2,
-//       code: 'FB0001-02',
-//       unit: 'KG',
-//       name: 'Grass carp 2',
-//       pack_weight: '~2.25',
-//       remaining_qty: 5,
-//       expiry_date: '2021-01-01'
-//     },
-//     {
-//       product_id: 3,
-//       code: 'FB0001-03',
-//       unit: 'KG',
-//       name: 'Grass carp 3',
-//       pack_weight: '~3.25',
-//       remaining_qty: 5,
-//       expiry_date: '2021-01-02'
-//     },
-//     {
-//       product_id: 4,
-//       code: 'FB0001-04',
-//       unit: 'KG',
-//       name: 'Grass carp 4',
-//       pack_weight: '~4.25',
-//       remaining_qty: undefined,
-//       expiry_date: undefined
-//     },
-//     {
-//       product_id: 5,
-//       code: 'FB0001-05',
-//       unit: 'KG',
-//       name: 'Grass carp 5',
-//       pack_weight: '~5.25',
-//       remaining_qty: 0,
-//       expiry_date: '2021-01-05'
-//     },
-//     {
-//       product_id: 6,
-//       code: 'FB0001-06',
-//       unit: 'KG',
-//       name: 'Grass carp 6',
-//       pack_weight: '~6.25',
-//       remaining_qty: 0,
-//       expiry_date: '2021-01-06'
-//     },
-//     {
-//       product_id: 7,
-//       code: 'FB0001-07',
-//       unit: 'KG',
-//       name: 'Grass carp 7',
-//       pack_weight: '~7.25',
-//       remaining_qty: 0,
-//       expiry_date: '2021-01-07'
-//     },
-//     {
-//       product_id: 8,
-//       code: 'FB0001-08',
-//       unit: 'KG',
-//       name: 'Grass carp 8',
-//       pack_weight: '~8.25',
-//       remaining_qty: 0,
-//       expiry_date: '2021-01-08'
-//     },
-//     {
-//       product_id: 9,
-//       code: 'FB0001-09',
-//       unit: 'KG',
-//       name: 'Grass carp 9',
-//       pack_weight: '~9.25',
-//       remaining_qty: 0,
-//       expiry_date: '2021-01-09'
-//     },
-//     {
-//       product_id: 10,
-//       code: 'FB0001-10',
-//       unit: 'KG',
-//       name: 'Grass carp',
-//       pack_weight: '~10.25',
-//       remaining_qty: undefined,
-//       expiry_date: undefined
-//     },
-//     {
-//       product_id: 11,
-//       code: 'FB0001-11',
-//       unit: 'KG',
-//       name: 'Grass carp',
-//       pack_weight: '~11.25',
-//       remaining_qty: 0,
-//       expiry_date: '2021-01-11'
-//     }
-//   ]
-// };
-
 const displayInputDate = (value) => {
   let displayValue;
   if (value instanceof Date) {
@@ -150,7 +39,7 @@ const displayInputDate = (value) => {
 const itemColumns = [
   {
     title: <FormattedMessage id="IDS_ITEMS"/>,
-    render: (item, actionProviders, rowIndex) => (
+    render: (item, actionProviders) => (
       <div className="app-flex-container item-info-container">
         <RoundImage src={item.image} alt="Item Image"/>
         <div>
@@ -166,16 +55,12 @@ const itemColumns = [
             noColon={true}
             className="item-info"
           >
-            {item.name}&nbsp;
-            <FormattedMessage
-              id="IDS_WEIGHT_PER_PACKS"
-              values={{weight: item.pack_weight}}
-            />
+            {item.name} {item.pack_weight}
           </InfoGroup>
         </div>
         {
           !actionProviders.isConfirmMode() && (
-            <Form.Item name={['items', rowIndex, 'product_id']}
+            <Form.Item name={['items', item._index, 'product_id']}
                        initialValue={item.product_id}
                        hidden>
               <Input/>
@@ -190,7 +75,7 @@ const itemColumns = [
     key: 'expiryDate',
     align: 'center',
     width: '118px',
-    render: (item, actionProviders, rowIndex) => {
+    render: (item, actionProviders) => {
       let expiryDate = actionProviders.getItemById(item.product_id)?.expiry_date;
       if (actionProviders.isConfirmMode()) {
         return <div className="input-cell expiry-date-input">
@@ -203,15 +88,14 @@ const itemColumns = [
                              onCancel={() => actionProviders.editItemField(item.product_id, 'expiry_date', expiryDate?.originValue)}
                              onPopupCancel={(originValue) => actionProviders.editItemField(item.product_id, 'expiry_date', originValue)}
                              onValueChanged={(newValue) => actionProviders.editItemField(item.product_id, 'expiry_date', newValue)}
-                             onSubmit={(value) => actionProviders.handleEditItemFieldSubmit(item.product_id, rowIndex, 'expiry_date', formatDate(value, EXPIRY_DATE_JSON_FORMAT))}
+                             onSubmit={(value) => actionProviders.handleEditItemFieldSubmit(item.product_id,  item._index, 'expiry_date', formatDate(value, EXPIRY_DATE_JSON_FORMAT))}
                              onError={(error) => actionProviders.handleExpiryDateInputError(item, error)}>
             <Button>
               {displayInputDate(expiryDate?.editValue)}
             </Button>
           </DayMonthEditPopup>
-          <Form.Item name={['items', rowIndex, 'expiry_date']}
-                     initialValue={formatDate(expiryDate?.originValue, EXPIRY_DATE_JSON_FORMAT)}
-                     rules={[requiredValidationRule('Expiry date')]} hidden>
+          <Form.Item name={['items', item._index, 'expiry_date']}
+                     initialValue={formatDate(expiryDate?.originValue, EXPIRY_DATE_JSON_FORMAT) || ''} hidden>
             <Input/>
           </Form.Item>
         </div>
@@ -223,7 +107,7 @@ const itemColumns = [
     key: 'remainingQty',
     align: 'center',
     width: '111px',
-    render: (item, actionProviders, rowIndex) => {
+    render: (item, actionProviders) => {
       let remainingQty = actionProviders.getItemById(item.product_id)?.remaining_qty;
       if (actionProviders.isConfirmMode()) {
         return <div className="input-cell remaining-quantity-input">
@@ -236,14 +120,13 @@ const itemColumns = [
                            onCancel={() => actionProviders.editItemField(item.product_id, 'remaining_qty', item.remaining_qty)}
                            onPopupCancel={(originValue) => actionProviders.editItemField(item.product_id, 'remaining_qty', originValue)}
                            onValueChanged={(newValue) => actionProviders.editItemField(item.product_id, 'remaining_qty', newValue)}
-                           onSubmit={(value) => actionProviders.handleEditItemFieldSubmit(item.product_id, rowIndex, 'remaining_qty', value)}>
+                           onSubmit={(value) => actionProviders.handleEditItemFieldSubmit(item.product_id, item._index, 'remaining_qty', value)}>
             <Button>
               {remainingQty?.editValue || 0}
             </Button>
           </NumberEditPopup>
-          <Form.Item name={['items', rowIndex, 'remaining_qty']}
-                     initialValue={remainingQty?.originValue || 0}
-                     rules={[requiredValidationRule('Remaining quantity')]} hidden>
+          <Form.Item name={['items', item._index, 'remaining_qty']}
+                     initialValue={remainingQty?.originValue || 0} hidden>
             <Input/>
           </Form.Item>
         </div>
@@ -255,6 +138,7 @@ const itemColumns = [
 const InventoryDetail = (props) => {
   const {id} = props.match.params;
   const [data, setData] = useState();
+  const [loadingData, setLoadingData] = useState();
   const [mapItems, setMapItems] = useState({});
   const [confirmMode, setConfirmMode] = useState(false);
   const [confirmSubmitModalVisible, setConfirmSubmitModalVisible] = useState(false);
@@ -262,7 +146,7 @@ const InventoryDetail = (props) => {
   const [formSubmitFailed, setFormSubmitFailed] = useState(false);
   const [formData] = Form.useForm();
   const [submitData, setSubmitData] = useState({
-    remark: undefined,
+    remark: '',
     items: []
   });
 
@@ -270,11 +154,10 @@ const InventoryDetail = (props) => {
     try {
       const res = await getMonthlyInventoryDetail(getLangCode(props.locale), inventoryId);
       if (!isEmpty(res.data)) {
-        let data = res.data.data?.inventory_list;
-        initMapItems(data.items);
-        setData(data);
+        return res.data;
       }
     } catch (e) {
+      throw e;
     }
   };
 
@@ -299,10 +182,17 @@ const InventoryDetail = (props) => {
     setMapItems(result);
   };
 
+  const refreshData = async () => {
+    setLoadingData(true);
+    let response = await fetchData(id);
+    let listInventories = response.data.inventory_list;
+    initMapItems(listInventories.items);
+    setData(listInventories);
+    setLoadingData(false);
+  }
+
   useEffect(() => {
-    fetchData(id);
-    // setData(item);
-    // initMapItems(item.items);
+    refreshData();
   }, []);
 
   const isConfirmMode = () => {
@@ -355,6 +245,7 @@ const InventoryDetail = (props) => {
   const renderBodyGroup = () => {
     let table = <AppTable columns={itemColumns}
                           dataSource={data?.items}
+                          showLoading={loadingData}
                           actionProviders={{
                             getItemById: getItemById,
                             editItemField: editItemField,
@@ -384,7 +275,7 @@ const InventoryDetail = (props) => {
     if (confirmMode) {
       remark = submitData.remark;
     } else {
-    remark = <Form.Item name="remark" rules={[requiredValidationRule('Remark')]}>
+    remark = <Form.Item name="remark" initialValue={submitData.remark}>
       <TextArea/>
     </Form.Item>
     }
@@ -403,7 +294,7 @@ const InventoryDetail = (props) => {
   };
 
   const goBack = () => {
-    props.history.push(routes.INVENTORY);
+    props.history.goBack();
   };
 
   const backToEdit = () => {
@@ -471,13 +362,17 @@ const InventoryDetail = (props) => {
             </div>
           </div>
         </div>
-        <AppModal visible={confirmSubmitModalVisible}
+        <AppModal className="inventory-detail-modal"
+                  visible={confirmSubmitModalVisible}
                   onVisibleChange={(visible) => setConfirmSubmitModalVisible(visible)}
                   titleID="IDS_SUBMIT_INVENTORY_FORM"
                   okTextID="IDS_SUBMIT" onOk={submitInventory}>
-          <FormattedMessage id="IDS_SUBMIT_INVENTORY_FORM_MESSAGE"/>
+          <div className="modal-message">
+            <FormattedMessage id="IDS_SUBMIT_INVENTORY_FORM_MESSAGE"/>
+          </div>
         </AppModal>
-        <AppModal visible={submitProgressModalVisible}
+        <AppModal className="inventory-detail-modal"
+                  visible={submitProgressModalVisible}
                   onVisibleChange={(visible) => setSubmitProgressModalVisible(visible)}
                   titleID="IDS_SUBMIT_INVENTORY_FORM" hideOkButton={true} hideCancelButton={true}>
           <div className="modal-progress-container">

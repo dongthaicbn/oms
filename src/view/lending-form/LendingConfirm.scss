@@ -8,7 +8,12 @@
 .lending-confirm-table {
   justify-content: stretch;
   flex-grow: 1;
-  min-width: 911px;
+  min-width: 863px;
+  flex: 1 1;
+  overflow: auto;
+  .ant-col {
+    height: 100%;
+  }
 
   .app-table {
     .table-header {
@@ -22,11 +27,15 @@
     }
 
     .table-body {
+      flex: 1 1 auto;
       .ant-affix {
         position: absolute !important;
         overflow-y: hidden;
         overflow-x: hidden;
         top: 49px !important;
+      }
+      .item-row {
+        align-items: center;
       }
       .group-item-expand-row {
         .group-item-expand-cell {
@@ -48,6 +57,7 @@
         border: 2px solid #B5B6FF;
         box-sizing: border-box;
         border-radius: 10px;
+        cursor: pointer;
       }
       .borrowed-qty {
         border: 2px solid #6461B4;
@@ -62,6 +72,13 @@
         font-size: 18px;
         font-weight: bold;
         cursor: pointer;
+      }
+      .borrowed-quantity {
+        button {
+          height: 55px;
+          padding: 0px 30px;
+        }
+        
       }
     }
   }

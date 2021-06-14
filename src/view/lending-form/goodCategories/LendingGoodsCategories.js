@@ -10,7 +10,7 @@ import { getLedingFormCategories } from '../LendingFormService';
 import { getLangCode, isEmpty } from 'utils/helpers/helpers';
 import Layout from 'components/layout/Layout';
 import { routes } from 'utils/constants/constants';
-
+import './LendingGoodsCategories.scss'
 const LendingGoodsCategories = (props) => {
   const { locale } = props;
   const { shop_id, start_date, end_date } = parseQueryString(
@@ -43,7 +43,7 @@ const LendingGoodsCategories = (props) => {
   };
   return (
     <Layout emptyDrawer={true}>
-      <div className="scrollable-container">
+      <div className="scrollable-container auto-view-height lending-good-categories scrollable-container-categories">
         <div className="content-container">
           <div className="header-container">
             <div className="left-header">

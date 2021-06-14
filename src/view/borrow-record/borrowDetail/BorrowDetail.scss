@@ -1,12 +1,12 @@
 .borrow-detail-container {
   .content-container {
-    height: calc(100vh - 118px);
+    height: calc(var(--vh, 1vh) * 100 - 118px);
     padding-bottom: 0;
     display: flex;
     flex-direction: column;
     overflow-x: auto;
     min-width: calc(100% - 150px);
-
+    padding: 24px 17px 0 24px;
     h3.ant-typography {
       margin: 0;
     }
@@ -15,7 +15,7 @@
   .action-container {
     background: #f3f3f9;
     height: 118px;
-    padding: 24px;
+    padding: 24px 24px 24px 24px;
     position: sticky;
     min-width: 100%;
     bottom: 0;
@@ -31,17 +31,18 @@
       width: 226px;
       margin-right: 10px;
       height: 70px;
+      padding: unset;
     }
   }
 }
 
 .borrow-detail-header {
   margin-bottom: 24px;
-  min-width: 911px;
+  min-width: 863px;
   .reject-button-container {
     width: 213px;
     height: 70px;
-    margin-right: 5px;
+    margin-right: 12px;
     font-size: 18px;
   }
   .first-line-title-borrow {
@@ -61,8 +62,11 @@
 .borrow-detail-table {
   justify-content: stretch;
   flex-grow: 1;
-  min-width: 911px;
-
+  min-width: 863px;
+  overflow: auto;
+  .ant-col {
+    height: 100%;
+  }
   .app-table {
     .ant-affix {
       position: absolute !important;
@@ -76,7 +80,7 @@
           &:first-child {
             color: #4f4e66;
           }
-          
+
           div {
             text-align: center;
           }
@@ -85,6 +89,7 @@
     }
 
     .table-body {
+      flex: 1 1 auto;
       .group-item-expand-row {
         .group-item-expand-cell {
           img {
@@ -152,9 +157,8 @@ canvas {
     .action-container {
       padding: 24px 0;
       .ant-btn {
-        padding: 0
+        padding: 0;
       }
     }
   }
-  
 }

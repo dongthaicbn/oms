@@ -1,48 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { List } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { isEmpty } from 'utils/helpers/helpers';
 import './AppList.scss'
 
 const AppList = (props) => {
-  let {dataSource, renderItem, disableLoadMore, refreshOn, onRefresh, onLoadMore, itemKey} = props;
+  let {dataSource, showLoading, renderItem, hasMore, disableLoadMore, onLoadMore, itemKey, scrollTop, onScroll} = props;
   renderItem = renderItem || (() => {});
   onLoadMore = onLoadMore || (async () => {});
-  onRefresh = onRefresh || (async () => {});
   itemKey = itemKey || 'id';
 
-  const [items, setItems] = useState([]);
   const [loadMoreMeta, setLoadMoreMeta] = useState({
     disabled: false,
-    hasMore: true,
     loading: false
   });
+  let listRef = useRef(null);
 
   useEffect(() => {
-    setItems(dataSource || []);
+    if (scrollTop) {
+      listRef.current.scrollTop = scrollTop;
+    }
+  }, [scrollTop]);
+
+  useEffect(() => {
+    if (scrollTop) {
+      listRef.current.scrollTop = scrollTop;
+    }
   }, [dataSource]);
 
   useEffect(() => {
-    setItems([]);
-    refreshData();
-  }, [refreshOn]);
+    if (loadMoreMeta.loading) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [loadMoreMeta.loading]);
 
-  const refreshData = () => {
-    if (onRefresh) {
-      setLoadMoreMeta({disabled: true, hasMore: false, loading: false});
-      onRefresh()
-        .then((hasMore) => {
-          setLoadMoreMeta({disabled: false, hasMore: hasMore, loading: false})
-        })
-        .catch(error => {
-          setLoadMoreMeta({disabled: false, hasMore: true, loading: false});
-        });
+  const handleListScroll = (event) => {
+    if (onScroll) {
+      onScroll(event.target.scrollTop);
     }
   };
 
   const canLoadMore = () => {
-    return !disableLoadMore && !loadMoreMeta.disabled && !loadMoreMeta.loading && loadMoreMeta.hasMore;
+    return !disableLoadMore && !loadMoreMeta.disabled && !loadMoreMeta.loading && hasMore;
+  };
+
+  const isLoadingMore = () => {
+    return !disableLoadMore && loadMoreMeta.loading;
   };
 
   const loadMoreData = () => {
@@ -51,45 +54,54 @@ const AppList = (props) => {
       if (!canLoadMore()) {
         return;
       }
-      setLoadMoreMeta({hasMore: true, loading: true});
-      onLoadMore(items ? items[items.length - 1] : null)
-        .then((hasMore) => {
-          setLoadMoreMeta({disabled: false, hasMore: hasMore, loading: false})
-        })
-        .catch(error => {
-          setLoadMoreMeta({disabled: false, hasMore: true, loading: false});
+      setLoadMoreMeta({disabled: true, loading: true});
+      onLoadMore(dataSource ? dataSource[dataSource.length - 1] : null)
+        .finally(() => {
+          setLoadMoreMeta({disabled: false, loading: false})
         });
     }
   };
 
-  const renderLoadingItem = () => {
-    if (!disableLoadMore && loadMoreMeta.loading) {
+  const renderLoadingMoreItem = () => {
+    if (isLoadingMore()) {
       return <div className="item-loading">
         <CircularProgress/>
       </div>
     }
   };
 
-  let hasMore = canLoadMore();
-  return (
-    <div className="app-list">
+  const renderListContent = () => {
+    if (showLoading) {
+      return (
+        <div className="loading-container">
+          <CircularProgress/>
+        </div>
+      );
+    }
+    return (
       <InfiniteScroll
         pageStart={0}
         initialLoad={false}
         loadMore={loadMoreData}
-        hasMore={hasMore}
-        threshold={5}
+        hasMore={canLoadMore()}
+        threshold={10}
         useWindow={false}>
         <List
           itemLayout="vertical"
-          dataSource={items}
+          dataSource={dataSource}
           renderItem={(item, index) => (
             <List.Item key={itemKey ? index : (item[itemKey] || index)}>
               {renderItem(item)}
             </List.Item>
           )}/>
-        {renderLoadingItem()}
+        {renderLoadingMoreItem()}
       </InfiniteScroll>
+    );
+  };
+
+  return (
+    <div className="app-list" ref={listRef} onScroll={handleListScroll}>
+      {renderListContent()}
     </div>
   )
 };

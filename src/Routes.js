@@ -1,7 +1,6 @@
 import React from 'react';
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
-// import { isMobile } from 'react-device-detect';
-import { isLoggedIn } from 'utils/helpers/helpers';
+import { isLoggedIn, pageNeedCheckAuthen } from 'utils/helpers/helpers';
 import { routes } from './utils/constants/constants';
 import Login from './view/login/Login';
 import Home from 'view/home/Home';
@@ -41,7 +40,7 @@ import NewAndPromotion from 'view/newsAndPromotion/newAndPromotion';
 import PageNotFound from 'view/pageNotFound/PageNotFound';
 
 const Routes = (props) => {
-  if (!isLoggedIn() && props.location.pathname !== routes.LOGIN) {
+  if (!isLoggedIn() && pageNeedCheckAuthen()) {
     return <Redirect to={routes.LOGIN} />;
   }
   return (
@@ -80,8 +79,8 @@ const Routes = (props) => {
         component={HolidayGoodsCategoriesDetail}
       />
       <Route exact path={routes.FAVOURITE} component={Favourite} />
-      <Route exact path={routes.BORROW_RECORD} component={Borrow} />
-      <Route exact path={routes.BORROW_DETAIL} component={BorrowDetail} />
+      <Route path={routes.BORROW_RECORD} component={Borrow} />
+      {/* <Route exact path={routes.BORROW_DETAIL} component={BorrowDetail} /> */}
 
       <Route
         exact
@@ -113,17 +112,6 @@ const Routes = (props) => {
       <Route exact path={routes.TERM_CONDITION} component={TermCondition} />
       <Route exact path={routes.PRIVACY_POLICY} component={TermCondition} />
       <Route exact path={routes.DISCLAIMER} component={TermCondition} />
-
-      <Route
-        exact
-        path={routes.RECEIVED_DELIVERY_DETAIL}
-        component={ReceivedDetail}
-      />
-      <Route
-        exact
-        path={routes.RECEIVED_DELIVERY_DETAIL_EDIT}
-        render={(props) => <ReceivedDetail {...props} editMode={true} />}
-      />
 
       <Route exact path={routes.INVENTORY} component={Inventory} />
       <Route exact path={routes.INVENTORY_DETAIL} component={InventoryDetail} />

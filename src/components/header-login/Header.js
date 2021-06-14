@@ -36,11 +36,11 @@ const Header = props => {
         <div
           id="hongkong"
           className={
-            props.locale === 'vi'
+            props.locale === 'zh_TW'
               ? `button-language button-language-choosed`
               : `button-language button-language-not-choosed`
           }
-          onClick={changeLanguage('vi')}
+          onClick={changeLanguage('zh_TW')}
         >
           繁體中文
         </div>

@@ -3,7 +3,7 @@ import { DEFAULT_NUMBER_OF_ITEMS } from 'utils/constants/constants';
 
 let cancelTokenSource;
 
-export const getOrderList = (langCode, orderStatus, lastItemOrderNo) => {
+export const getOrderList = (langCode, orderStatus, lastItemOrderNo, numberOfItems = DEFAULT_NUMBER_OF_ITEMS) => {
   cancelCurrentGetOrderListRequest();
   cancelTokenSource = CancelToken.source();
   return pageApi({
@@ -13,7 +13,7 @@ export const getOrderList = (langCode, orderStatus, lastItemOrderNo) => {
       lang_code: langCode,
       order_status: orderStatus,
       last_item_id: lastItemOrderNo,
-      number_of_items: DEFAULT_NUMBER_OF_ITEMS
+      number_of_items: numberOfItems
     },
     cancelToken: cancelTokenSource.token,
     arrayField: 'orders'

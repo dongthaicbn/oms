@@ -9,7 +9,6 @@ const initialState = {
   account: {},
   role: [],
   showMenu: false,
-  selectedActionMenuItemId: 1,
   snackBar: {
     open: false,
     type: '',
@@ -22,8 +21,7 @@ const initialState = {
     categories: [],
     borrowingNo: 'IB0200265201'
   },
-  layoutSlider: {
-    previousUrl: null
+  pageCache: {
   }
 };
 
@@ -38,17 +36,15 @@ const system = (state = initialState, action) => {
       };
     case constants.TOGGLE_MENU:
       return { ...state, showMenu: action.payload };
-    case constants.SELECT_MENU_ACTION_ITEM:
-      return { ...state, selectedActionMenuItemId: action.payload };
     case constants.SNACK_BAR:
       return { ...state, snackBar: action.payload };
-    case constants.LAYOUT_SLIDER_ROUTING:
+
+    case constants.CACHE_PAGE: {
       let newState = {...state};
-      newState.layoutSlider = {
-        ...newState.layoutSlider,
-        ...action.payload
-      };
+      newState.pageCache[action.payload.page] = action.payload.pageData;
       return newState;
+    }
+
     default:
       return state;
   }

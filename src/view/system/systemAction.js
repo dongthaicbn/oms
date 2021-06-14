@@ -1,6 +1,5 @@
 import api from 'utils/helpers/api';
 import * as constants from 'utils/constants/actionType';
-// import { isEmpty } from 'utils/helpers/helpers';
 
 export const actionChangeLang = lang => ({
   type: constants.CHANGE_LANG,
@@ -13,16 +12,14 @@ export const getAccountInfo = () => async dispatch => {
     dispatch({ type: constants.FETCH_ACCOUNT, payload: data.data });
   } catch (error) { }
 };
+
 export const updateAccountInfo = data => ({
   type: constants.FETCH_ACCOUNT,
   payload: data
 });
+
 export const actionToggleMenu = data => ({
   type: constants.TOGGLE_MENU,
-  payload: data
-});
-export const actionSelectActionMenuItem = data => ({
-  type: constants.SELECT_MENU_ACTION_ITEM,
   payload: data
 });
 
@@ -31,9 +28,10 @@ export const actionSnackBar = data => ({
   payload: data
 });
 
-export const actionLayoutSliderRouting = currentUrl => ({
-  type: constants.LAYOUT_SLIDER_ROUTING,
+export const actionCachePage = (page, data) => ({
+  type: constants.CACHE_PAGE,
   payload: {
-    previousUrl: currentUrl
+    page: page,
+    pageData: data
   }
 });

@@ -240,7 +240,7 @@
   "IDS_CONFIRM": "Confirm",
   "IDS_BACK_TO_EDIT": "Back to Edit",
   "IDS_SUBMIT_INVENTORY_FORM": "Submit Inventory form",
-  "IDS_SUBMIT_INVENTORY_FORM_MESSAGE": "Are you sure to submit this form, you are not able to edit after submitted",
+  "IDS_SUBMIT_INVENTORY_FORM_MESSAGE": "Submitted date will not change after submit.",
   "IDS_INVENTORY_SUBMIT_SUCCESS_MESSAGE": "Inventory has been submitted successfully",
   "IDS_INPUT_REQUIRED_VALIDATION_MESSAGE": "{field} is required",
   "IDS_PAGE_NOT_FOUND": "Page Not Found",
@@ -249,5 +249,6 @@
   "IDS_SEND_AGAIN": "Send again",
   "IDS_SCAN_QR_CODE_ERROR": "Scan QR Code Error: {message}",
   "IDS_CONFIRM_REDIRECT": "Confirm Redirect",
-  "IDS_SEARCH_ORDER_NO": "Search Order No"
+  "IDS_VIEW_ALL": "View all",
+  "IDS_CLOSE": "Close"
 }

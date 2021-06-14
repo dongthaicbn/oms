@@ -33,16 +33,17 @@ const VehicleSchedule = (props) => {
   };
 
   const handleBack = () => {
-    if (props.layoutSlider.previousUrl) {
-      props.history.push(props.layoutSlider.previousUrl);
-    }
+    props.history.goBack();
   };
 
   const { store } = account;
   // const { store, user } = account;
   return (
     <Layout>
-      <div className="scrollable-container">
+      <div
+        className="scrollable-container padding-right scrollable-container-categories"
+        // style={{ position: 'relative' }}
+      >
         <div className="content-container">
           <div className="header-container">
             <div className="left-header">
@@ -54,7 +55,10 @@ const VehicleSchedule = (props) => {
               </span>
             </div>
           </div>
-          <div className="page-content">
+          <div
+            className="page-content"
+            // style={{ height: 'calc(100vh - 202px)' }}
+          >
             <div className="item-group">
               {!isEmpty(data.favourite_categories) &&
                 data.favourite_categories.map((el, i) => (
@@ -83,11 +87,16 @@ const VehicleSchedule = (props) => {
                 ))}
             </div>
           </div>
-          <div className="page-footer">
-            <Button className="footer-btn" onClick={handleBack}>
-              <FormattedMessage id="IDS_BACK" />
-            </Button>
-          </div>
+        </div>
+        <div
+          className="page-footer"
+          style={{
+            padding: 24,
+          }}
+        >
+          <Button className="footer-btn" onClick={handleBack}>
+            <FormattedMessage id="IDS_BACK" />
+          </Button>
         </div>
       </div>
     </Layout>

@@ -45,6 +45,22 @@ body {
 ::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background: #bdbdbd;
+  transform: translateZ(0);
+}
+
+::scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::scrollbar-track {
+  background: none;
+}
+
+::scrollbar-thumb {
+  border-radius: 4px;
+  background: #bdbdbd;
+  transform: translateZ(0);
 }
 
 @keyframes App-logo-spin {
@@ -103,6 +119,7 @@ body {
     color: #6461b4;
     font-weight: 700;
     font-size: 20px;
+    text-shadow: none;
   }
 
   .ant-btn:focus {
@@ -118,9 +135,9 @@ body {
   }
 
   .ant-btn:disabled {
-    border: 2px solid #F0F0FC;
-    background: #F0F0FC;
-    color: #BDBDBD;
+    border: 2px solid #f0f0fc;
+    background: #f0f0fc;
+    color: #bdbdbd;
   }
 
   .ant-btn:not(.ant-btn-primary):hover {
@@ -130,30 +147,35 @@ body {
   }
 
   .ant-btn-primary {
-    border: none;
+    border: 1px solid #d8d8d8;
     background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
     color: #ffffff;
-    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1), 0 1px 8px rgba(100, 97, 180, 0.12);
+    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1),
+      0 1px 8px rgba(100, 97, 180, 0.12);
+    text-shadow: none;
   }
 
   .ant-btn-primary:focus {
-    border: none;
+    border: 1px solid #d8d8d8;
     background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
     color: #ffffff;
-    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1), 0 1px 8px rgba(100, 97, 180, 0.12);
+    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1),
+      0 1px 8px rgba(100, 97, 180, 0.12);
   }
 
   .ant-btn-primary:active {
-    border: none;
+    border: 1px solid #d8d8d8;
     background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
     color: #ffffff;
-    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1), 0 1px 8px rgba(100, 97, 180, 0.12);
+    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1),
+      0 1px 8px rgba(100, 97, 180, 0.12);
   }
 
   .ant-btn-primary:hover {
+    border: 1px solid #d8d8d8;
     background: linear-gradient(92.72deg, #c5c2ff 0%, #938fff 100%);
-    border: none;
-    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1), 0 1px 8px rgba(100, 97, 180, 0.12);
+    box-shadow: 0 4px 20px rgba(100, 97, 180, 0.1),
+      0 1px 8px rgba(100, 97, 180, 0.12);
   }
 }
 
@@ -221,13 +243,14 @@ body {
 
 .app-scrollable-container {
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   overflow: auto;
 }
 
 .app-content-container {
   height: 100%;
   min-width: 863px;
-  padding: 24px;
+  padding: 24px 24px 0 24px;
   background: #f3f3f9;
 }
 
@@ -293,11 +316,11 @@ body {
 }
 
 .selection-item-odds {
-  background: #F9FAFF;
+  background: #f9faff;
 }
 
 .selection-item-even {
-  background: #F1F4FC;
+  background: #f1f4fc;
 }
 
 .selection-item {
@@ -309,7 +332,7 @@ body {
   .item-code {
     text-align: start;
     width: 100px;
-    color: #4F4F4F;
+    color: #4f4f4f;
     font-size: 14px;
     font-weight: 400;
     margin-right: 22px;
@@ -317,7 +340,7 @@ body {
 
   .item-name {
     flex: 1;
-    color: #4F4E66;
+    color: #4f4e66;
     font-size: 16px;
     font-weight: 700;
     text-align: start;
@@ -333,38 +356,38 @@ body {
 }
 
 .ant-radio-wrapper {
-  --antd-wave-shadow-color: #6461B4;
+  --antd-wave-shadow-color: #6461b4;
 
   &:hover {
     .ant-radio {
-      border-color: #6461B4;
+      border-color: #6461b4;
     }
   }
 
   .ant-radio:not(.ant-radio-checked) {
     .ant-radio-inner {
-      border-color: #B5B6FF;
+      border-color: #b5b6ff;
     }
   }
 
   .ant-radio.ant-radio-checked {
     &:hover {
       .ant-radio-inner {
-        border-color: #6461B4;
+        border-color: #6461b4;
       }
     }
 
     .ant-radio-input:focus + .ant-radio-inner {
-      border-color: #6461B4;
+      border-color: #6461b4;
     }
   }
 
   .ant-radio-checked {
     .ant-radio-inner {
-      border-color: #6461B4;
+      border-color: #6461b4;
 
       &:after {
-        background: #6461B4;
+        background: #6461b4;
       }
     }
   }
@@ -376,20 +399,20 @@ body {
 }
 
 textarea.ant-input {
-  border: 1px solid #B5B6FF;
+  border: 1px solid #b5b6ff;
   border-radius: 6px;
   resize: none;
-  color: #4F4F4F;
+  color: #4f4f4f;
   padding: 16px;
   background: rgba(255, 255, 255, 0.5);
 
   &:hover {
-    border: 1px solid #6461B4 !important;
+    border: 1px solid #6461b4 !important;
     border-radius: 6px;
   }
 
   &:focus {
-    border: 1px solid #6461B4;
+    border: 1px solid #6461b4;
     border-radius: 6px;
     box-shadow: 0 5px 20px -5px rgba(132, 128, 255, 0.3);
   }
@@ -397,4 +420,7 @@ textarea.ant-input {
 
 .ant-list-empty-text {
   display: none;
+}
+.ant-modal-mask {
+  background-color: rgba(130, 130, 130, 0.3) !important;
 }

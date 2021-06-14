@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { usePageCache } from 'components/hook/AppHook';
 import { connect } from 'react-redux';
-import Layout from 'components/layout/Layout';
-import { withRouter, Link } from 'react-router-dom';
-
 import { FormattedMessage } from 'react-intl';
-import { Row, Col, Space, Radio, Typography, List, Card, Button } from 'antd';
+import { Row, Col, Space, Radio, Typography, Card, Button } from 'antd';
+import Layout from 'components/layout/Layout';
+import { withRouter, Link, Switch, Route } from 'react-router-dom';
 import { formatDate, isEmpty, getLangCode } from 'utils/helpers/helpers';
 import TypeBorrow from 'components/typeBorrow/TypeBorrow';
-
 import { TYPE_LEND, TYPE_BORROW, routes } from 'utils/constants/constants';
 import * as icons from 'assets';
-import { getBorrowList } from './BorrowService';
+import { getBorrowList, getBorrowListCount } from './BorrowService';
 import './Borrow.scss';
 import InfoGroup from 'components/infoGroup/InfoGroup';
 import { parse as parseQueryString } from 'query-string';
 import { actionSnackBar } from 'view/system/systemAction';
 import AppList from 'components/list/AppList';
+import BorrowDetail from './borrowDetail/BorrowDetail';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -23,11 +23,13 @@ const Borrow = props => {
   const [borrowStatus, setBorrowStatus] = useState(0);
   const [data, setData] = useState([]);
   const [lengthData, setLengthData] = useState(null)
-  const child = useRef(null);
+  const [loadMore, setLoadMore] = useState(true)
+  let child = useRef(null);
+  let { path } = props.match;
   const fetchData = async (borrowStatus, lastItemNo) => {
     try {
       const res = await getBorrowList(getLangCode(props.locale), borrowStatus, lastItemNo);
-      console.log(res)
+      console.log("res getBorrowList")
       if (!isEmpty(res.data)) {
         return res.data
         // setData(res.data.data.borrowingList);
@@ -37,19 +39,35 @@ const Borrow = props => {
 
     }
   };
-  useEffect(() => {
-    // fetchData(borrowStatus).then(
-    //   response => {
-    //     setData(response.data.borrowingList);
+  const fetchCount = async () => {
+    try {
+      const res = await getBorrowListCount()
+      if (!isEmpty(res.data)) {
+        let lengthData = {}
+        lengthData.all = res.data.data.all_count
+        lengthData.borrow = res.data.data.borrowed_count
+        lengthData.lend = res.data.data.lended_count
+        setLengthData(lengthData)
+      }
+    } catch (e) {
 
-    //   }
-    // )
-
-  }, []);
+    }
+  }
   useEffect(() => {
+    var historyYE = null
+    // document.getElementById("header-container-borrow").addEventListener('touchmove', function(e) {
+    //   e.stopPropagation();
+    //   }, { passive:false });
+  }, [])
+  useEffect(() => {
+    console.log("useEffect borrow")
     setData(undefined);
+    setLoadMore(true)
     fetchData(borrowStatus).then(response => {
       setData(response.data.borrowingList);
+      if (response.data.borrowingList.length < 8) {
+        setLoadMore(false)
+      }
       let showNotiNewItem = localStorage.getItem("showNotiNewItem")
       if (showNotiNewItem) {
         // console.log(showNotiNewItem)
@@ -83,6 +101,7 @@ const Borrow = props => {
         }
       }
     })
+    fetchCount()
   }, [borrowStatus]);
 
   const refreshBorrowingItems = async () => {
@@ -92,14 +111,22 @@ const Borrow = props => {
   };
 
   const loadMoreBorrowingItems = async (lastItem) => {
-    let lastItemId = lastItem? lastItem.id : undefined;
-    let response = await fetchData(borrowStatus, lastItemId);
-    if (data) {
-      setData([...data, ...response.data.borrowingList]);
-    } else {
-      setData(response.data.borrowingList);
+    if (loadMore) {
+      let lastItemId = lastItem ? lastItem.id : undefined;
+      let response = await fetchData(borrowStatus, lastItemId);
+      if (data) {
+        setData([...data, ...response.data.borrowingList]);
+      } else {
+        setData(response.data.borrowingList);
+      }
+      if (response.data.borrowingList.length < 8) {
+        console.log("setloadMore")
+        setLoadMore(false)
+      }
+      return response.data.borrowingList && response.data.borrowingList.length < 8 ? false : true
     }
-    return response.pagination.hasMore;
+    return null
+
   };
 
   const renderDate = item => {
@@ -132,7 +159,6 @@ const Borrow = props => {
     }
   };
   const goToDetail = item => () => {
-    console.log(item.id)
     props.history.push(`${routes.BORROW_RECORD}/${item.id}`)
   }
   const renderListItems = items => {
@@ -141,7 +167,7 @@ const Borrow = props => {
       message = (
         <div className="borrowing-record-message-container">
           <Text className="message">
-            <FormattedMessage id="IDS_NO_BORROW_RECORD_YET"/>
+            <FormattedMessage id="IDS_NO_BORROW_RECORD_YET" />
           </Text>
         </div>
       );
@@ -154,9 +180,10 @@ const Borrow = props => {
         refreshOn={borrowStatus}
         onRefresh={refreshBorrowingItems}
         onLoadMore={loadMoreBorrowingItems}
+        hasMore={loadMore}
         renderItem={item => (
           <div>
-            <Card hoverable>
+            <Card hoverable onClick={goToDetail(item)}>
               <Row>
                 <Col span={8}>{renderNameAndType(item)}</Col>
                 <Col span={12}>{renderDate(item)}</Col>
@@ -165,7 +192,12 @@ const Borrow = props => {
                     <Text className="date">
                       {formatDate(item.order_at, 'YYYY / MM / DD')}
                     </Text>
-                    <TypeBorrow type={item.status === "Processing" ? item.type : item.status}>{item.status === "Processing" || item.status === "Accepted" ? item.type : item.status}</TypeBorrow>
+                    <TypeBorrow type={item.status === "Processing" ? item.type : item.status}>
+                    {item.status === "Processing" ? item.type : null}
+                    {item.status === "Accepted" && item.type == "borrow" ? "Borrowed" : null}
+                    {item.status === "Rejected" ? "Rejected" : null}
+                    {item.status === "Accepted" && item.type == "lend"  ? "Lended" : null}                 
+                    </TypeBorrow>
                   </div>
                 </Col>
               </Row>
@@ -178,7 +210,7 @@ const Borrow = props => {
                           <Text strong>{item.no}</Text>
                     </Paragraph>
                     {item.type == TYPE_BORROW && item.status === "Processing" ? (
-                      <Button className="button-comfirm" onClick={goToDetail(item)}>
+                      <Button className="button-comfirm">
                         <FormattedMessage id="IDS_COMFIRM" />
                       </Button>
                     ) : null}
@@ -192,59 +224,71 @@ const Borrow = props => {
       />
     </>
   };
-  return (
-    <div className="borrow-record-container">
-      <Layout emptyDrawer={true}>
-        <div className="app-scrollable-container ">
-          <div className="app-content-container">
-            <div className="header-container header-container-borrow">
-              <div className="left-header">
-                <Row className="title-borrow">
-                  <Col span={24}>
-                    <Title level={3}>
-                      <FormattedMessage id="IDS_BORROWING_RECORD" />
-                    </Title>
-                  </Col>
-                </Row>
-                <Row className="status-filter-container no-margin-bottom">
-                  <Col span={24}>
-                    <Radio.Group
-                      defaultValue="ALL"
-                      buttonStyle="solid"
-                      onChange={e => {
-                        setBorrowStatus(e.target.value)
-                        console.log(child)
-                        // child.current.resetHasMore()
-                      }}
-                      value={borrowStatus}
-                    >
-                      <Space size={24}>
-                        <Radio.Button value={0}>
-                          <FormattedMessage id="IDS_ALL" /> {lengthData ? `(${lengthData['all']})` : null}
-                        </Radio.Button>
-                        <Radio.Button value={1}>
-                          <FormattedMessage id="IDS_BORROWED" /> {lengthData ? `(${lengthData['borrow']})` : null}
-                        </Radio.Button>
-                        <Radio.Button value={2}>
-                          <FormattedMessage id="IDS_LENDED" />  {lengthData ? `(${lengthData['lend']})` : null}
-                        </Radio.Button>
-                      </Space>
-                    </Radio.Group>
-                  </Col>
-                </Row>
+  const listBorrow = () => {
+    return (
+        <div style={{display: window.location.pathname === routes.BORROW_RECORD || window.location.pathname === routes.BORROW_RECORD + '/' ? 'block' : 'none'}}>
+          <div className="app-scrollable-container container-margin-right">
+            <div className="app-content-container">
+              <div className="header-container header-container-borrow" id="header-container-borrow">
+                <div className="left-header">
+                  <Row className="title-borrow">
+                    <Col span={24}>
+                      <Title level={3}>
+                        <FormattedMessage id="IDS_BORROWING_RECORD" />
+                      </Title>
+                    </Col>
+                  </Row>
+                  <Row className="status-filter-container no-margin-bottom">
+                    <Col span={24}>
+                      <Radio.Group
+                        defaultValue="ALL"
+                        buttonStyle="solid"
+                        onChange={e => {
+                          setBorrowStatus(e.target.value)
+                          console.log(child)
+                          // child.current.resetHasMore()
+                        }}
+                        value={borrowStatus}
+                      >
+                        <Space size={24}>
+                          <Radio.Button value={0}>
+                            <FormattedMessage id="IDS_ALL" /> {lengthData ? `(${lengthData['all']})` : null}
+                          </Radio.Button>
+                          <Radio.Button value={1}>
+                            <FormattedMessage id="IDS_BORROWED" /> {lengthData ? `(${lengthData['borrow']})` : null}
+                          </Radio.Button>
+                          <Radio.Button value={2}>
+                            <FormattedMessage id="IDS_LENDED" />  {lengthData ? `(${lengthData['lend']})` : null}
+                          </Radio.Button>
+                        </Space>
+                      </Radio.Group>
+                    </Col>
+                  </Row>
+                </div>
               </div>
+              <div className="body-group">
+                {renderListItems(data)}
+              </div>
+
             </div>
-            <div className="body-group">
-              {renderListItems(data)}
-            </div>
-            <div className="page-footer">
+          </div>
+          <div className="page-footer">
               <Button className="lending-form-btn" onClick={onLendingForm}>
                 <FormattedMessage id="IDS_LENDING_FORM" />
               </Button>
             </div>
-          </div>
         </div>
+    )
+  }
+  return (
+    <div className="borrow-record-container">
+      <Layout emptyDrawer={true}>
+        {listBorrow()}
+        <Switch>
+          <Route exact path={`${path}/:id`} component={BorrowDetail}/>
+        </Switch>
       </Layout>
+
     </div>
 
   );

@@ -45,20 +45,20 @@ const itemColumns = [
     )
   },
   {
-    title: (data, actionProviders) => {
+    title: (actionProviders) => {
       return (actionProviders.addedItem ? 'Borrowed qty' : '')
     },
     align: 'center',
     width: '100px',
-    render: (item, actionProviders, index) => {
+    render: (item, actionProviders) => {
       if (item.edited) {
         return (
           // <div className="borrowed-qty">{item.borrowed_qty}</div>
           <div className="app-button quantity-button borrowed-quantity">
             <NumberEditPopup value={item.borrowed_qty} minValue={0} maxValue={99999} disableFractional={false}
-              onCancel={() => actionProviders.updateItemActualWeight(index, item.borrowed_qty)}
-              onPopupCancel={(originValue) => actionProviders.updateItemActualWeight(index, originValue)}
-              onValueChanged={(newValue) => actionProviders.updateItemActualWeight(index, newValue)}>
+              onCancel={() => actionProviders.updateItemActualWeight(item._index, item.borrowed_qty)}
+              onPopupCancel={(originValue) => actionProviders.updateItemActualWeight(item._index, originValue)}
+              onValueChanged={(newValue) => actionProviders.updateItemActualWeight(item._index, newValue)}>
               <Button>
                 {item.borrowed_qty || 0}
               </Button>
@@ -71,17 +71,18 @@ const itemColumns = [
 
   },
   {
-    title: (data, actionProviders) => { return (actionProviders.addedItem ? 'Unit' : '') },
+    title: (actionProviders) => { return (actionProviders.addedItem ? 'Unit' : '') },
     align: 'center',
     width: '120px',
-    render: (item, actionProvider, index) => {
+    render: (item, actionProviders) => {
       if (item.edited) {
+        console.log("item.edited")
         return (
           <UnitEditPopup value={item.unit_id} minValue={0} maxValue={99999} disableFractional={true}
             onCancel={() => { }}
-            onPopupCancel={(originValue) => actionProvider.updateItemUnit(index, originValue)}
-            onValueChanged={(newValue) => actionProvider.updateItemUnit(index, newValue)}
-            units={actionProvider.units}
+            onPopupCancel={(originValue) => actionProviders.updateItemUnit(item._index, originValue)}
+            onValueChanged={(newValue) => actionProviders.updateItemUnit(item._index, newValue)}
+            units={actionProviders.units}
           >
             <div className="unit">{item.unit_name}</div>
           </UnitEditPopup>
@@ -89,7 +90,7 @@ const itemColumns = [
         )
       } else {
         return (
-          <div className="borrow" onClick={() => actionProvider.onChangeStateLending(index)}>Borrow</div>
+          <div className="borrow" onClick={() => actionProviders.onChangeStateLending(item._index)}>Borrow</div>
         )
       }
 
@@ -103,6 +104,7 @@ const LendingGoodCategoryDetail = props => {
   let [addedItem, setAddedItem] = useState(false)
   const paramsUrl = queryString.parse(props.location.search);
   let [bodySend, setBodySend] = useState([]);
+  let [items, setItems] = useState(null)
   const fetchData = async () => {
     try {
       const res = await getLedingFormCategoriesDetail({
@@ -141,6 +143,7 @@ const LendingGoodCategoryDetail = props => {
         newData.categories.push(wapperParseData)
         setData(newData);
         setUnits(res.data.data.units)
+        localStorage.setItem("units", JSON.stringify(res.data.data.units));
         setBodySend(wapperParseData.items)
 
       }
@@ -244,13 +247,16 @@ const LendingGoodCategoryDetail = props => {
     props.history.push(routes.LENDING_CONFIRM)
   }
   const onChangeStateLending = (index) => {
+    console.log("onChangeStateLending")
     setAddedItem(true)
-    data.categories[0].items[index].edited = true
-    data.categories[0].items[index].borrowed_qty = 10;
-    data.categories[0].items[index].unit_id = units[0].id
-    data.categories[0].items[index].unit_name = units[0].name
-
-    let newData = Object.assign({}, data);
+    let items = [...data.categories[0].items];
+    items[index].edited = true
+    items[index].borrowed_qty = 10;
+    items[index].unit_id = units[0].id
+    items[index].unit_name = units[0].name
+    
+    let newData = {...data};
+    newData.categories[0].items = items;
     setData(newData)
 
     let newbodySend = bodySend
@@ -311,8 +317,8 @@ const LendingGoodCategoryDetail = props => {
 
   return (
     <Layout emptyDrawer={true}>
-      <div className="borrow-detail-container">
-        <div className="app-content-container content-container">
+      <div className="lending-form-container">
+        <div className="app-content-container content-container table-container">
           <Row className="borrow-detail-header">
             <Col span={24}>
               {/* <div className="app-flex-container height-full flex-va-center">
@@ -331,8 +337,8 @@ const LendingGoodCategoryDetail = props => {
               <AppTable
                 columns={itemColumns}
                 // columnDataSource={mapFormData}
-                dataSource={data && data.categories}
-                itemsKey="items"
+                dataSource={data && data.categories && data.categories.length > 0 && data.categories[0].items}
+                // itemsKey="items"
 
                 // groupKey="name"
                 // groupExpandable={createGroupExpandable()}

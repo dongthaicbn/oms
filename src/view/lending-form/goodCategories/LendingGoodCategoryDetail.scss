@@ -12,7 +12,11 @@
 .lending-good-category-detail-table {
   justify-content: stretch;
   flex-grow: 1;
-  min-width: 911px;
+  min-width: 863px;
+  overflow: auto;
+  .ant-col {
+    height: 100%;
+  }
   .app-table {
     .table-header {
       .header-row {
@@ -25,6 +29,10 @@
     }
 
     .table-body {
+      flex: 1 1 auto;
+      .item-row {
+        align-items: center;
+      }
       // .borrowed-qty {
       //   font-weight: bold;
       //   font-size: 18px;
@@ -53,6 +61,7 @@
         border: 2px solid #B5B6FF;
         box-sizing: border-box;
         border-radius: 10px;
+        cursor: pointer;
       }
       .borrow {
         border: 2px solid #6461B4;
@@ -73,4 +82,10 @@
 }
 .ant-modal {
   top: 0;
+}
+.auto-view-height {
+  overflow-y: hidden;
+  .header-container {
+    padding: 0;
+  }
 }

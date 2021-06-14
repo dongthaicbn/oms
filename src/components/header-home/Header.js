@@ -7,7 +7,7 @@ import {
   actionToggleMenu,
   actionChangeLang,
 } from '../../view/system/systemAction';
-import { routes } from 'utils/constants/constants';
+import { LANG, routes } from 'utils/constants/constants';
 import { isLoggedIn } from 'utils/helpers/helpers';
 const Header = (props) => {
   const openMenu = () => {
@@ -15,6 +15,7 @@ const Header = (props) => {
   };
   const changeLanguage = (language) => () => {
     props.actionChangeLang(language);
+    localStorage.setItem(LANG, language);
   };
   const clickLogo = () => {
     if (isLoggedIn()) props.history.push(routes.ORDER_FORM);

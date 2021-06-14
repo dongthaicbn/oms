@@ -12,7 +12,7 @@ import Layout from 'components/layout/Layout';
 import { routes } from 'utils/constants/constants';
 
 const HolidayGoodsCategories = (props) => {
-  const { locale } = props;
+  const { account, locale } = props;
   const { shop_id, start_date, end_date } = parseQueryString(
     props.location.search,
     { parseBooleans: true }
@@ -23,6 +23,7 @@ const HolidayGoodsCategories = (props) => {
     try {
       const { data } = await getDeliveryCategories({
         lang_code: getLangCode(locale),
+        shop_id: shop_id,
       });
       if (!isEmpty(data.data)) setData(data.data);
     } catch (error) {}
@@ -39,25 +40,28 @@ const HolidayGoodsCategories = (props) => {
     );
   };
   const handleBack = () => {
-    props.history.push(routes.HOLIDAY);
+    props.history.goBack();
   };
+  const { store, user } = account;
   return (
     <Layout>
-      <div className="scrollable-container">
+      <div className="scrollable-container scrollable-container-categories" style={{ overflowY: 'hidden'}}>
         <div className="content-container">
-          <div className="header-container">
+          <div className="header-container" style={{ paddingLeft: 0 }}>
             <div className="left-header">
               <span className="title-info">
                 <FormattedMessage id="IDS_STORE" />
-                <span className="title-value">: HP003 Lake Silver</span>
+                {!isEmpty(store) && (
+                  <span className="title-value">: {store.company_name}</span>
+                )}
               </span>
-              <span className="title-info">
+              {/* <span className="title-info">
                 <FormattedMessage id="IDS_DEPT" />
                 <span className="title-value">: Management team</span>
-              </span>
+              </span> */}
             </div>
           </div>
-          <div className="page-content">
+          <div className="page-content page-content-categories">
             <div className="item-group">
               {!isEmpty(data.favourite_categories) &&
                 data.favourite_categories.map((el, i) => (
@@ -100,6 +104,7 @@ const HolidayGoodsCategories = (props) => {
 export default connect(
   (state) => ({
     locale: state.system.locale,
+    account: state.system.account,
   }),
   { actionToggleMenu }
 )(withRouter(HolidayGoodsCategories));

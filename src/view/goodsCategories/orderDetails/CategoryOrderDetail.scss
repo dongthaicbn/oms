@@ -5,10 +5,11 @@
     .app-content-container {
       display: flex;
       flex-direction: column;
-      padding-bottom: 0;
+      padding: 24px 12px 0 24px;
 
       .header-group {
         margin-bottom: 16px;
+        padding-right: 12px;
 
         .page-info-container {
           display: flex;
@@ -94,7 +95,6 @@
 
       .body-group {
         overflow-y: auto;
-        padding-right: 4px;
         flex: 1;
 
         .app-table {
@@ -119,7 +119,7 @@
 
                   .text-label {
                     overflow-wrap: break-word;
-                    // max-width: 220px;
+                    max-width: 220px;
                     font-weight: 400;
                     color: #4f4e66;
                     font-size: 14px;
@@ -133,7 +133,7 @@
 
                   .text-info {
                     overflow-wrap: break-word;
-                    // max-width: 220px;
+                    max-width: 220px;
                     font-size: 18px;
                     @media only screen and (max-width: 1200px) {
                       max-width: 240px;
@@ -223,7 +223,7 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        padding: 24px 0 24px 0;
+        padding: 24px 12px 24px 0;
 
         .ant-btn {
           height: 70px;

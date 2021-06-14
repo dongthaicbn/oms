@@ -15,6 +15,7 @@
           flex-direction: row;
           align-items: center;
           margin-bottom: 16px;
+          padding-right: 12px;
 
           .page-title {
             flex: 1;
@@ -176,7 +177,7 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        padding: 24px 0 24px 0;
+        padding: 24px 12px 24px 0;
 
         .ant-btn {
           height: 70px;
@@ -191,6 +192,16 @@
           width: 351px;
         }
       }
+    }
+  }
+}
+
+.inventory-detail-modal {
+  .ant-modal-content {
+    width: 500px !important;
+
+    .modal-message {
+      padding: 0 30px;
     }
   }
 }

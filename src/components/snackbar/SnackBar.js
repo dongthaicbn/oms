@@ -12,21 +12,21 @@ import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   success: {
     width: '80vw',
     background: 'linear-gradient(272.96deg, #28A9F1 0%, #65C8FF 100%)',
     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-    borderRadius: '10px'
+    borderRadius: '10px',
   },
   warning: {
     width: '80vw',
-    background: '#EF5F5F',
+    background: 'linear-gradient(272.96deg, #EF5F5F 0%, #EF5F5F 100%)',
     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
-    borderRadius: '6px'
-  }
+    borderRadius: '6px',
+  },
 }));
-const SnackBar = props => {
+const SnackBar = (props) => {
   const classes = useStyles();
 
   const handleClose = (event, reason) => {
@@ -35,16 +35,21 @@ const SnackBar = props => {
     }
     props.actionSnackBar({
       ...props.snackBar,
-      open: false
+      open: false,
     });
   };
 
   const renderMessage = () => {
     if (props.snackBar.messageID) {
-      return <FormattedMessage id={props.snackBar.messageID} values={props.snackBar.messageParams} />
+      return (
+        <FormattedMessage
+          id={props.snackBar.messageID}
+          values={props.snackBar.messageParams}
+        />
+      );
     }
     return props.snackBar.message;
-  }
+  };
 
   return (
     <div>
@@ -59,8 +64,8 @@ const SnackBar = props => {
             props.snackBar.type === 'success' ? (
               <CheckCircleIcon fontSize="inherit" />
             ) : (
-                <ReportProblemIcon fontSize="inherit" />
-              )
+              <ReportProblemIcon fontSize="inherit" />
+            )
           }
           className={
             props.snackBar.type === 'success'
@@ -76,9 +81,9 @@ const SnackBar = props => {
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     // isLoading: state.system.isLoading,
-    snackBar: state.system.snackBar
+    snackBar: state.system.snackBar,
   }),
   { actionSnackBar }
 )(withRouter(SnackBar));

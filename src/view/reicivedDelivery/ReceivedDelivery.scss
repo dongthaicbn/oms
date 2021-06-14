@@ -7,7 +7,7 @@
     .app-content-container {
       display: flex;
       flex-direction: column;
-      padding-bottom: 0;
+      padding: 24px 12px 0 24px;
 
       .header-group {
         .page-info-container {
@@ -29,6 +29,9 @@
           }
 
           .app-input-container {
+            width: 304px;
+            padding-right: 15px;
+
             svg {
               path {
                 fill: #4F4E66;
@@ -174,7 +177,7 @@
       }
 
       .footer-group {
-        padding: 24px 0 24px 0;
+        padding: 24px 12px 24px 0;
 
         .ant-btn {
           height: 70px;

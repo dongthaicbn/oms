@@ -1,205 +1,3 @@
-.sidebar-menu-container {
-  .ant-drawer-mask {
-    background: rgba(130, 130, 130, 0.2);
-  }
-  .ant-drawer-content-wrapper {
-    width: 388px;
-
-    box-shadow: none !important;
-    background: transparent;
-    height: calc(100% - 24px);
-    margin: 12px;
-    border-radius: 8px;
-  }
-  .side-bar-content {
-    background: white;
-    position: absolute;
-    @media only screen and (max-width: 576px) {
-      width: 100%;
-    }
-    width: 328px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
-    overflow: auto;
-
-    &::-webkit-scrollbar-track {
-      background: none;
-    }
-  }
-  &.closed-menu {
-    .ant-drawer-content-wrapper {
-      margin: 0;
-    }
-  }
-  &.ant-drawer .ant-drawer-content {
-    height: calc(100% - 24px);
-    @media only screen and (max-width: 576px) {
-      height: 100%;
-    }
-  }
-  .ant-drawer-content,
-  .ant-drawer-wrapper-body,
-  .ant-drawer-body {
-    border-radius: 8px;
-    background: transparent;
-  }
-  .ant-drawer-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 0;
-  }
-  .close-menu-icon {
-    cursor: pointer;
-    position: absolute;
-    // left: 356px;
-    right: 0;
-    background: #f7f7fd;
-    border-radius: 10px;
-    padding: 12px;
-    @media only screen and (max-width: 576px) {
-      z-index: 10;
-      margin-right: 5px;
-      background: none;
-    }
-  }
-  .login-btn {
-    .ant-btn {
-      width: 100%;
-      height: auto;
-      padding: 15px 0;
-      font-size: 18px;
-    }
-  }
-  .header-menu {
-    padding: 32px 19px;
-  }
-  .login-info {
-    padding: 16px 24px;
-    background: #f7f7fd;
-
-    .ant-avatar {
-      width: 56px;
-      height: 56px;
-      margin-right: 16px;
-    }
-
-    .ant-typography {
-      margin-bottom: 0;
-      font-weight: 700;
-      font-size: 20px;
-      color: #4f4e66;
-    }
-  }
-  .action-menu {
-    padding: 15px 8px 16px 8px;
-    .menu-item {
-      margin-bottom: 2px;
-      .ant-btn {
-        width: 100%;
-        height: auto;
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-        border: none;
-        background: none;
-        color: #9998ae;
-        box-shadow: none;
-
-        .icon {
-          margin-right: 15px;
-        }
-      }
-
-      .ant-btn:focus {
-        border: none;
-        background: none;
-        color: #9998ae;
-      }
-
-      .ant-btn:active {
-        border: none;
-        background: none;
-        color: #9998ae;
-      }
-
-      .ant-btn:hover {
-        border: none;
-        background: #f3f3f9;
-        color: #9998ae;
-      }
-    }
-
-    .active-item {
-      .ant-btn {
-        background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
-        border-radius: 4px;
-        color: #ffffff;
-
-        .icon {
-          svg {
-            path {
-              fill: #ffffff;
-            }
-          }
-        }
-      }
-
-      .ant-btn:focus {
-        background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
-        color: #ffffff;
-      }
-
-      .ant-btn:active {
-        background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
-        color: #ffffff;
-      }
-
-      .ant-btn:hover {
-        background: linear-gradient(92.72deg, #c5c2ff 0%, #938fff 100%);
-        color: #ffffff;
-      }
-    }
-  }
-  .footer-menu {
-    display: flex;
-    justify-content: flex-end;
-
-    align-items: flex-end;
-    height: 100%;
-    padding: 16px;
-    .container-language {
-      display: none;
-      .button-language-choosed {
-        background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
-        // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-        color: white;
-      }
-      .button-language-not-choosed {
-        color: #828282;
-      }
-      .button-language {
-        border-radius: 4px;
-        padding: 6px 33px;
-        align-items: center;
-        display: flex;
-        cursor: pointer;
-        height: 37px;
-        align-self: center;
-        font-weight: bold;
-      }
-    }
-  }
-  .logout-icon {
-    background: #f0f0fc;
-    border-radius: 10px;
-    padding: 14px;
-    cursor: pointer;
-  }
-}
-
 .ant-dropdown-menu {
   margin: 0 20px;
 }
@@ -222,7 +20,7 @@
   .layout-content {
     width: 100%;
     // min-height: 100vh;
-    padding-left: 125px;
+    padding-left: 112px;
     // overflow: hidden;
     // max-height: 100%;
   }
@@ -242,10 +40,11 @@
   flex-direction: column;
   position: fixed;
   top: 0;
-  height: calc(100vh - 24px);
+  height: calc(var(--vh, 1vh) * 100 - 24px);
   img {
     margin-bottom: 56px;
   }
+
   .menu-sider-item {
     display: flex;
     flex-direction: column;
@@ -259,6 +58,7 @@
     padding: 10px 0;
     width: 77px;
     cursor: pointer;
+
     .name-tab {
       line-height: 12px;
       font-style: normal;
@@ -266,51 +66,35 @@
       font-size: 10px;
       font-family: NotoSansTCBlack;
     }
-    &:hover {
-      color: white;
-      background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
-    }
+
     img {
       max-width: 20px;
       max-height: 30px;
       margin: 0 auto;
       margin-bottom: 4px;
     }
+
+    &:hover {
+      color: #bdbdd3;
+      background: none;
+    }
+
+    &:focus {
+      color: white;
+      background: lightgray;
+
+      img {
+        filter: brightness(0) invert(1);
+      }
+    }
+
     &.active-item {
       color: white;
       background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
-      img {
-        filter: brightness(0) invert(1);
-      }
-    }
-    &:hover {
-      img {
-        filter: brightness(0) invert(1);
-      }
-    }
-  }
-}
 
-@media only screen and (max-width: 576px) {
-  .sidebar-menu-container {
-    .ant-drawer-content-wrapper {
-      margin: 0;
-    }
-    .side-bar-content {
-      height: calc(var(--vh, 1vh) * 100);
-      .footer-menu {
-        justify-content: space-between;
-        align-items: flex-end;
-        .container-language {
-          display: flex;
-          margin-bottom: 7px;
-        }
+      img {
+        filter: brightness(0) invert(1);
       }
-    }
-  }
-  .layout-sider {
-    img {
-      margin-bottom: 0;
     }
   }
 }

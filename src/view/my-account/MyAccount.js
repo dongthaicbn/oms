@@ -19,8 +19,9 @@ import { encrypt } from '../../utils/helpers/helpers';
 import { actionSnackBar } from 'view/system/systemAction';
 import { notification } from 'antd';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 import './MyAccount.scss'
+const reg = /^-?[0-9]*(\.[0-9]*)?$/;
+
 const MyAccount = props => {
   let [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -236,8 +237,16 @@ const MyAccount = props => {
       confirmPassword: ''
     })
   }
+  const formatPhoneNumber = value => {
+    let newContactNo = value.replace(/ /g, '');
+    if (reg.test(newContactNo)) {
+      let newContactNoText = `${newContactNo}`.replace(/(\d{4})(\d)/g, '$1 $2');
+      return newContactNoText;
+    }
+    return '';
+  };
   return (
-    <Layout>
+    <Layout emptyDrawer={true}>
       <div className="scrollable-container">
         <div className="content-container wapper-my-account">
           <div className="title-header"><FormattedMessage id="IDS_ACCOUNT_DETAILS" /></div>
@@ -261,7 +270,7 @@ const MyAccount = props => {
               </div>
               <div className="phone col-account-right">
                 <div className="title"><FormattedMessage id="IDS_CONTACT_NO" /></div>
-                <div className="value">{props.account && props.account.user && props.account.user.contact_no}</div>
+                <div className="value">{props.account && props.account.user && props.account.user.contact_no && formatPhoneNumber(props.account.user.contact_no)}</div>
               </div>
             </div>
             <div className="password row-account">

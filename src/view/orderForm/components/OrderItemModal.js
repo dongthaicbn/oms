@@ -3,21 +3,32 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Modal } from 'antd';
 import * as icons from 'assets';
+import IconLoading from 'components/icon-loading/IconLoading';
 import { getTodayDetail } from '../OrderFormActions';
-import { getLangCode, isEmpty, showDate } from 'utils/helpers/helpers';
+import {
+  getLangCode,
+  isEmpty,
+  showDate,
+  showEstimateDate,
+} from 'utils/helpers/helpers';
 
 const OrderItemModal = (props) => {
   const { item, locale, handleClose, isShowEdit, handleDetail } = props;
   const [dataDetail, setDataDetail] = useState({});
+  const [loading, setLoading] = useState(false);
   const fetchData = async () => {
     try {
+      setLoading(true);
       const { data } = await getTodayDetail({
         lang_code: getLangCode(locale),
         id: item.id,
       });
       let status = data && data.result && data.result.status;
       if (!isEmpty(status) && status === 200) setDataDetail(data.data);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
   useEffect(() => {
     if (!isEmpty(item)) fetchData();
@@ -28,15 +39,27 @@ const OrderItemModal = (props) => {
       visible={true}
       title={null}
       centered
-      closeIcon={<img src={icons.ic_close} alt="" />}
+      closeIcon={
+        <img src={icons.ic_close} alt="" style={{ width: 24, height: 24 }} />
+      }
       onOk={handleClose}
       onCancel={handleClose}
       className="modal-container"
       width={726}
       footer={null}
     >
-      {isEmpty(dataDetail) ? (
-        <></>
+      {loading ? (
+        <div
+          className="icon-loading"
+          style={{
+            margin: 80,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <IconLoading />
+        </div>
       ) : (
         <div className="modal-content">
           <span className="time-text">
@@ -52,7 +75,7 @@ const OrderItemModal = (props) => {
                 <FormattedMessage id="IDS_ESTIMATED_DELIVERY" />
                 &nbsp;:&nbsp;
                 {!isEmpty(supplier_form) &&
-                  showDate(supplier_form.estimated_delivery)}
+                  showEstimateDate(supplier_form.estimated_delivery)}
               </span>
               {!isEmpty(supplier_form) && (
                 <span className="order-value-text">
@@ -68,6 +91,7 @@ const OrderItemModal = (props) => {
               <Button
                 className="item-btn"
                 style={{
+                  background: '#F7F9FF',
                   color: '#6461B4',
                   fontWeight: 'bold',
                   fontSize: 18,

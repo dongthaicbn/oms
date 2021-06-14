@@ -27,6 +27,7 @@ export { default as ic_edit } from './icons/ic_edit.svg';
 export { default as ic_delete } from './icons/ic_delete.svg';
 export { default as ic_check_white } from './icons/ic_check_white.svg';
 export { default as ic_drop_down } from './icons/ic_drop_down.svg';
+export { default as ic_arrow_right } from './icons/ic_arrow_right.svg';
 
 // image
 export { default as img_placeholder } from './images/image_placeholder.png';

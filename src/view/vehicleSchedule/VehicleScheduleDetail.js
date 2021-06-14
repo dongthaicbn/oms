@@ -1,17 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Row, Col, Button, Typography } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { Button } from 'antd';
 import './VehicleSchedule.scss';
 import { actionToggleMenu } from '../system/systemAction';
 import { getScheduleDetail } from './VehicleScheduleActions';
 import { getLangCode, isEmpty } from 'utils/helpers/helpers';
 import Layout from 'components/layout/Layout';
 import { routes } from 'utils/constants/constants';
-import { Fragment } from 'react';
-import * as icons from 'assets';
+import AppTable from 'components/table/AppTable';
+import InfoGroup from 'components/infoGroup/InfoGroup';
+// import * as icons from 'assets';
+import RoundImage from 'components/image/RoundImage';
+import {isIPad} from 'utils/helpers/helpers';
+
+const { Text } = Typography;
+
+const itemColumns = [
+  {
+    title: <FormattedMessage id="IDS_ITEMS" />,
+    render: (item) => (
+      <div className="app-flex-container items-info-cell">
+        <RoundImage src={item.image} alt="Item Image" />
+        <div>
+          <InfoGroup label={<Text>{item.code}</Text>} noColon={true}>
+            {item.name}&nbsp;
+            <FormattedMessage
+              id="IDS_WEIGHT_PER_PACKS"
+              values={{ weight: item.pack_weight }}
+            />
+          </InfoGroup>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: (
+      <span style={{ textAlign: 'center' }}>
+        <FormattedMessage id="IDS_VEHICLE_SCHEDULE" />
+      </span>
+    ),
+    align: 'center',
+    width: '100px',
+    render: (item) => (
+      <span className="value-item">{item.vehicle_schdules}</span>
+    ),
+  },
+  {
+    title: (
+      <span style={{ textAlign: 'center' }}>
+        <FormattedMessage id="IDS_ORDER_BEFORE" />
+      </span>
+    ),
+    align: 'center',
+    width: '100px',
+    render: (item) => (
+      <span className="value-item">{item.order_before_day}</span>
+    ),
+  },
+];
 
 const VehicleScheduleDetail = (props) => {
   const [dataDetail, setDataDetail] = useState({});
@@ -38,15 +87,56 @@ const VehicleScheduleDetail = (props) => {
   const { category, suppliers } = dataDetail;
   return (
     <Layout>
-      <div className="scrollable-container">
+      <>
+        <div className="borrow-detail-container">
+          <div className={`app-content-container content-container container-vehicle-schedule-detail`}>
+            <Row className="borrow-detail-header">
+              <Col span={16} className="lending-confirm-info-store">
+                <div className="title-info">
+                  {!isEmpty(category) ? category.name : ''}
+                </div>
+              </Col>
+            </Row>
+            <Row className="lending-confirm-table">
+              <Col span={24}>
+                <AppTable
+                  columns={itemColumns}
+                  // columnDataSource={mapFormData}
+                  dataSource={suppliers || []}
+                  itemsKey="items"
+                  groupKey="name"
+                />
+              </Col>
+            </Row>
+          </div>
+          <div className="action-container app-button">
+            <Button className="action-button back-button" onClick={handleBack}>
+              <FormattedMessage id="IDS_BACK" />
+            </Button>
+          </div>
+        </div>
+        {/* <div className="scrollable-container" style={{ position: 'relative' }}>
         <div className="content-container">
           <div className="header-container vehicle-detail">
             <span className="title-info">
               {!isEmpty(category) ? category.name : ''}
             </span>
           </div>
-
-          <div className="page-content vehicle-detail">
+          <Row className="borrow-detail-table">
+            <Col span={24}>
+              <AppTable
+                columns={itemColumns}
+                // columnDataSource={mapFormData}
+                dataSource={suppliers || []}
+                itemsKey="items"
+                groupKey="name"
+              />
+            </Col>
+          </Row>
+          <div
+            className="page-content vehicle-detail"
+            // style={{ overflow: 'auto' }}
+          >
             <div className="header-fix">
               <div className="header-group">
                 <div className="items-column">
@@ -62,6 +152,7 @@ const VehicleScheduleDetail = (props) => {
             </div>
 
             <div className="header-fill" />
+
             <>
               {!isEmpty(suppliers) &&
                 suppliers.map((el, i) => (
@@ -77,21 +168,7 @@ const VehicleScheduleDetail = (props) => {
                             className="items-column"
                             style={{ flexDirection: 'row' }}
                           >
-                            <img
-                              src={
-                                !isEmpty(item.image)
-                                  ? item.image
-                                  : icons.img_placeholder
-                              }
-                              alt=""
-                              style={{
-                                maxWidth: 75,
-                                maxHeight: 60,
-                                marginRight: 12,
-                                borderRadius: 6,
-                                border: '1px solid #B5B6FF',
-                              }}
-                            />
+                            <RoundImage src={item.image} alt="Item Image" />
                             <div className="items-column">
                               <span
                                 style={{
@@ -134,14 +211,21 @@ const VehicleScheduleDetail = (props) => {
                 ))}
             </>
           </div>
-
-          <div className="page-footer">
-            <Button className="footer-btn" onClick={handleBack}>
-              <FormattedMessage id="IDS_BACK" />
-            </Button>
-          </div>
         </div>
-      </div>
+        <div
+          className="page-footer"
+          style={{
+            background: '#f3f3f9',
+            padding: '24px 12px 24px 0',
+            width: 'calc(100% - 24px)',
+          }}
+        >
+          <Button className="footer-btn" onClick={handleBack}>
+            <FormattedMessage id="IDS_BACK" />
+          </Button>
+        </div>
+      </div> */}
+      </>
     </Layout>
   );
 };

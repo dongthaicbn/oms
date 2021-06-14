@@ -1,0 +1,197 @@
+.holiday-goods-category-detail {
+  .layout-content {
+    height: 100%;
+
+    .app-content-container {
+      display: flex;
+      flex-direction: column;
+      padding: 24px 12px 0 24px;
+
+      .header-group {
+        margin-bottom: 16px;
+        padding-right: 12px;
+
+        .page-info-container {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          .page-title {
+            flex: 1;
+
+            .ant-typography {
+              font-family: NotoSansTCBlack;
+              font-size: 24px;
+              font-weight: 900;
+              color: #6461b4;
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+
+      .body-group {
+        overflow-y: auto;
+        flex: 1;
+
+        .table-header {
+          .header-row {
+            .column-cell {
+              .item-info-column {
+                padding: 0 19px;
+              }
+            }
+          }
+        }
+
+        .app-table {
+          .table-body {
+            .item-row {
+              .items-info-cell {
+                align-items: start;
+
+                .info-group-container {
+                  flex: 1;
+                  overflow: hidden;
+
+                  .text-label {
+                    overflow-wrap: break-word;
+                    max-width: 220px;
+                    font-weight: 400;
+                    color: #4f4e66;
+                    font-size: 14px;
+                    @media only screen and (max-width: 1200px) {
+                      max-width: 240px;
+                    }
+                    .ant-divider {
+                      border-color: #4f4e66;
+                    }
+                  }
+
+                  .text-info {
+                    overflow-wrap: break-word;
+                    max-width: 220px;
+                    font-size: 18px;
+                    @media only screen and (max-width: 1200px) {
+                      max-width: 240px;
+                    }
+                  }
+                }
+              }
+
+              .ant-tag.info-tag {
+                background: #F7F7FD;
+                color: #828282;
+                font-size: 18px;
+                font-weight: 700;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 10px;
+              }
+            }
+
+            .group-item-row {
+              .group-item-body-wrapper {
+                .group-item-extend-row {
+                  .group-item-extend-cell {
+                    .supplier-delivery-info-container {
+                      .ant-divider {
+                        margin: 0;
+                      }
+
+                      .suspended-section{
+                        padding: 16px;
+                        color: #EF5F5F;
+
+                        .delivery-suspended-dates {
+                          display: flex;
+                          flex-direction: row;
+                          flex-wrap: wrap;
+
+                          .ant-tag {
+                            width: 110px;
+                            background: #EF5F5F;
+                            color: #FFFFFF;
+                            font-size: 16px;
+                            font-weight: 700;
+                            border-radius: 4px;
+                            padding: 6px 0;
+                            text-align: center;
+                            border: none;
+                            margin-top: 10px;
+                          }
+                        }
+                      }
+
+                      .available-section {
+                        padding: 16px;
+                        color: #4F4F4F;
+                        display: flex;
+                        flex-direction: row;
+                        flex-wrap: wrap;
+
+                        .ant-tag {
+                          width: 277px;
+                          background: #F7F7FD;
+                          color: #4F4F4F;
+                          font-weight: 700;
+                          font-size: 16px;
+                          border-radius: 4px;
+                          padding: 8px 0;
+                          margin-right: 8px;
+                          text-align: center;
+                          border: none;
+                          margin-top: 8px;
+
+                          img {
+                            margin: 0 15px;
+                          }
+                        }
+                      }
+
+                      .view-action-section {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 8px 0;
+
+                        .view-action {
+                          color: #4F4F4F;
+                          cursor: pointer;
+                          font-size: 16px;
+                          font-weight: 700;
+                          display: flex;
+                          align-items: center;
+
+                          svg {
+                            margin-left: 12px;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .footer-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 24px 12px 24px 0;
+
+        .ant-btn {
+          height: 70px;
+          padding: 0;
+        }
+
+        .back-button {
+          width: 226px;
+        }
+      }
+    }
+  }
+}

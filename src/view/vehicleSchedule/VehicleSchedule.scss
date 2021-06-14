@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 24px 0;
-  padding: 0 24px 0 12px;
+  margin: 30px 0 24px;
+  padding: 0 24px;
   width: 100%;
   .left-header {
     .title-info {
@@ -26,9 +26,9 @@
   }
 }
 .page-content {
-  padding: 0 24px 0 12px;
-  margin-top: 23px;
-  height: calc(100vh - 218px);
+  padding: 0 12px 0 24px;
+  margin-top: 16px;
+  height: calc(var(--vh, 1vh) * 100 - 212px);
   overflow: auto;
   .item-group {
     display: flex;
@@ -52,6 +52,12 @@
       line-height: 30px;
       text-align: center;
       cursor: pointer;
+      &:first-child {
+        margin: 0 6px 0 4px;
+      }
+      &:last-child {
+        margin: 0 4px 0 6px;
+      }
       &.item-0 {
         background: linear-gradient(81.97deg, #a69bea 1.05%, #b530bc 84.79%);
       }
@@ -98,20 +104,21 @@
 .page-footer {
   position: absolute;
   bottom: 0;
-  padding: 20px 0;
-  background: #f3f3f9;
+  padding: 24px 0;
+  background: unset;
   .footer-btn {
     font-weight: bold;
     font-size: 20px;
-    line-height: 30px;
+    // line-height: 30px;
+    width: 226px;
     text-align: center;
     color: #6461b4;
     border: 2px solid #5855a6;
     box-sizing: border-box;
     border-radius: 10px;
     height: 70px;
-    padding: 20px 88px;
-    margin-left: 12px;
+    // padding: 20px 88px;
+    background-color: #f3f3f9;
   }
 }
 .vehicle-detail {
@@ -124,6 +131,7 @@
   }
   .header-fix {
     position: sticky;
+    z-index: 1;
     position: --webkit-sticky;
     top: 0;
     background-color: #f3f3f9;
@@ -132,6 +140,7 @@
   .header-fill {
     height: 10px;
     background-color: #f0f2f5;
+    z-index: 1;
     position: sticky;
     position: --webkit-sticky;
     top: 50px;
@@ -185,6 +194,7 @@
   }
   .wapper-title-vehicle {
     position: sticky;
+    z-index: 1;
     position: --webkit-sticky;
     top: 58px;
     background-color: #f3f3f9;
@@ -200,5 +210,43 @@
       margin-bottom: 8px;
       padding: 10px 12px;
     }
+  }
+}
+.padding-right {
+  padding: 0 12px 0 0;
+  overflow-y: hidden;
+}
+// refactor
+.title-info {
+  color: #4f4e66;
+  margin-right: 40px;
+  margin-bottom: 8px;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 30px;
+  color: #6461b4;
+  .title-value {
+    color: #828282;
+  }
+}
+.value-item {
+  background: #f7f7fd;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 27px;
+  color: #828282;
+}
+.page-content-categories {
+  padding: 0 12px 0 2px;
+}
+.scrollable-container-categories {
+  height: calc(var(--vh, 1vh) * 100);
+}
+.container-vehicle-schedule-detail {
+  padding: 24px 12px 0 24px;
+  .app-table .table-body .item-row {
+    box-shadow: 0px 5px 20px -5px rgba(132, 128, 255, 0.3);
   }
 }

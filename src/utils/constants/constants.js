@@ -18,6 +18,12 @@ export const TYPE_REJECTED = 'Rejected';
 export const UPLOAD_TYPE_FILE = 1;
 export const UPLOAD_TYPE_URL = 2;
 
+export const ACTION_ADD_PHOTO = 1;
+export const ACTION_REMOVE_PHOTO = 2;
+
+export const ORDER_ID_TYPE = 1;
+export const ORDER_NO_TYPE = 2;
+
 export const DATE_FORMAT = 'DD/MM/YYYY';
 export const DATE_FORMAT_URL = 'YYYY-MM-DD';
 // routes
@@ -32,7 +38,7 @@ export const routes = {
   REGISTRATION: '/registration',
   REGISTRATION_DONE: '/registration/done',
   ORDER_RECORD: '/order-record',
-  ORDER_DETAILS: '/order-record/:orderNo',
+  ORDER_DETAILS: '/order-record/:orderId',
   HOME: '/',
   ORDER_FORM: '/order-form',
   GOODS_CATEGORIES: '/goods-categories',
@@ -48,8 +54,7 @@ export const routes = {
   CATEGORY: '/category',
   GOODS_CATEGORY_ORDER_DETAIL: '/goods-categories/:id/order',
   RECEIVED_DELIVERY: '/received-delivery',
-  RECEIVED_DELIVERY_DETAIL: '/received-delivery/:orderNo',
-  RECEIVED_DELIVERY_DETAIL_EDIT: '/received-delivery/:orderNo/edit',
+  RECEIVED_DELIVERY_DETAIL: '/received-delivery/:orderCode',
   LENDING_FORM: '/lending-form',
   LENDING_CONFIRM: '/lending-confirm',
 

@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { Button } from 'antd';
 import * as icons from 'assets';
-import { showDate } from 'utils/helpers/helpers';
+import { showDate, showEstimateDate } from 'utils/helpers/helpers';
 import { routes } from 'utils/constants/constants';
 import OrderItemModal from './OrderItemModal';
 
@@ -16,7 +16,7 @@ const OrderItem = (props) => {
   const closeModal = () => setVisible(false);
   const handleDetail = () => {
     props.history.push(
-      `${routes.GOODS_CATEGORY_ORDER_DETAIL.replace(':id', 1)}?type=categories`
+      `${routes.GOODS_CATEGORY_ORDER_DETAIL.replace(':id', -1)}?type=categories`
     );
   };
 
@@ -66,7 +66,7 @@ const OrderItem = (props) => {
             )}
           </span>
           <span>
-            <FormattedMessage id="IDS_TOTAL" />: {item.total_cost}
+            <FormattedMessage id="IDS_TOTAL" /> : {item.total_cost}
           </span>
         </div>
         {isWarning ? (
@@ -81,7 +81,7 @@ const OrderItem = (props) => {
         ) : (
           <p className="estimate-text">
             <FormattedMessage id="IDS_ESTIMATED_DELIVERY" />:{' '}
-            {showDate(item.estimated_delivery)}
+            {showEstimateDate(item.estimated_delivery)}
           </p>
         )}
       </div>

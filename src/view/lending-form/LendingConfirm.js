@@ -15,6 +15,9 @@ import IconLoading from 'components/icon-loading/IconLoading';
 import "./LendingConfirm.scss"
 import moment from 'moment';
 import { notification } from 'antd';
+import NumberEditPopup from 'components/input/NumberEditPopup';
+import UnitEditPopup from 'components/input/UnitEditPopup'
+
 
 import { routes } from 'utils/constants/constants';
 const { Text } = Typography;
@@ -132,18 +135,44 @@ const itemColumns = [
     )
   },
   {
-    title: 'Actual weight',
+    title: 'Borrowed Qty',
     align: 'center',
     width: '100px',
-    render: item => <div className="borrowed-qty">{item.borrowed_qty}</div>
+    render: (item, actionProviders) => {
+      return (
+      // <div className="borrowed-qty">{item.borrowed_qty}</div>
+          <div className="app-button quantity-button borrowed-quantity">
+            <NumberEditPopup value={item.borrowed_qty} minValue={0} maxValue={99999} disableFractional={false}
+              onCancel={() => actionProviders.updateItemActualWeight(item._index, item.borrowed_qty, item._group_index)}
+              onPopupCancel={(originValue) => actionProviders.updateItemActualWeight(item._index, originValue, item._group_index)}
+              onValueChanged={(newValue) => actionProviders.updateItemActualWeight(item._index, newValue, item._group_index)}>
+              <Button>
+                {item.borrowed_qty || 0}
+              </Button>
+            </NumberEditPopup>
+          </div>
+      )
+    }
   },
   {
-    title: 'Received qty',
+    title: 'Unit',
     align: 'center',
     width: '100px',
-    render: item => <div className="unit">{item.unit_name}</div>
+    render: (item, actionProviders)  => {
+      return (
+        <UnitEditPopup value={item.unit_id} minValue={0} maxValue={99999} disableFractional={true}
+            onCancel={() => { }}
+            onPopupCancel={(originValue) => actionProviders.updateItemUnit(item._index, originValue, item._group_index)}
+            onValueChanged={(newValue) => actionProviders.updateItemUnit(item._index, newValue, item._group_index)}
+            units={actionProviders.units}
+          >
+            <div className="unit">{item.unit_name}</div>
+          </UnitEditPopup>
+      )
+    }
   }
 ];
+
 const LendingConfirm = props => {
   let [data, setData] = useState({});
   let [modalVisible, setModalVisible] = useState(false);
@@ -152,20 +181,52 @@ const LendingConfirm = props => {
   let shop_name = localStorage.getItem("shop_name")
   let lending_date = localStorage.getItem("lending_date") ? moment(localStorage.getItem("lending_date")) : null
   let shop_id = localStorage.getItem("shop_id")
+  let [units, setUnits] = useState([]);
+
   const goBack = () => {
     props.history.goBack();
   };
   useEffect(() => {
     let newData = JSON.parse(localStorage.getItem("lendingData"));
     // let newData = testData
-
+    let newUnits = JSON.parse(localStorage.getItem("units"));
     setData(newData)
+    setUnits(newUnits)
+    // var xStart, yStart = 0;
+    // document.getElementById("disable-touch-move").addEventListener('touchstart',function(e) {
+    //      xStart = e.touches[0].screenX;
+    //      yStart = e.touches[0].screenY;
+    // });
+    
+    // document.getElementById("disable-touch-move").addEventListener('touchmove',function(e) {
+    //     var xMovement = Math.abs(e.touches[0].screenX - xStart);
+    //     var yMovement = Math.abs(e.touches[0].screenY - yStart);
+    //     if((yMovement * 3) > xMovement) {
+    //         console.log(e)
+    //         e.preventDefault();
+    //     }
+    // });
   }, []);
 
   const onAdd = () => {
 
     props.history.push(`${routes.LENDING_FORM_GOODS_CATEGORY}?shop_id=${shop_id}`)
   }
+  const updateItemActualWeight = (index, newWeight, indexGroupName) => {
+    // setAddedItem(true)
+    data.categories[indexGroupName].items[index].borrowed_qty = newWeight
+    let newData = Object.assign({}, data);
+    setData(newData)
+    localStorage.setItem("lendingData", JSON.stringify(newData));
+  
+  };
+  const updateItemUnit = (index, newUnit, indexGroupName) => {
+    data.categories[indexGroupName].items[index].unit_id = newUnit
+    data.categories[indexGroupName].items[index].unit_name = units.find(item => item.id === newUnit).name
+    let newData = Object.assign({}, data);
+    setData(newData)
+    localStorage.setItem("lendingData", JSON.stringify(newData));
+  };
   const onSubmit = async () => {
     setModalVisible(true)
     let bodyLending = {}
@@ -177,7 +238,10 @@ const LendingConfirm = props => {
         item.items.map(childValue => {
           delete childValue.name
           delete childValue.code
-          bodyLending.items.push(childValue)
+          console.log(childValue)
+          if(childValue && childValue.borrowed_qty) {
+            bodyLending.items.push(childValue)
+          }
         })
       })
     }
@@ -206,7 +270,7 @@ const LendingConfirm = props => {
       <div className="borrow-detail-container">
         <div className="app-content-container content-container">
           <Row className="borrow-detail-header">
-            <Col span={20} className="lending-confirm-info-store">
+            <Col span={16} className="lending-confirm-info-store">
               <div>
                 <InfoGroup labelID="IDS_LENDING_TO" noColon>
                   {shop_name}
@@ -219,7 +283,7 @@ const LendingConfirm = props => {
                 </InfoGroup>
               </div>
             </Col>
-            <Col span={4}>
+            <Col span={8}>
               <div className="app-flex-container flex-end app-button modal-button-container">
                 {/* <IconButton icon={<FilterIcon />}>
                   <FormattedMessage id="IDS_FILTER" />
@@ -243,14 +307,16 @@ const LendingConfirm = props => {
                 dataSource={data && data.categories}
                 itemsKey="items"
                 groupKey="name"
+                pushGroupNameToItem={true}
               // groupExpandable={createGroupExpandable()}
               // rowExpandable={createRowExpandable()}
               // groupError={(item) => formErrors[item.supplier_id]}
               // itemError={(item) => formErrors[item.supplier_id]}
-              // actionProviders={{
-              //   onItemQuantityChanged: onItemQuantityChanged,
-              //   getItemCurrentQuantity: getItemCurrentQuantity
-              // }}
+                actionProviders={{
+                  updateItemActualWeight: updateItemActualWeight,
+                  updateItemUnit,
+                  units,
+                }}
               />
             </Col>
           </Row>

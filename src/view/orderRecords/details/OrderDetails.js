@@ -8,7 +8,7 @@ import InfoGroup from 'components/infoGroup/InfoGroup';
 import RoundImage from 'components/image/RoundImage';
 import AppTable from 'components/table/AppTable';
 import { FormattedMessage } from 'react-intl';
-import { routes, STATUS_PENDING, STATUS_RECEIVED } from 'utils/constants/constants';
+import { routes, STATUS_PENDING, STATUS_RECEIVED, ORDER_ID_TYPE } from 'utils/constants/constants';
 import { formatDate, isEmpty } from 'utils/helpers/helpers';
 import * as icons from 'assets';
 import { getOrderDetail } from './OrderDetailsService';
@@ -76,20 +76,29 @@ const itemColumns = [
 ];
 
 const OrderDetails = props => {
-  const {orderNo} = props.match.params;
+  const {orderId} = props.match.params;
   let [data, setData] = useState({});
+  let [loadingData, setLoadingData] = useState();
 
-  const fetchData = async orderNo => {
+  const fetchData = async (orderId) => {
     try {
-      const res = await getOrderDetail(1, orderNo);
+      const res = await getOrderDetail(1, orderId);
       if (!isEmpty(res.data)) {
-        setData(res.data.data);
+        return res.data;
       }
     } catch (e) {
+      throw e;
     }
   };
 
-  useEffect(() => fetchData(orderNo), [orderNo]);
+  const refreshData = async () => {
+    setLoadingData(true);
+    let response = await fetchData(orderId);
+    setData(response.data);
+    setLoadingData(false);
+  }
+
+  useEffect(() => refreshData(), []);
 
   const renderDeliveryInfo = order => {
     switch (order?.status) {
@@ -128,11 +137,11 @@ const OrderDetails = props => {
   };
 
   const goBack = () => {
-    props.history.push(routes.ORDER_RECORD);
+    props.history.goBack();
   };
 
   const navigateToReceivedDetail = () => {
-    props.history.push(routes.RECEIVED_DELIVERY_DETAIL_EDIT.replace(':orderNo', orderNo));
+    props.history.push(`${routes.RECEIVED_DELIVERY_DETAIL.replace(':orderCode', orderId)}?type=${ORDER_ID_TYPE}`);
   };
 
   return (
@@ -183,7 +192,8 @@ const OrderDetails = props => {
             </div>
             <div className="body-group">
               <AppTable columns={itemColumns}
-                        dataSource={data.items}/>
+                        dataSource={data.items}
+                        showLoading={loadingData}/>
             </div>
             <div className="footer-group app-button">
               <Button className="back-button" onClick={goBack}>

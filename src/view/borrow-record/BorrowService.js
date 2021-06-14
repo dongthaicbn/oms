@@ -13,3 +13,9 @@ export const getBorrowList = (langCode, recordStatus, lastItemNo) => {
     }
   });
 };
+export const getBorrowListCount = () => {
+  return api({
+    method: 'GET',
+    url: '/api/v1/borrowing/list/count'
+  });
+};

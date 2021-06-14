@@ -9,6 +9,7 @@
 
       .header-group {
         margin-bottom: 16px;
+        padding-right: 12px;
 
         .page-info-container {
           display: flex;
@@ -44,13 +45,21 @@
 
       .body-group {
         overflow-y: auto;
-        padding-right: 4px;
         flex: 1;
+
+        .loading-progress-container {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
         .item-damage-report {
           margin-bottom: 8px;
           border-radius: 10px;
           background: #FFFFFF;
+          margin-right: 12px;
 
           .ant-card-body {
             padding: 16px;
@@ -104,8 +113,18 @@
         }
 
         .app-table {
+          height: auto;
+          position: relative;
+
+          .table-header {
+            position: sticky;
+            top: 0;
+          }
 
           .table-body {
+            flex: none;
+            overflow: unset;
+
             .item-info-container {
               .item-info {
                 font-weight: 700;
@@ -158,7 +177,7 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        padding: 24px 0 24px 0;
+        padding: 24px 12px 24px 0;
 
         .ant-btn {
           height: 70px;
