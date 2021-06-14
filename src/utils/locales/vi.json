@@ -134,7 +134,7 @@
   "IDS_SAT": " 週六",
   "IDS_SUN": " 週日",
   "IDS_TOTAL_COST_PER_PACKS": " 總計：{currency}{cost} / 包",
-  "IDS_WEIGHT_PER_PACKS": " （{weight} / 包）",
+  "IDS_WEIGHT_PER_PACKS": " {weight} ",
   "IDS_EXPAND": "展開",
   "IDS_COLLAPSE": "折疊",
   "IDS_UPDATE": " 更新",

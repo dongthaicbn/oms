@@ -5,16 +5,16 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   actionToggleMenu,
-  actionChangeLang
+  actionChangeLang,
 } from '../../view/system/systemAction';
 import { LANG } from 'utils/constants/constants';
-const Header = props => {
+const Header = (props) => {
   const openMenu = () => {
     props.actionToggleMenu(true);
   };
-  const changeLanguage = language => () => {
+  const changeLanguage = (language) => () => {
     props.actionChangeLang(language);
-    localStorage.setItem(LANG, language)
+    localStorage.setItem(LANG, language);
   };
   return (
     <div className="header">
@@ -49,9 +49,9 @@ const Header = props => {
   );
 };
 export default connect(
-  state => ({
+  (state) => ({
     // users: state.system.users,
-    locale: state.system.locale
+    locale: state.system.locale,
   }),
   { actionToggleMenu, actionChangeLang }
 )(withRouter(Header));

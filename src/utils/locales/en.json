@@ -134,7 +134,7 @@
   "IDS_SAT": "Sat",
   "IDS_SUN": "Sun",
   "IDS_TOTAL_COST_PER_PACKS": "Total : {currency}{cost} / packs",
-  "IDS_WEIGHT_PER_PACKS": "({weight}/pc)",
+  "IDS_WEIGHT_PER_PACKS": "{weight}",
   "IDS_EXPAND": "Expand",
   "IDS_COLLAPSE": "Collapse",
   "IDS_UPDATE": "Update",
