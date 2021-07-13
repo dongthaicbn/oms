@@ -18,7 +18,7 @@ const InfoGroup = (props) => {
                 {label}{props.noColon? '' : ':'}
             </Text>
             <Paragraph className={`text-info ${props.className || ''}`}>
-                {props.children || '_'}
+                {props.children || (props.noPlacehholder? '' : '_')}
             </Paragraph>
         </div>
     );

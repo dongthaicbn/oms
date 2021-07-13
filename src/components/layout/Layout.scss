@@ -41,6 +41,8 @@
   position: fixed;
   top: 0;
   height: calc(var(--vh, 1vh) * 100 - 24px);
+  min-height: 240px;
+  overflow: auto;
   img {
     margin-bottom: 56px;
   }

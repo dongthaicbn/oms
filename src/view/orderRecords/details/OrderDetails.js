@@ -77,6 +77,7 @@ const itemColumns = [
 
 const OrderDetails = props => {
   const {orderId} = props.match.params;
+  let [orderNotFound, setOrderNotFound] = useState(false);
   let [data, setData] = useState({});
   let [loadingData, setLoadingData] = useState();
 
@@ -94,13 +95,30 @@ const OrderDetails = props => {
   const refreshData = async () => {
     setLoadingData(true);
     let response = await fetchData(orderId);
-    setData(response.data);
+    if (response.result.status !== 200) {
+      setOrderNotFound(true);
+      setData({});
+    } else {
+      setOrderNotFound(false);
+      setData(response.data);
+    }
     setLoadingData(false);
   }
 
   useEffect(() => refreshData(), []);
 
   const renderDeliveryInfo = order => {
+    if (!order?.status) {
+      return (
+        <>
+          <InfoGroup
+            labelID="IDS_DELIVERY_DATE"
+            className="delivery-date-color"
+            noPlacehholder={true}>
+          </InfoGroup>
+        </>
+      );
+    }
     switch (order?.status) {
       case STATUS_PENDING:
         return (
@@ -144,6 +162,16 @@ const OrderDetails = props => {
     props.history.push(`${routes.RECEIVED_DELIVERY_DETAIL.replace(':orderCode', orderId)}?type=${ORDER_ID_TYPE}`);
   };
 
+  const renderOrderNotFound = () => {
+    if (orderNotFound) {
+      return (
+        <div className="message-container">
+          <FormattedMessage id="IDS_ORDER_NOT_FOUND"/>
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="order-detail-container">
       <Layout>
@@ -157,9 +185,12 @@ const OrderDetails = props => {
                   </Title>
                 </div>
                 <div className="status-tag-container">
-                  <StatusTag status={data.order?.status}>
-                    {data.order?.status}
-                  </StatusTag>
+                  {
+                    data.order?.status &&
+                    <StatusTag status={data.order?.status}>
+                      {data.order?.status}
+                    </StatusTag>
+                  }
                 </div>
               </div>
               <div className="page-info-container">
@@ -168,7 +199,7 @@ const OrderDetails = props => {
                     <Col span={12}>{renderDeliveryInfo(data.order)}</Col>
                     <Col span={1}/>
                     <Col span={11}>
-                      <InfoGroup labelID="IDS_ORDER_DATE">
+                      <InfoGroup labelID="IDS_ORDER_DATE" noPlacehholder={true}>
                         {formatDate(data.order?.order_at, 'DD MMM')}
                       </InfoGroup>
                     </Col>
@@ -177,12 +208,12 @@ const OrderDetails = props => {
                 <Card className="app-card info-card card-2">
                   <Row>
                     <Col span={14}>
-                      <InfoGroup labelID="IDS_ORDER_NO">
+                      <InfoGroup labelID="IDS_ORDER_NO" noPlacehholder={true}>
                         {data.order?.order_no}
                       </InfoGroup>
                     </Col>
                     <Col span={10}>
-                      <InfoGroup labelID="IDS_RECEIPT_NO">
+                      <InfoGroup labelID="IDS_RECEIPT_NO" noPlacehholder={true}>
                         {data.order?.receipt_no}
                       </InfoGroup>
                     </Col>
@@ -194,15 +225,19 @@ const OrderDetails = props => {
               <AppTable columns={itemColumns}
                         dataSource={data.items}
                         showLoading={loadingData}/>
+              {renderOrderNotFound()}
             </div>
             <div className="footer-group app-button">
               <Button className="back-button" onClick={goBack}>
                 <FormattedMessage id="IDS_BACK"/>
               </Button>
-              <Button type="primary" className="update-button"
-                      onClick={navigateToReceivedDetail}>
-                <FormattedMessage id="IDS_VIEW_UPDATE_RECEIVED_RECORD"/>
-              </Button>
+              {
+                !orderNotFound &&
+                <Button type="primary" className="update-button"
+                        onClick={navigateToReceivedDetail}>
+                  <FormattedMessage id="IDS_VIEW_UPDATE_RECEIVED_RECORD"/>
+                </Button>
+              }
             </div>
           </div>
         </div>

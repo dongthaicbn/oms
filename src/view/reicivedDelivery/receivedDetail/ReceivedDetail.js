@@ -359,7 +359,7 @@ const ReceivedDetail = (props) => {
     } else if (rpDmgFormModalMeta.mode === MODE_EDIT) {
       await updateDamageRecord(rpDmgMeta.report.report_id, reasonType, otherReason, items, photos);
     }
-    fetchData(orderCode);
+    refreshData();
   };
 
   const showCameraModal = () => {
@@ -429,11 +429,6 @@ const ReceivedDetail = (props) => {
       position: temp.length + 1
     });
     let newRpDmgMeta = { ...rpDmgMeta, report: { ...rpDmgMeta.report, photos: temp } };
-    // newRpDmgMeta.report.photos.push({
-    //   action: ACTION_ADD_PHOTO,
-    //   upload_type: UPLOAD_TYPE_FILE,
-    //   file: base64Image,
-    // });
     setRpDmgMeta(newRpDmgMeta);
     reportDamageForm();
   };
@@ -459,7 +454,7 @@ const ReceivedDetail = (props) => {
 
   const handleDeleteDamageReport = async () => {
     await deleteDamageRecord(confirmDeleteModalMeta.deleteReportId, getLangCode(props.locale));
-    fetchData(orderCode);
+    refreshData();
     props.actionSnackBar({
       open: true,
       type: 'success',
@@ -541,7 +536,7 @@ const ReceivedDetail = (props) => {
                   getPageMode: getPageMode
                 }}/>
     </>;
-  }
+  };
 
   const renderActionButton = () => {
     let buttonLabel;

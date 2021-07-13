@@ -6,7 +6,8 @@
       display: flex;
       flex-direction: column;
       padding: 24px 12px 0 24px;
-
+      min-width: 900px;
+      z-index: 1;
       .header-group {
         margin-bottom: 16px;
         padding-right: 12px;
@@ -239,5 +240,10 @@
         }
       }
     }
+    .category-order-detail-footer-group {
+      background-color: #f3f3f9;
+      z-index: 1;
+    }
   }
+  
 }

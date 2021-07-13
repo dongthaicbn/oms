@@ -250,5 +250,6 @@
   "IDS_SCAN_QR_CODE_ERROR": "Scan QR Code Error: {message}",
   "IDS_CONFIRM_REDIRECT": "Confirm Redirect",
   "IDS_VIEW_ALL": "View all",
-  "IDS_CLOSE": "Close"
+  "IDS_CLOSE": "Close",
+  "IDS_ORDER_NOT_FOUND": "Order not found"
 }

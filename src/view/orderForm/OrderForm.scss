@@ -450,7 +450,7 @@
   background: #f3f3f9;
   z-index: 1;
   @media only screen and (max-width: 1200px) {
-    width: calc(100% - 112px - 24px);
+    // width: calc(100% - 112px - 24px);
     min-width: calc(1024px - 150px);
   }
   .left-header {
@@ -500,4 +500,15 @@
 }
 .box-order-form {
   height: calc(var(--vh, 1vh) * 100 - 118px);
+}
+// .MuiSnackbar-root {
+//   z-index: 0 !important;
+// }
+@keyframes shadowSnackbar {
+  from {transform: scale(1);}
+  to {transform: scale(1);}
+}
+.MuiAlert-filledSuccess {
+  animation: shadowSnackbar 10s infinite;
+  animation-delay: 2s;
 }

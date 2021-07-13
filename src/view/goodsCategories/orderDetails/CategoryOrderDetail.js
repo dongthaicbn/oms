@@ -23,13 +23,13 @@ import {
 } from '../../orderForm/OrderFormActions';
 import './CategoryOrderDetail.scss';
 
-const {Title, Paragraph} = Typography;
+const { Title, Paragraph } = Typography;
 
 const renderDayColumn = (weekday, date) => (
   <div>
     <div>{formatDate(date, 'DD/MM')}</div>
     <div>
-      (<FormattedMessage id={`IDS_${weekday.toUpperCase()}`}/>)
+      (<FormattedMessage id={`IDS_${weekday.toUpperCase()}`} />)
     </div>
   </div>
 );
@@ -106,16 +106,16 @@ const renderItemQuantity = (item, weekday, actionProvider) => {
 };
 
 const itemsColumn = {
-  title: <FormattedMessage id="IDS_ITEMS"/>,
+  title: <FormattedMessage id="IDS_ITEMS" />,
   render: (item) => (
     <div className="app-flex-container items-info-cell">
-      <RoundImage src={item.image} alt="Item Image"/>
+      <RoundImage src={item.image} alt="Item Image" />
       <InfoGroup
         label={
           <>
             {item.code}
-            <Divider type="vertical"/>
-            <FormattedMessage id="IDS_UNIT" values={{value: item.unit}}/>
+            <Divider type="vertical" />
+            <FormattedMessage id="IDS_UNIT" values={{ value: item.unit }} />
           </>
         }
         noColon={true}
@@ -208,10 +208,10 @@ const initData = (data) => {
   });
   return [data, suppliers, submitData, supplierTotalOrderQty];
 };
-
+let interval = null;
 const CategoryOrderDetail = (props) => {
-  const {locale} = props;
-  const {id} = props.match.params;
+  const { locale } = props;
+  const { id } = props.match.params;
   const paramsUrl = queryString.parse(props.location.search);
 
   let [data, setData] = useState({});
@@ -236,7 +236,7 @@ const CategoryOrderDetail = (props) => {
         let totalOrderQty = supplierTotalOrderQty[item._index];
         return (
           <Paragraph>
-            <img src={icons.ic_warning_white} alt=""/>
+            <img src={icons.ic_warning_white} alt="" />
             <FormattedMessage
               id="IDS_SHIPPING_WARNING"
               values={{
@@ -272,7 +272,7 @@ const CategoryOrderDetail = (props) => {
 
   const fetchData = async (categoryId, categoryType) => {
     try {
-      const {data} = await getOrderCategoriesDetail({
+      const { data } = await getOrderCategoriesDetail({
         lang_code: getLangCode(locale),
         is_favorite_category: categoryType === 'categories' ? 0 : 1,
         id: categoryId,
@@ -298,9 +298,23 @@ const CategoryOrderDetail = (props) => {
     setSupplierTotalOrderQty(newSupplierTotalOrderQty);
     setLoadingData(false);
   };
+  useEffect(() => {
+    if (!isEmpty(suppliers) && !isEmpty(paramsUrl.id)) {
+      interval = setInterval(() => {
+        const el = document.getElementById(paramsUrl.id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" })
+          clearInterval(interval)
+        }
+      }, 100);
+    }
+  }, [suppliers]);
 
   useEffect(() => {
     refreshData();
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   const goBack = () => {
@@ -364,7 +378,7 @@ const CategoryOrderDetail = (props) => {
     };
 
     try {
-      const {data} = await saveOrder(convertedSubmitData);
+      const { data } = await saveOrder(convertedSubmitData);
       if (data.result.status === 200) {
         props.actionSnackBar({
           open: true,
@@ -385,12 +399,12 @@ const CategoryOrderDetail = (props) => {
   };
 
   const getItemCurrentOrderQty = (supplierIndex, itemIndex, weekday) => {
-    return submitData[supplierIndex]?.items[itemIndex]?.day_detail[weekday]?.order_qty;
+    return submitData[supplierIndex] ?.items[itemIndex] ?.day_detail[weekday] ?.order_qty;
   };
 
   const onItemOrderQtyChanged = (supplierIndex, itemIndex, weekday, newOrderQty) => {
     let newSubmitData = [...submitData];
-    let dayDetail = newSubmitData[supplierIndex]?.items[itemIndex]?.day_detail[weekday];
+    let dayDetail = newSubmitData[supplierIndex] ?.items[itemIndex] ?.day_detail[weekday];
     if (dayDetail) {
       setSubmitData(newSubmitData);
       updateSupplierTotalOrderQty(supplierIndex, dayDetail.order_qty, newOrderQty);
@@ -402,7 +416,7 @@ const CategoryOrderDetail = (props) => {
   };
 
   const updateChangedItems = (supplierIndex, itemIndex, weekday, newOrderQty) => {
-    let newChangedData = {...changedData};
+    let newChangedData = { ...changedData };
     let originOrderQty = suppliers[supplierIndex].items[itemIndex].day_detail[weekday].order_qty;
 
     if (newOrderQty === originOrderQty) {
@@ -463,7 +477,7 @@ const CategoryOrderDetail = (props) => {
     if (!isEmpty(filterValue.filled)) {
       let filledDay = Object.keys(item.day_detail)
         .find((weekday) => {
-          return submitData[item._group_index]?.items[item._index]?.day_detail[weekday].order_qty > 0
+          return submitData[item._group_index] ?.items[item._index] ?.day_detail[weekday].order_qty > 0
         });
       return filterValue.filled ? !Boolean(filledDay) : Boolean(filledDay);
     }
@@ -493,20 +507,20 @@ const CategoryOrderDetail = (props) => {
             <div className="header-group">
               <div className="page-info-container app-button">
                 <div className="page-title">
-                  <Title level={3}>{data.category?.name}</Title>
+                  <Title level={3}>{data.category ?.name}</Title>
                 </div>
                 <Button
                   className={`${
                     !isEmpty(filterValue.suppliers) ||
-                    !isEmpty(filterValue.items) ||
-                    !isEmpty(filterValue.filled)
+                      !isEmpty(filterValue.items) ||
+                      !isEmpty(filterValue.filled)
                       ? 'active-btn'
                       : ''
                     }`}
-                  icon={<FilterIcon/>}
+                  icon={<FilterIcon />}
                   onClick={() => setFilterModalVisible(true)}
                 >
-                  <FormattedMessage id="IDS_FILTER"/>
+                  <FormattedMessage id="IDS_FILTER" />
                 </Button>
               </div>
             </div>
@@ -517,6 +531,7 @@ const CategoryOrderDetail = (props) => {
                 showLoading={loadingData}
                 itemsKey="items"
                 groupKey="supplier_name"
+                groupId="supplier_id"
                 groupFilter={supplierFilter}
                 itemFilter={itemFilter}
                 groupExpandable={createGroupExpandable()}
@@ -529,16 +544,16 @@ const CategoryOrderDetail = (props) => {
                 }}
               />
             </div>
-            <div className="footer-group app-button">
+            <div className="footer-group app-button category-order-detail-footer-group">
               <Button className="back-button" onClick={prepareGoBack}>
-                <FormattedMessage id="IDS_BACK"/>
+                <FormattedMessage id="IDS_BACK" />
               </Button>
               <Button
                 type="primary"
                 className="save-button"
                 onClick={prepareSubmitForm}
               >
-                <FormattedMessage id="IDS_SAVE"/>
+                <FormattedMessage id="IDS_SAVE" />
               </Button>
             </div>
           </div>
@@ -547,7 +562,7 @@ const CategoryOrderDetail = (props) => {
           visible={filterModalVisible}
           handleClose={() => setFilterModalVisible(false)}
           suppliers={(originSuppliers || []).map((v) => {
-            if (v) return {...v, id: v.supplier_id};
+            if (v) return { ...v, id: v.supplier_id };
             return v;
           })}
           filterValue={filterValue}
@@ -561,7 +576,7 @@ const CategoryOrderDetail = (props) => {
           cancelTextID="IDS_STAY"
           onVisibleChange={(visible) => setConfirmLeaveModalVisible(visible)}
         >
-          <FormattedMessage id="IDS_LEAVE_DESCRIPTION"/>
+          <FormattedMessage id="IDS_LEAVE_DESCRIPTION" />
         </AppModal>
         <AppModal
           visible={confirmSaveModalVisible}
@@ -570,10 +585,10 @@ const CategoryOrderDetail = (props) => {
           onOk={submitForm}
           onVisibleChange={(visible) => setConfirmSaveModalVisible(visible)}
         >
-          <FormattedMessage id="IDS_ORDER_ITEM_DESCRIPTION"/>
+          <FormattedMessage id="IDS_ORDER_ITEM_DESCRIPTION" />
           {saveProgressVisible && (
             <div className="modal-progress-container">
-              <CircularProgress/>
+              <CircularProgress />
             </div>
           )}
         </AppModal>
@@ -587,5 +602,5 @@ export default connect(
     locale: state.system.locale,
     account: state.system.account,
   }),
-  {actionSnackBar}
+  { actionSnackBar }
 )(withRouter(CategoryOrderDetail));

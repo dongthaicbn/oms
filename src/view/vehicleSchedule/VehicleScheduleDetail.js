@@ -14,7 +14,7 @@ import AppTable from 'components/table/AppTable';
 import InfoGroup from 'components/infoGroup/InfoGroup';
 // import * as icons from 'assets';
 import RoundImage from 'components/image/RoundImage';
-import {isIPad} from 'utils/helpers/helpers';
+import { isIPad } from 'utils/helpers/helpers';
 
 const { Text } = Typography;
 
@@ -38,24 +38,24 @@ const itemColumns = [
   },
   {
     title: (
-      <span style={{ textAlign: 'center' }}>
+      <span style={{ textAlign: 'center', maxWidth: 80 }}>
         <FormattedMessage id="IDS_VEHICLE_SCHEDULE" />
       </span>
     ),
     align: 'center',
-    width: '100px',
+    width: '150px',
     render: (item) => (
       <span className="value-item">{item.vehicle_schdules}</span>
     ),
   },
   {
     title: (
-      <span style={{ textAlign: 'center' }}>
+      <span style={{ textAlign: 'center', maxWidth: 83 }}>
         <FormattedMessage id="IDS_ORDER_BEFORE" />
       </span>
     ),
     align: 'center',
-    width: '100px',
+    width: '85px',
     render: (item) => (
       <span className="value-item">{item.order_before_day}</span>
     ),
@@ -75,7 +75,7 @@ const VehicleScheduleDetail = (props) => {
       });
 
       if (!isEmpty(data.data)) setDataDetail(data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
   useEffect(() => {
     fetchData(); // eslint-disable-next-line
@@ -97,7 +97,7 @@ const VehicleScheduleDetail = (props) => {
                 </div>
               </Col>
             </Row>
-            <Row className="lending-confirm-table">
+            <Row className="lending-confirm-table vehicle-schedule-detail">
               <Col span={24}>
                 <AppTable
                   columns={itemColumns}

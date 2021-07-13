@@ -39,30 +39,34 @@ const columns = [
         </InfoGroup>
       </div>
     ),
-    renderGroup: (item) => item.name
+    renderGroup: (item) => item.name,
   },
   {
-    title: <div className="item-info-column">
-      <FormattedMessage id="IDS_VEHICLE_SCHEDULE"/>
-    </div>,
+    title: (
+      <div className="item-info-column">
+        <FormattedMessage id="IDS_VEHICLE_SCHEDULE" />
+      </div>
+    ),
     width: '120px',
     align: 'center',
-    render: (item) => (
-      item.vehicle_schdules &&
-      <Tag className="info-tag">{item.vehicle_schdules}</Tag>
-    )
+    render: (item) =>
+      item.vehicle_schdules && (
+        <Tag className="info-tag">{item.vehicle_schdules}</Tag>
+      ),
   },
   {
-    title: <div className="item-info-column">
-      <FormattedMessage id="IDS_ORDER_BEFORE"/>
-    </div>,
+    title: (
+      <div className="item-info-column">
+        <FormattedMessage id="IDS_ORDER_BEFORE" />
+      </div>
+    ),
     width: '120px',
     align: 'center',
-    render: (item) => (
-      item.vehicle_schdules &&
-      <Tag className="info-tag">{item.vehicle_schdules}</Tag>
-    )
-  }
+    render: (item) =>
+      item.vehicle_schdules && (
+        <Tag className="info-tag">{item.vehicle_schdules}</Tag>
+      ),
+  },
 ];
 
 const HolidayGoodsCategoriesDetail = (props) => {
@@ -72,80 +76,86 @@ const HolidayGoodsCategoriesDetail = (props) => {
   const [suppliers, setSuppliers] = useState([]);
   const [supplierMetas, setSupplierMetas] = useState([]);
 
-  const togleAvailableDateView = (supplierIndex, viewAll) => {
+  const toggleAvailableDateView = (supplierIndex, viewAll) => {
     let newSupplierMetas = [...supplierMetas];
     newSupplierMetas[supplierIndex] = {
-      expanded: viewAll
+      expanded: viewAll,
     };
     setSupplierMetas(newSupplierMetas);
   };
 
   const createGroupExtendable = () => {
     return {
-      extendable: (item) => true,
+      extendable: (item) => item.date?.suspended_date?.length > 0,
       render: (item) => {
-        let expaned = supplierMetas[item._index]?.expanded;
+        let expanded = supplierMetas[item._index]?.expanded;
         let availableDates = item.date?.available_date || [];
         let viewActionContent;
-        if (expaned) {
-          viewActionContent = <>
-            <FormattedMessage id="IDS_CLOSE"/>
-            <DropDownIcon/>
-          </>;
+        if (expanded) {
+          viewActionContent = (
+            <>
+              <FormattedMessage id="IDS_CLOSE" />
+              <DropDownIcon />
+            </>
+          );
         } else {
           if (availableDates.length > MINIMAL_AVAILABLE_DATE_DISPLAY) {
-            availableDates = availableDates.slice(0, MINIMAL_AVAILABLE_DATE_DISPLAY);
+            availableDates = availableDates.slice(
+              0,
+              MINIMAL_AVAILABLE_DATE_DISPLAY
+            );
           }
-          viewActionContent = <>
-            <FormattedMessage id="IDS_VIEW_ALL"/>
-            <DropDownIcon/>
-          </>;
+          viewActionContent = (
+            <>
+              <FormattedMessage id="IDS_VIEW_ALL" />
+              <DropDownIcon />
+            </>
+          );
         }
         return (
           <div className="supplier-delivery-info-container">
             <div className="suspended-section">
-              <FormattedMessage id="IDS_DELIVERY_SUSPENDED"/>
-              {
-                item.date?.suspended_date?.length > 0 &&
+              <FormattedMessage id="IDS_DELIVERY_SUSPENDED" />
+              {item.date?.suspended_date?.length > 0 && (
                 <div className="delivery-suspended-dates">
-                  {
-                    item.date?.suspended_date?.map(date => (
-                      <Tag>{formatDate(date, 'DD/MM(dd)')}</Tag>
-                    ))
-                  }
+                  {item.date?.suspended_date?.map((date) => (
+                    <Tag>{formatDate(date, 'DD/MM(dd)')}</Tag>
+                  ))}
                 </div>
-              }
+              )}
             </div>
-            <Divider/>
-            {
-              availableDates.length > 0 &&
+            <Divider />
+            {availableDates.length > 0 && (
               <div className="available-section">
-                {
-                  availableDates.map(date => (
-                    <Tag>
-                      {formatDate(date.order_date, 'DD/MM(dd)')}
-                      <img src={icons.ic_arrow_right}/>
-                      {formatDate(date.delivery_date, 'DD/MM(dd)')}
-                    </Tag>
-                  ))
-                }
+                {availableDates.map((date) => (
+                  <Tag>
+                    {formatDate(date.order_date, 'DD/MM(dd)')}
+                    <img src={icons.ic_arrow_right} />
+                    {formatDate(date.delivery_date, 'DD/MM(dd)')}
+                  </Tag>
+                ))}
               </div>
-            }
-            {
-              item.date?.available_date?.length > MINIMAL_AVAILABLE_DATE_DISPLAY &&
+            )}
+            {item.date?.available_date?.length >
+              MINIMAL_AVAILABLE_DATE_DISPLAY && (
               <>
-                <Divider/>
+                <Divider />
                 <div className="view-action-section">
-                  <div className="view-action" onClick={() => togleAvailableDateView(item._index, !expaned)}>
+                  <div
+                    className="view-action"
+                    onClick={() =>
+                      toggleAvailableDateView(item._index, !expanded)
+                    }
+                  >
                     {viewActionContent}
                   </div>
                 </div>
               </>
-            }
+            )}
           </div>
-        )
-      }
-    }
+        );
+      },
+    };
   };
 
   const fetchData = async (id, type, shop_id, start_date, end_date) => {
@@ -168,8 +178,13 @@ const HolidayGoodsCategoriesDetail = (props) => {
   };
 
   const refreshData = async () => {
-    let response = await fetchData(id, paramsUrl.type,
-      paramsUrl.shop_id, paramsUrl.start_date, paramsUrl.end_date);
+    let response = await fetchData(
+      id,
+      paramsUrl.type,
+      paramsUrl.shop_id,
+      paramsUrl.start_date,
+      paramsUrl.end_date
+    );
     setData(response);
     setSuppliers(response.suppliers);
   };
@@ -199,6 +214,7 @@ const HolidayGoodsCategoriesDetail = (props) => {
                 columns={columns}
                 dataSource={suppliers}
                 itemsKey="items"
+                groupKey="name"
                 groupExtendable={createGroupExtendable()}
               />
             </div>

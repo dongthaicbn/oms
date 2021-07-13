@@ -42,7 +42,7 @@ const Favourite = (props) => {
         mainOrder = data.data.orders || [];
         setData(data.data);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const Favourite = (props) => {
           message: dataRes.result.message,
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const getColumns = () => {
     let result = [
@@ -251,7 +251,7 @@ const Favourite = (props) => {
     <div className="category-order-detail-container">
       <Layout>
         <div className="app-scrollable-container favourite-page">
-          <div className={`app-content-container app-content-container-favourite`}>
+          <div className={`app-content-container app-content-container-favourite new-container-favourite`}>
             <div className="header-group">
               <div className="page-info-container app-button">
                 <div className="page-title">
@@ -262,11 +262,11 @@ const Favourite = (props) => {
                 <Button
                   className={`${
                     !isEmpty(filterValue.suppliers) ||
-                    !isEmpty(filterValue.categories) ||
-                    !isEmpty(filterValue.items)
+                      !isEmpty(filterValue.categories) ||
+                      !isEmpty(filterValue.items)
                       ? 'active-btn'
                       : ''
-                  }`}
+                    }`}
                   icon={<FilterIcon />}
                   onClick={openFilter}
                 >
@@ -284,11 +284,11 @@ const Favourite = (props) => {
                 />
               </div>
             )}
-            <div className="footer-group app-button">
+            {/* <div className="footer-group app-button">
               <Button className="back-button" onClick={goBack}>
                 <FormattedMessage id="IDS_BACK" />
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
         {open && (

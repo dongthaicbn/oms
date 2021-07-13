@@ -16,14 +16,17 @@ const useStyles = makeStyles((theme) => ({
   success: {
     width: '80vw',
     background: 'linear-gradient(272.96deg, #28A9F1 0%, #65C8FF 100%)',
-    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+    // boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
     borderRadius: '10px',
+    transition: 'unset !important'
+    // WebkitBoxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)'
   },
   warning: {
     width: '80vw',
     background: 'linear-gradient(272.96deg, #EF5F5F 0%, #EF5F5F 100%)',
-    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
+    // boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
     borderRadius: '6px',
+    // WebkitBoxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)'
   },
 }));
 const SnackBar = (props) => {
@@ -64,8 +67,8 @@ const SnackBar = (props) => {
             props.snackBar.type === 'success' ? (
               <CheckCircleIcon fontSize="inherit" />
             ) : (
-              <ReportProblemIcon fontSize="inherit" />
-            )
+                <ReportProblemIcon fontSize="inherit" />
+              )
           }
           className={
             props.snackBar.type === 'success'

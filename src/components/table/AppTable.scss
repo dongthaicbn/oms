@@ -70,7 +70,7 @@
     }
 
     .item-row {
-      margin-top: 8px;
+      margin-bottom: 8px;
       border-radius: 6px;
       background: #FFFFFF;
       padding: 8px;
@@ -110,10 +110,8 @@
     .group-item-container {
       position: relative;
 
-      &:not(:first-child) {
-        .group-item-row {
-          margin-top: 8px;
-        }
+      .item-row:nth-child(2) {
+        margin-top: 8px;
       }
     }
 

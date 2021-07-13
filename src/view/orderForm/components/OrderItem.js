@@ -16,7 +16,10 @@ const OrderItem = (props) => {
   const closeModal = () => setVisible(false);
   const handleDetail = () => {
     props.history.push(
-      `${routes.GOODS_CATEGORY_ORDER_DETAIL.replace(':id', -1)}?type=categories`
+      `${routes.GOODS_CATEGORY_ORDER_DETAIL.replace(
+        ':id',
+        -1
+      )}?type=categories&id=${item.id}`
     );
   };
 

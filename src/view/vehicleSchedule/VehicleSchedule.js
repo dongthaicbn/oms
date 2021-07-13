@@ -21,7 +21,7 @@ const VehicleSchedule = (props) => {
       });
 
       if (!isEmpty(data.data)) setData(data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
   useEffect(() => {
     fetchData(); //eslint-disable-next-line
@@ -42,7 +42,7 @@ const VehicleSchedule = (props) => {
     <Layout>
       <div
         className="scrollable-container padding-right scrollable-container-categories"
-        // style={{ position: 'relative' }}
+      // style={{ position: 'relative' }}
       >
         <div className="content-container">
           <div className="header-container">
@@ -56,8 +56,8 @@ const VehicleSchedule = (props) => {
             </div>
           </div>
           <div
-            className="page-content"
-            // style={{ height: 'calc(100vh - 202px)' }}
+            className="page-content page-content-vehicle-schedule"
+          // style={{ height: 'calc(100vh - 202px)' }}
           >
             <div className="item-group">
               {!isEmpty(data.favourite_categories) &&
@@ -88,7 +88,7 @@ const VehicleSchedule = (props) => {
             </div>
           </div>
         </div>
-        <div
+        {/* <div
           className="page-footer"
           style={{
             padding: 24,
@@ -97,7 +97,7 @@ const VehicleSchedule = (props) => {
           <Button className="footer-btn" onClick={handleBack}>
             <FormattedMessage id="IDS_BACK" />
           </Button>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );

@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Row, Col } from 'antd';
 import { isEmpty, isFunction, isIPad } from 'utils/helpers/helpers';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './AppTable.scss';
 
 const isIPadDevice = isIPad();
-const TABLE_ITEM_SPACING_PX = 8;
 
 const initTableColumns = (columns) => {
   columns = columns || [];
@@ -62,6 +61,7 @@ const AppTable = (props) => {
     itemFilter,
     itemsKey,
     groupKey,
+    groupId,
     noStickyGroup,
     rowExpandable,
     groupExpandable,
@@ -134,7 +134,7 @@ const AppTable = (props) => {
 
   const renderTableGroupItemContentCells = (item) => {
     return (
-      <Col className="group-item-content-cell"
+      <Col className="group-item-content-cell" id={item[groupId]}
            span={24}>
         {item[groupKey]}
       </Col>
@@ -268,7 +268,7 @@ const AppTable = (props) => {
         {renderBottom && renderBottom()}
       </div>
     );
-  }
+  };
 
   const renderTableItemRows = () => {
     return tableData.map((item, index) => {
